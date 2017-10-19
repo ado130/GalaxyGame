@@ -12,7 +12,6 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
 
     a.setApplicationName("Semicoln - Space game");
 
@@ -21,6 +20,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<Common::IGameRunner> gameRunner = Common::getGameRunner(galaxy, handler);
     Common::utilityInit(time(NULL));
 
+    MainWindow w(0, galaxy, gameRunner);
     w.show();
 
     return a.exec();

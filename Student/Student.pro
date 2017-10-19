@@ -18,13 +18,15 @@ SOURCES += \
     eventhandler.cc \
     galaxy.cc \
     statistics.cc \
-    mainwindow.cc
+    mainwindow.cc \
+    playership.cc
 
 HEADERS  += \
     galaxy.hh \
     eventhandler.hh \
     statistics.hh \
-    mainwindow.hh
+    mainwindow.hh \
+    playership.hh
 
 INCLUDEPATH += $$PWD/../Course
 DEPENDPATH += $$PWD/../Course
