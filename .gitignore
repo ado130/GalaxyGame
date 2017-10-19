@@ -30,6 +30,8 @@ ui_*.h
 *.jsc
 Makefile*
 *build-*
+*debug
+*release
 
 # Qt unit tests
 target_wrapper.*
@@ -44,3 +46,7 @@ target_wrapper.*
 
 # QtCtreator CMake
 CMakeLists.txt.user*
+
+NUL
+*.qmake.stash
+

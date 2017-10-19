@@ -14,12 +14,17 @@ CONFIG += c++14
 
 
 SOURCES += \
-    main.cc\
+    main.cc \
+    eventhandler.cc \
+    galaxy.cc \
+    statistics.cc \
+    mainwindow.cc
 
 HEADERS  += \
     galaxy.hh \
     eventhandler.hh \
-    statistics.hh
+    statistics.hh \
+    mainwindow.hh
 
 INCLUDEPATH += $$PWD/../Course
 DEPENDPATH += $$PWD/../Course
@@ -33,8 +38,9 @@ CONFIG(debug, debug|release) {
 }
 
 win32 {
-    copyfiles.commands += @echo NOW COPYING ADDITIONAL FILE(S) for Windows &
-    copyfiles.commands += @call xcopy ..\\..\\GalaxyGame\\Assets Assets /i /s /e /y
+    #copyfiles.commands += @echo \"NOW COPYING ADDITIONAL FILE(S) for Windows\" &
+    #copyfiles.commands += xcopy /S /E /I /Y \"..//..//Assets\" $$PWD/Assets
+    #copyfiles.commands += cmd.exe /c call xcopy /S /E /I /Y ..\\..\\Assets \"Assets\"
 }
 unix:!macx {
     copyfiles.commands += @echo \"NOW COPYING ADDITIONAL FILE(S) for Linux\" &&
@@ -53,3 +59,7 @@ LIBS += -L$$OUT_PWD/../Course/$${DESTDIR}/ -lCourse
 
 QMAKE_EXTRA_TARGETS += copyfiles
 POST_TARGETDEPS += copyfiles
+
+FORMS += \
+    mainwindow.ui \
+    mainwindow.ui
