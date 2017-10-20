@@ -15,11 +15,21 @@ CONFIG += c++14
 
 SOURCES += \
     main.cc\
+	mainwindow.cc \
+	galaxy.cc \
+	eventhandler.cc \
+	statistics.cc \
+	playership.cc
 
 HEADERS  += \
     galaxy.hh \
     eventhandler.hh \
-    statistics.hh
+    statistics.hh \
+	playership.hh \
+	mainwindow.hh
+	
+FORMS += \
+		mainwindow.ui
 
 INCLUDEPATH += $$PWD/../Course
 DEPENDPATH += $$PWD/../Course
@@ -33,8 +43,8 @@ CONFIG(debug, debug|release) {
 }
 
 win32 {
-    copyfiles.commands += @echo NOW COPYING ADDITIONAL FILE(S) for Windows &
-    copyfiles.commands += @call xcopy ..\\..\\GalaxyGame\\Assets Assets /i /s /e /y
+ #   copyfiles.commands += @echo NOW COPYING ADDITIONAL FILE(S) for Windows &
+    copyfiles.commands += xcopy ..\\..\\GalaxyGame\\Assets Assets /i /s /e /y
 }
 unix:!macx {
     copyfiles.commands += @echo \"NOW COPYING ADDITIONAL FILE(S) for Linux\" &&
