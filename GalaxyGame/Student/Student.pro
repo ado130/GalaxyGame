@@ -19,14 +19,18 @@ SOURCES += \
 	galaxy.cc \
 	eventhandler.cc \
 	statistics.cc \
-	playership.cc
+	playership.cc \
+    shipdesign.cc \
+    npcships.cc
 
 HEADERS  += \
     galaxy.hh \
     eventhandler.hh \
     statistics.hh \
 	playership.hh \
-	mainwindow.hh
+	mainwindow.hh \
+    shipdesign.hh \
+    npcships.hh
 	
 FORMS += \
 		mainwindow.ui

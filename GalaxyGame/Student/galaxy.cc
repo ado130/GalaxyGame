@@ -1,5 +1,7 @@
 #include "galaxy.hh"
 
+#include <algorithm>
+
 Student::Galaxy::Galaxy()
 {
 
@@ -12,6 +14,14 @@ Student::Galaxy::~Galaxy()
 
 void Student::Galaxy::addShip(std::shared_ptr<Common::Ship> ship)
 {
+   for(auto k : shipsInGalaxy)
+   {
+       if(k == ship)
+       {
+           // throw error
+       }
+   }
+   shipsInGalaxy.push_back(ship);
 
 }
 

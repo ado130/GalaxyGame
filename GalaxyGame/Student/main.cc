@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<Common::IGameRunner> gameRunner = Common::getGameRunner(galaxy, handler);
     Common::utilityInit(time(NULL));
 
-    MainWindow w(0, galaxy, gameRunner);
+    MainWindow w(0, handler, galaxy, gameRunner);
     w.show();
 
     return a.exec();

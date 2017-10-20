@@ -28,6 +28,7 @@ public:
     std::shared_ptr<Common::StarSystem> getStarSystemById(unsigned id);
 
 private:
+    ShipVector shipsInGalaxy;
 
 };
 }//Student
