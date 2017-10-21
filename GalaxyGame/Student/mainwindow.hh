@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <memory>
+#include <QMap>
 
 #include "galaxy.hh"
 #include "utility.hh"
@@ -37,9 +38,11 @@ private:
     QTimer *timer;
     QGraphicsScene *scene_;
     PlayerShip *player;
+    QMap<QString, QVariant> playerScore_;
 
     void startGame();
-
+    void loadSettings();
+    void saveSettings();
 private slots:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();

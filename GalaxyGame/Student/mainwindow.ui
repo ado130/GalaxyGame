@@ -79,7 +79,7 @@
      <rect>
       <x>10</x>
       <y>610</y>
-      <width>141</width>
+      <width>191</width>
       <height>16</height>
      </rect>
     </property>
@@ -158,6 +158,10 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>pbNewGame</tabstop>
+  <tabstop>graphicsView</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

@@ -1,4 +1,6 @@
 #include "playership.hh"
+#include "starplanet.hh"
+#include "bullet.hh"
 
 #include <QDebug>
 #include <cmath>
@@ -51,7 +53,27 @@ void PlayerShip::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Space)
     {
-        qDebug() << "Space";
-        // shoot
+        bool bTrading = false;
+        QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(this);
+        for(int i = 0, n = colliding_Items.size(); i<n; ++i)
+        {
+            if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
+            {
+                qDebug() << "Yes, you are next to the planet";
+                bTrading = true;
+            }
+        }
+
+        // You can not shoot during trading
+        if(bTrading) return;
+        Bullet *bullet1 = new Bullet(scene_);
+        bullet1->setRotation(rotation());
+        bullet1->setPos(x()+width/2,y());
+        scene_->addItem(bullet1);
+
+        Bullet *bullet2 = new Bullet(scene_);
+        bullet2->setRotation(rotation());
+        bullet2->setPos(x()+width+width/2,y());
+        scene_->addItem(bullet2);
     }
 }

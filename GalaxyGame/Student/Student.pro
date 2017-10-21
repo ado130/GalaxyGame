@@ -21,7 +21,8 @@ SOURCES += \
 	statistics.cc \
 	playership.cc \
     starplanet.cc \
-    npcship.cc
+    npcship.cc \
+    bullet.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -30,7 +31,8 @@ HEADERS  += \
 	playership.hh \
 	mainwindow.hh \
     starplanet.hh \
-    npcship.hh
+    npcship.hh \
+    bullet.hh
 	
 FORMS += \
     mainwindow.ui

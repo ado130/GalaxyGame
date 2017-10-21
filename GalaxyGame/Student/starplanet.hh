@@ -9,7 +9,10 @@
 class StarPlanet : public QGraphicsPixmapItem
 {
 public:
-    StarPlanet();
+    StarPlanet(QGraphicsScene *scene);
+
+private:
+    QGraphicsScene *scene_;
 };
 
 #endif // STARPLANET_HH

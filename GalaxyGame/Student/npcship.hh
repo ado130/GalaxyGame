@@ -1,12 +1,11 @@
 #ifndef NPCSHIP_HH
 #define NPCSHIP_HH
 
+#include "ship.hh"
+
 #include <memory>
-#include <QObject>
 #include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
-
-#include "ship.hh"
 
 // ToDo: inherit this class from Common::Ship
 class NPCShip : public QObject, public QGraphicsPixmapItem
@@ -14,9 +13,10 @@ class NPCShip : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 
 public:
-    NPCShip();
+    NPCShip(QGraphicsScene *scene);
 
 private:
+    QGraphicsScene *scene_;
 
 private slots:
     void move();

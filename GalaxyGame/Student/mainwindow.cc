@@ -9,6 +9,8 @@
 #include <QTextEdit>
 #include <QTimer>
 #include <QBrush>
+#include <QInputDialog>
+#include <QSettings>
 
 #define SCENE_WIDTH 800
 #define SCENE_HEIGHT 600
@@ -26,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent, std::shared_ptr<Common::IEventHandler> h
 
 MainWindow::~MainWindow()
 {
+    saveSettings();
     delete timer;
     delete player;
     delete ui;
@@ -34,6 +37,11 @@ MainWindow::~MainWindow()
 void MainWindow::startGame()
 {
     // ToDo: do not ignore ToDo's
+
+    bool ok;
+    QString nickName = QInputDialog::getText(this, tr("Enter nickname"),
+                                          tr("Nickname:"), QLineEdit::Normal,
+                                          "", &ok);
 
     qDebug() << "New game";
     // Create scene for the game
@@ -49,18 +57,19 @@ void MainWindow::startGame()
     scene_->addItem(player);
     player->setFlag(QGraphicsItem::ItemIsFocusable);
     player->setFocus();
+    player->setZValue(1);
 
     // Add enemies to the galaxy
     for(unsigned int i = 0; i<5; i++)
     {
-        NPCShip *npcship = new NPCShip();
+        NPCShip *npcship = new NPCShip(scene_);
         scene_->addItem(npcship);
     }
 
     // Add star system to the galaxy
     for(unsigned int i = 0; i<3; i++)
     {
-        StarPlanet *starPlanet = new StarPlanet();
+        StarPlanet *starPlanet = new StarPlanet(scene_);
         scene_->addItem(starPlanet);
     }
 
@@ -68,7 +77,7 @@ void MainWindow::startGame()
     ui->graphicsView->setScene(scene_);
 
     // Base coordinates == player start position, there will be player's base
-    QString baseCoor = QString("Base coordinates: %1 %2").arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
+    QString baseCoor = QString(tr("Base coordinates: %1 %2")).arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
     ui->lbBaseCoor->setText(baseCoor);
 
     // Set timer to refresh UI information
@@ -79,7 +88,7 @@ void MainWindow::startGame()
 
 void MainWindow::refreshUI()
 {
-    QString playerCoor = QString("Player coordinates: %1 %2").arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
+    QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
     ui->lbPlayerCoor->setText(playerCoor);
 }
 
@@ -103,7 +112,9 @@ void MainWindow::on_actionAbout_triggered()
     QTextEdit* help = new QTextEdit();
     help->setWindowFlag(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
     help->setReadOnly(true);
-    help->append("<h1>About</h1>Welcome to Semicolon Spaceship game.<br/> Hope you like it.");
+    help->append(tr("<h1>About</h1>Welcome to Semicolon Spaceship game."
+                 "<br/>Lucia Kuchárová & Andrej Vlasatý"
+                 "<br/> Hope you like it."));
     help->show();
 }
 
@@ -112,6 +123,19 @@ void MainWindow::on_actionHelp_triggered()
     QTextEdit* help = new QTextEdit();
     help->setWindowFlag(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
     help->setReadOnly(true);
-    help->append("<h1>Help</h1>Welcome to my help.<br/> Hope you like it.");
+    help->append(tr("<h1>Help</h1>Use arrow keys to move."
+                 "<br/>Fly over the planet and press space to trade with the planet."
+                 "<br/>You can not shoot during trading."
+                 "<br/> Hope you like it."));
     help->show();
+}
+
+void MainWindow::loadSettings()
+{
+
+}
+
+void MainWindow::saveSettings()
+{
+
 }

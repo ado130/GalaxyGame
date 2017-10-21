@@ -3,9 +3,12 @@
 #include <QDebug>
 #include <QMap>
 #include <QList>
+#include <QGraphicsScene>
 
-StarPlanet::StarPlanet()
+StarPlanet::StarPlanet(QGraphicsScene *scene)
 {
+    scene_ = scene;
+
     QMap<unsigned int, QString> planets;
     planets[0] = "earth";
     planets[1] = "jupiter";
@@ -20,10 +23,26 @@ StarPlanet::StarPlanet()
     QString planet = QString(":/images/images/planets/%1.png").arg(planets.value(randomPlanet));
 
     setPixmap(QPixmap(planet));
-
     setScale(0.3);
 
-    int positionX = rand() % 800;
-    int positionY = rand() % 600;
-    setPos(positionX, positionY);
+    bool bCollision = false;
+    do
+    {
+        int positionX = rand() % 700;
+        int positionY = rand() % 500;
+        setPos(positionX, positionY);
+        QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(this);
+        for(int i = 0, n = colliding_Items.size(); i<n; ++i)
+        {
+            if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
+            {
+                qDebug() << "New planet - collision";
+                bCollision = true;
+            }
+            else
+            {
+                bCollision = false;
+            }
+        }
+    }while(bCollision);
 }
