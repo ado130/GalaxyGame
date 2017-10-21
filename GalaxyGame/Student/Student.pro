@@ -20,7 +20,6 @@ SOURCES += \
 	eventhandler.cc \
 	statistics.cc \
 	playership.cc \
-    shipdesign.cc \
     npcships.cc
 
 HEADERS  += \
@@ -29,11 +28,13 @@ HEADERS  += \
     statistics.hh \
 	playership.hh \
 	mainwindow.hh \
-    shipdesign.hh \
     npcships.hh
 	
 FORMS += \
-		mainwindow.ui
+    mainwindow.ui
+
+RESOURCES += \
+    resources.qrc
 
 INCLUDEPATH += $$PWD/../Course
 DEPENDPATH += $$PWD/../Course

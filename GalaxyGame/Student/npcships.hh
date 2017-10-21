@@ -3,10 +3,13 @@
 
 #include <memory>
 #include <QObject>
-#include "shipdesign.hh"
+#include <QGraphicsItem>
+#include <QGraphicsPixmapItem>
+
+#include "ship.hh"
 
 // ToDo: inherit this class from Common::Ship
-class NPCShips : public QObject, public ShipDesign
+class NPCShips : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 

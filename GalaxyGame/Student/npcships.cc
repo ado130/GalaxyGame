@@ -6,6 +6,10 @@
 
 NPCShips::NPCShips()
 {  
+    setPixmap(QPixmap(":/images/images/NPCShip.png"));
+
+    setScale(0.2);
+
     int positionX = rand() % 700;
     int positionY = rand() % 500;
     setPos(positionX, positionY);
@@ -32,8 +36,8 @@ void NPCShips::move()
     else if(randomMove == 2)
     {   // ToDo: movement is not correct
         qreal diffX = 0, diffY = 0;
-        diffX = rect().width()-rect().x();
-        diffY = rect().height()-rect().y();
+       // diffX = rect().width()-rect().x();
+        //diffY = rect().height()-rect().y();
         diffX *= cos( rotation() * PI / 180.0 );
         diffY *= sin( rotation() * PI / 180.0 );
         setPos(x() + diffX, y() + diffY);
@@ -41,8 +45,8 @@ void NPCShips::move()
     else if(randomMove == 3)
     {   // ToDo: movement is not correct
         qreal diffX = 0, diffY = 0;
-        diffX = rect().width()-rect().x();
-        diffY = rect().height()-rect().y();
+       // diffX = rect().width()-rect().x();
+       // diffY = rect().height()-rect().y();
         diffX *= cos( rotation() * PI / 180.0 );
         diffY *= sin( rotation() * PI / 180.0 );
         setPos(x() - diffX, y() - diffY);

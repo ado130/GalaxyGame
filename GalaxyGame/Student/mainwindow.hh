@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <memory>
+
 #include "galaxy.hh"
 #include "utility.hh"
 #include "igamerunner.hh"
@@ -34,7 +35,7 @@ private:
     std::shared_ptr<Common::IGameRunner> gameRunner_;
 
     QTimer *timer;
-    std::shared_ptr<QGraphicsScene> scene_;
+    QGraphicsScene *scene_;
     PlayerShip *player;
 
     void startGame();

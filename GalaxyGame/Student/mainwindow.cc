@@ -32,12 +32,11 @@ void MainWindow::startGame()
 
     qDebug() << "New game";
     // Create scene for the game
-    scene_ = std::make_shared<QGraphicsScene>();
+    scene_ = new QGraphicsScene(this);
 
-    //scene_->setSceneRect(0, 0, 800, 600);
+    scene_->setBackgroundBrush( Qt::lightGray );
 
     // Add player to the galaxy
-    //std::shared_ptr<PlayerShip> player = std::make_shared<PlayerShip>(scene_, galaxy_);
     player = new PlayerShip(galaxy_, scene_);
     scene_->addItem(player);
     player->setFlag(QGraphicsItem::ItemIsFocusable);
@@ -46,12 +45,12 @@ void MainWindow::startGame()
     // Add enemies to the galaxy
     for(unsigned int i = 0; i<10; i++)
     {
-        NPCShips * npcship = new NPCShips();
+        NPCShips *npcship = new NPCShips();
         scene_->addItem(npcship);
     }
 
     // Add scene to the view
-    ui->graphicsView->setScene(scene_.get());
+    ui->graphicsView->setScene(scene_);
 
     // Base coordinates == player start position, there will be player's base
     QString baseCoor = QString("Base coordinates: %1 %2").arg(ui->graphicsView->width()/2).arg(ui->graphicsView->height()/2);

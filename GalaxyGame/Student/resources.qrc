@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/NPCShip.png</file>
+        <file>images/playerShip.png</file>
+        <file>images/favicon.png</file>
+    </qresource>
+</RCC>
