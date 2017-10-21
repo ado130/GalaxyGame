@@ -3,5 +3,12 @@
         <file>images/NPCShip.png</file>
         <file>images/playerShip.png</file>
         <file>images/favicon.png</file>
+        <file>images/planets/earth.png</file>
+        <file>images/planets/jupiter.png</file>
+        <file>images/planets/mars.png</file>
+        <file>images/planets/mercury.png</file>
+        <file>images/planets/moon.png</file>
+        <file>images/planets/pluto.png</file>
+        <file>images/planets/venus.png</file>
     </qresource>
 </RCC>

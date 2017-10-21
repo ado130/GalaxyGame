@@ -20,7 +20,8 @@ SOURCES += \
 	eventhandler.cc \
 	statistics.cc \
 	playership.cc \
-    npcships.cc
+    starplanet.cc \
+    npcship.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -28,7 +29,8 @@ HEADERS  += \
     statistics.hh \
 	playership.hh \
 	mainwindow.hh \
-    npcships.hh
+    starplanet.hh \
+    npcship.hh
 	
 FORMS += \
     mainwindow.ui

@@ -14,7 +14,6 @@ class PlayerShip : public QGraphicsPixmapItem
 {
 public:
     PlayerShip(std::shared_ptr<Student::Galaxy> galaxy, QGraphicsScene *scene);
-    ~PlayerShip();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

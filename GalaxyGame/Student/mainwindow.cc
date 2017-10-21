@@ -2,11 +2,16 @@
 #include "ui_mainwindow.h"
 #include "eventhandler.hh"
 #include "playership.hh"
-#include "npcships.hh"
+#include "npcship.hh"
+#include "starplanet.hh"
 
 #include <QDebug>
 #include <QTextEdit>
 #include <QTimer>
+#include <QBrush>
+
+#define SCENE_WIDTH 800
+#define SCENE_HEIGHT 600
 
 MainWindow::MainWindow(QWidget *parent, std::shared_ptr<Common::IEventHandler> handler, std::shared_ptr<Student::Galaxy> galaxy, std::shared_ptr<Common::IGameRunner> gameRunner) :
     QMainWindow(parent),
@@ -34,6 +39,9 @@ void MainWindow::startGame()
     // Create scene for the game
     scene_ = new QGraphicsScene(this);
 
+    //scene_->setSceneRect(SCENE_WIDTH/2 - ui->graphicsView->width()/2, SCENE_WIDTH/2 - ui->graphicsView->height()/2, SCENE_WIDTH/2, SCENE_HEIGHT/2);
+
+    // Backgroudn for scene
     scene_->setBackgroundBrush( Qt::lightGray );
 
     // Add player to the galaxy
@@ -43,19 +51,27 @@ void MainWindow::startGame()
     player->setFocus();
 
     // Add enemies to the galaxy
-    for(unsigned int i = 0; i<10; i++)
+    for(unsigned int i = 0; i<5; i++)
     {
-        NPCShips *npcship = new NPCShips();
+        NPCShip *npcship = new NPCShip();
         scene_->addItem(npcship);
+    }
+
+    // Add star system to the galaxy
+    for(unsigned int i = 0; i<3; i++)
+    {
+        StarPlanet *starPlanet = new StarPlanet();
+        scene_->addItem(starPlanet);
     }
 
     // Add scene to the view
     ui->graphicsView->setScene(scene_);
 
     // Base coordinates == player start position, there will be player's base
-    QString baseCoor = QString("Base coordinates: %1 %2").arg(ui->graphicsView->width()/2).arg(ui->graphicsView->height()/2);
+    QString baseCoor = QString("Base coordinates: %1 %2").arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
     ui->lbBaseCoor->setText(baseCoor);
 
+    // Set timer to refresh UI information
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &MainWindow::refreshUI);
     timer->start(100);
@@ -63,7 +79,7 @@ void MainWindow::startGame()
 
 void MainWindow::refreshUI()
 {
-    QString playerCoor = QString("Player coordinates: %1 %2").arg(player->x()).arg(player->y());
+    QString playerCoor = QString("Player coordinates: %1 %2").arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
     ui->lbPlayerCoor->setText(playerCoor);
 }
 

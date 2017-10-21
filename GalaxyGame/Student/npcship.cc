@@ -1,27 +1,28 @@
-#include "npcships.hh"
+#include "npcship.hh"
 
 #include <QTimer>
 
-#define PI 3.14159265
-
-NPCShips::NPCShips()
+NPCShip::NPCShip()
 {  
     setPixmap(QPixmap(":/images/images/NPCShip.png"));
 
     setScale(0.2);
 
-    int positionX = rand() % 700;
-    int positionY = rand() % 500;
+    int positionX = rand() % 800;
+    int positionY = rand() % 600;
     setPos(positionX, positionY);
 
     QTimer * timer = new QTimer();
-    connect(timer, &QTimer::timeout, this, &NPCShips::move);
+    connect(timer, &QTimer::timeout, this, &NPCShip::move);
     timer->start(250);
 }
 
-void NPCShips::move()
+void NPCShip::move()
 {
-    int randomMove = rand() % 4;
+    qreal width = scale()*boundingRect().size().width()/2;
+    qreal height = scale()*boundingRect().size().height()/2;
+
+    int randomMove = rand() % 2 + 2;
     int randomRotation = rand() % 361 - 180;
     if(randomMove == 0)
     {
@@ -35,20 +36,14 @@ void NPCShips::move()
     }
     else if(randomMove == 2)
     {   // ToDo: movement is not correct
-        qreal diffX = 0, diffY = 0;
-       // diffX = rect().width()-rect().x();
-        //diffY = rect().height()-rect().y();
-        diffX *= cos( rotation() * PI / 180.0 );
-        diffY *= sin( rotation() * PI / 180.0 );
+        qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 );
+        qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 );
         setPos(x() + diffX, y() + diffY);
     }
     else if(randomMove == 3)
     {   // ToDo: movement is not correct
-        qreal diffX = 0, diffY = 0;
-       // diffX = rect().width()-rect().x();
-       // diffY = rect().height()-rect().y();
-        diffX *= cos( rotation() * PI / 180.0 );
-        diffY *= sin( rotation() * PI / 180.0 );
+        qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 );
+        qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 );
         setPos(x() - diffX, y() - diffY);
     }
 }

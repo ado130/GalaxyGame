@@ -1,5 +1,5 @@
-#ifndef NPCSHIPS_HH
-#define NPCSHIPS_HH
+#ifndef NPCSHIP_HH
+#define NPCSHIP_HH
 
 #include <memory>
 #include <QObject>
@@ -9,12 +9,12 @@
 #include "ship.hh"
 
 // ToDo: inherit this class from Common::Ship
-class NPCShips : public QObject, public QGraphicsPixmapItem
+class NPCShip : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 
 public:
-    NPCShips();
+    NPCShip();
 
 private:
 
@@ -22,4 +22,4 @@ private slots:
     void move();
 };
 
-#endif // NPCSHIPS_HH
+#endif // NPCSHIP_HH
