@@ -2,6 +2,7 @@
 #define STATISTICS_HH
 
 #include "istatistics.hh"
+
 namespace Student {
 
 class Statistics : public Common::IStatistics

@@ -1,11 +1,11 @@
 #ifndef NPCSHIP_HH
 #define NPCSHIP_HH
 
-#include "ship.hh"
-
 #include <memory>
 #include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
+
+#include "ship.hh"
 
 // ToDo: inherit this class from Common::Ship
 class NPCShip : public QObject, public QGraphicsPixmapItem

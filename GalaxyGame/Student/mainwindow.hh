@@ -37,12 +37,13 @@ private:
 
     QTimer *timer;
     QGraphicsScene *scene_;
-    PlayerShip *player;
+    PlayerShip *player_;
     QMap<QString, QVariant> playerScore_;
 
     void startGame();
     void loadSettings();
     void saveSettings();
+    void createPlayer();
 private slots:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();

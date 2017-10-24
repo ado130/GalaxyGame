@@ -15,6 +15,7 @@ public:
 
 private:
     QGraphicsScene *scene_;
+    unsigned int bulletTrain_;
 
 private slots:
     void move();

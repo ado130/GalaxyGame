@@ -11,7 +11,7 @@ Bullet::Bullet(QGraphicsScene *scene)
     bulletTrain_ = 0;
 
     setPixmap(QPixmap(":/images/images/bullet.png"));
-    setScale(0.5);
+    setScale(0.3);
 
     QTimer *timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &Bullet::move);
@@ -25,11 +25,9 @@ void Bullet::move()
     {
         if(typeid (*(colliding_Items[i])) == typeid (NPCShip))
         {
-            // remove them from the scene (still on the heap)
             scene_->removeItem(colliding_Items[i]);
             scene_->removeItem(this);
 
-            // delete them from the heap to save memory
             delete colliding_Items[i];
             delete this;
 

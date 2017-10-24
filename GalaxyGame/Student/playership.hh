@@ -4,16 +4,20 @@
 #include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
-
 #include <memory>
+
 #include "galaxy.hh"
 #include "ship.hh"
 
-// ToDo: inherit this class from Common::Ship
-class PlayerShip : public QGraphicsPixmapItem
+class PlayerShip : public Common::Ship, public QGraphicsPixmapItem
 {
 public:
-    PlayerShip(std::shared_ptr<Student::Galaxy> galaxy, QGraphicsScene *scene);
+    PlayerShip(std::shared_ptr<Student::Galaxy> galaxy, QGraphicsScene *scene,
+               std::shared_ptr<Common::ShipEngine> engine,
+               std::shared_ptr<Common::StarSystem> initialLocation,
+               std::shared_ptr<Common::IEventHandler> events);
+
+    bool decideAction();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

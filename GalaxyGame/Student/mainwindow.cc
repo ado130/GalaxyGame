@@ -4,6 +4,9 @@
 #include "playership.hh"
 #include "npcship.hh"
 #include "starplanet.hh"
+#include "wormholedrive.hh"
+#include "starsystem.hh"
+#include "point.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -30,7 +33,7 @@ MainWindow::~MainWindow()
 {
     saveSettings();
     delete timer;
-    delete player;
+    delete player_;
     delete ui;
 }
 
@@ -53,11 +56,11 @@ void MainWindow::startGame()
     scene_->setBackgroundBrush( Qt::lightGray );
 
     // Add player to the galaxy
-    player = new PlayerShip(galaxy_, scene_);
-    scene_->addItem(player);
-    player->setFlag(QGraphicsItem::ItemIsFocusable);
-    player->setFocus();
-    player->setZValue(1);
+    createPlayer();
+    scene_->addItem(player_);
+    player_->setFlag(QGraphicsItem::ItemIsFocusable);
+    player_->setFocus();
+    player_->setZValue(1);
 
     // Add enemies to the galaxy
     for(unsigned int i = 0; i<5; i++)
@@ -75,20 +78,30 @@ void MainWindow::startGame()
 
     // Add scene to the view
     ui->graphicsView->setScene(scene_);
+    ui->graphicsView->scene()->setFocusItem(player_);
 
     // Base coordinates == player start position, there will be player's base
-    QString baseCoor = QString(tr("Base coordinates: %1 %2")).arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
+    QString baseCoor = QString(tr("Base coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
     ui->lbBaseCoor->setText(baseCoor);
 
     // Set timer to refresh UI information
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &MainWindow::refreshUI);
-    timer->start(100);
+    timer->start(1);
+}
+
+void MainWindow::createPlayer()
+{
+    std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
+    std::shared_ptr<Common::StarSystem> initialLocation = std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
+    player_ = new PlayerShip(galaxy_, scene_, shipEngine, initialLocation, handler_);
 }
 
 void MainWindow::refreshUI()
 {
-    QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player->x(), 'f', 1)).arg(QString::number(player->y(), 'f', 1));
+    ui->graphicsView->centerOn(player_);
+
+    QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
     ui->lbPlayerCoor->setText(playerCoor);
 }
 

@@ -1,9 +1,11 @@
 #ifndef GALAXY_HH
 #define GALAXY_HH
+
 #include "igalaxy.hh"
 #include "ship.hh"
 #include "starsystem.hh"
 #include "ieventhandler.hh"
+
 namespace Student {
 
 class Galaxy : public Common::IGalaxy, public std::enable_shared_from_this<Galaxy>
