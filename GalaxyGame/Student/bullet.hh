@@ -11,10 +11,9 @@ class Bullet : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 
 public:
-    Bullet(QGraphicsScene *scene);
+    Bullet();
 
 private:
-    QGraphicsScene *scene_;
     unsigned int bulletTrain_;
 
 private slots:

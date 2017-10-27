@@ -8,15 +8,17 @@
 #include "ship.hh"
 
 // ToDo: inherit this class from Common::Ship
-class NPCShip : public QObject, public QGraphicsPixmapItem
+class NPCShip : public Common::Ship, public QGraphicsPixmapItem
 {
-    Q_OBJECT
 
 public:
-    NPCShip(QGraphicsScene *scene);
+    NPCShip(std::shared_ptr<Common::ShipEngine> engine,
+            std::shared_ptr<Common::StarSystem> initialLocation,
+            std::shared_ptr<Common::IEventHandler> events);
+
+    bool decideAction();
 
 private:
-    QGraphicsScene *scene_;
 
 private slots:
     void move();

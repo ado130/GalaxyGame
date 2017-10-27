@@ -47,17 +47,12 @@ void PlayerShip::keyPressEvent(QKeyEvent *event)
         qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * 0.5;
         setPos(x() + diffX, y() + diffY);
         // ToDo: check calculations
-        //scene_->setSceneRect(scene_->sceneRect().x()+diffX, scene_->sceneRect().y()+diffY,
-                  //           scene_->sceneRect().width(), scene_->sceneRect().height());
     }
     else if(event->key() == Qt::Key_Down)
     {   // ToDo: movement is not correct
         qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 ) * 0.5;
         qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * 0.5;
         setPos(x() - diffX, y() - diffY);
-        // ToDo: check calculations
-        //scene_->setSceneRect(scene_->sceneRect().x()-diffX, scene_->sceneRect().y()-diffY,
-              //               scene_->sceneRect().width(), scene_->sceneRect().height());
     }
     else if(event->key() == Qt::Key_Space)
     {
@@ -76,20 +71,9 @@ void PlayerShip::keyPressEvent(QKeyEvent *event)
         if(bTrading) return;
 
         // ToDo: fix bullets position
-        Bullet *bullet1 = new Bullet(scene_);
-        bullet1->setRotation(rotation());
-        bullet1->setPos(x() + width + 0*(width) * cos( (rotation()-90) * M_PI / 180.0 ), y() + 0*(height) * sin( (rotation()-90) * M_PI / 180.0 ));
-        scene_->addItem(bullet1);
-
-        /*
-        Bullet *bullet2 = new Bullet(scene_);
-        bullet2->setRotation(rotation());
-        bullet2->setPos(x() + (width) * cos( (rotation()-90) * M_PI / 180.0 ), y() + (height) * sin( (rotation()-90) * M_PI / 180.0 ));
-        scene_->addItem(bullet2);*/
+        Bullet *bullet = new Bullet();
+        bullet->setRotation(rotation());
+        bullet->setPos(x() + width + 0*(width) * cos( (rotation()-90) * M_PI / 180.0 ), y() + 0*(height) * sin( (rotation()-90) * M_PI / 180.0 ));
+        scene_->addItem(bullet);
     }
-
-    qDebug() << scene_->width() << height;
-    qDebug() << scene_->sceneRect().x() << scene_->sceneRect().y();
-    qDebug() << scene_->sceneRect().width() << scene_->sceneRect().height();
-    qDebug() << "";
 }

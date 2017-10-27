@@ -5,38 +5,26 @@
 #include <QGraphicsScene>
 #include <QObject>
 
-NPCShip::NPCShip(QGraphicsScene *scene)
+NPCShip::NPCShip(std::shared_ptr<Common::ShipEngine> engine,
+                 std::shared_ptr<Common::StarSystem> initialLocation,
+                 std::shared_ptr<Common::IEventHandler> events):
+    Ship(engine, initialLocation, events),
+    QGraphicsPixmapItem()
 {  
-    scene_ = scene;
-
     setPixmap(QPixmap(":/images/images/NPCShip.png"));
     setScale(0.2);
     setTransformOriginPoint(static_cast<int>(scale()*boundingRect().size().width()/2), static_cast<int>(scale()*boundingRect().size().height()/2));
 
-    bool bCollision = false;
-    do
-    {
-        int positionX = rand() % 700;
-        int positionY = rand() % 500;
-        setPos(positionX, positionY);
-        QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(this);
-        for(int i = 0, n = colliding_Items.size(); i<n; ++i)
-        {
-            if(typeid (*(colliding_Items[i])) == typeid (NPCShip))
-            {
-                qDebug() << "NPC - collision";
-                bCollision = true;
-            }
-            else
-            {
-                bCollision = false;
-            }
-        }
-    }while(bCollision);
+    setPos(initialLocation->getCoordinates().x*100, initialLocation->getCoordinates().y*100);
 
-    QTimer * timer = new QTimer();
-    connect(timer, &QTimer::timeout, this, &NPCShip::move);
-    timer->start(250);
+    //QTimer * timer = new QTimer();
+    //QObject::connect(timer, &QTimer::timeout, this, &NPCShip::move);
+    //timer->start(250);
+}
+
+bool NPCShip::decideAction()
+{
+
 }
 
 void NPCShip::move()

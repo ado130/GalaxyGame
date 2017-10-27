@@ -6,13 +6,13 @@
 
 #include "starsystem.hh"
 
-class StarPlanet : public QGraphicsPixmapItem
+class StarPlanet : public Common::StarSystem, public QGraphicsPixmapItem
 {
 public:
-    StarPlanet(QGraphicsScene *scene);
-
+    StarPlanet(std::string name, ECONOMY_TYPE economy, unsigned id,
+               uint64_t population, Common::Point location);
 private:
-    QGraphicsScene *scene_;
+
 };
 
 #endif // STARPLANET_HH

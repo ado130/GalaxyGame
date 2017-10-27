@@ -5,10 +5,9 @@
 #include <QList>
 #include <QGraphicsScene>
 
-StarPlanet::StarPlanet(QGraphicsScene *scene)
+StarPlanet::StarPlanet(std::string name, ECONOMY_TYPE economy, unsigned id, uint64_t population, Common::Point location) :
+    Common::StarSystem (name, economy, id, population, location)
 {
-    scene_ = scene;
-
     QMap<unsigned int, QString> planets;
     planets[0] = "earth";
     planets[1] = "jupiter";
@@ -18,13 +17,14 @@ StarPlanet::StarPlanet(QGraphicsScene *scene)
     planets[5] = "pluto";
     planets[6] = "venus";
 
-    unsigned int randomPlanet = rand() % 7;
-
+    unsigned int randomPlanet = Common::randomMinMax(0, 7);
     QString planet = QString(":/images/images/planets/%1.png").arg(planets.value(randomPlanet));
 
     setPixmap(QPixmap(planet));
     setScale(0.3);
 
+    setPos(location.x*100, location.y*100);
+    /*
     bool bCollision = false;
     do
     {
@@ -44,5 +44,5 @@ StarPlanet::StarPlanet(QGraphicsScene *scene)
                 bCollision = false;
             }
         }
-    }while(bCollision);
+    }while(bCollision);*/
 }

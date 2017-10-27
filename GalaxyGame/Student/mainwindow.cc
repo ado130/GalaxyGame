@@ -7,6 +7,7 @@
 #include "wormholedrive.hh"
 #include "starsystem.hh"
 #include "point.hh"
+#include "bullet.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -27,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent, std::shared_ptr<Common::IEventHandler> h
     handler_ = handler;
     galaxy_ = galaxy;
     gameRunner_ = gameRunner;
+
+    gameRunner->spawnShips(10);
 }
 
 MainWindow::~MainWindow()
@@ -40,20 +43,20 @@ MainWindow::~MainWindow()
 void MainWindow::startGame()
 {
     // ToDo: do not ignore ToDo's
-
-    bool ok;
-    QString nickName = QInputDialog::getText(this, tr("Enter nickname"),
-                                          tr("Nickname:"), QLineEdit::Normal,
-                                          "", &ok);
+    //bool ok;
+    //QString nickName = QInputDialog::getText(this, tr("Enter nickname"),
+    //                                      tr("Nickname:"), QLineEdit::Normal,
+    //                                      "", &ok);
 
     qDebug() << "New game";
     // Create scene for the game
     scene_ = new QGraphicsScene(this);
 
-    //scene_->setSceneRect(SCENE_WIDTH/2 - ui->graphicsView->width()/2, SCENE_WIDTH/2 - ui->graphicsView->height()/2, SCENE_WIDTH/2, SCENE_HEIGHT/2);
-
     // Backgroudn for scene
     scene_->setBackgroundBrush( Qt::lightGray );
+
+    // Add star system to the galaxy
+    createStarSystem();
 
     // Add player to the galaxy
     createPlayer();
@@ -61,20 +64,6 @@ void MainWindow::startGame()
     player_->setFlag(QGraphicsItem::ItemIsFocusable);
     player_->setFocus();
     player_->setZValue(1);
-
-    // Add enemies to the galaxy
-    for(unsigned int i = 0; i<5; i++)
-    {
-        NPCShip *npcship = new NPCShip(scene_);
-        scene_->addItem(npcship);
-    }
-
-    // Add star system to the galaxy
-    for(unsigned int i = 0; i<3; i++)
-    {
-        StarPlanet *starPlanet = new StarPlanet(scene_);
-        scene_->addItem(starPlanet);
-    }
 
     // Add scene to the view
     ui->graphicsView->setScene(scene_);
@@ -87,7 +76,7 @@ void MainWindow::startGame()
     // Set timer to refresh UI information
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &MainWindow::refreshUI);
-    timer->start(1);
+    timer->start(10);
 }
 
 void MainWindow::createPlayer()
@@ -97,8 +86,67 @@ void MainWindow::createPlayer()
     player_ = new PlayerShip(galaxy_, scene_, shipEngine, initialLocation, handler_);
 }
 
+void MainWindow::createStarSystem()
+{
+    auto starSystem = galaxy_->getStarSystemVector();
+    for(auto k : starSystem)
+    {
+        StarPlanet *starPlanet = new StarPlanet(k->getName(), k->getEconomy(),k->getId(), k->getPopulation(), k->getCoordinates());
+        scene_->addItem(starPlanet);
+    }
+}
+
+void MainWindow::createEnemy()
+{
+    //galaxy_->getShips();
+    qDebug() << "lala";
+    std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
+    std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();
+    NPCShip *npcship = new NPCShip(shipEngine, initialLocation, handler_);
+    scene_->addItem(npcship);
+    galaxy_->newShipAdded(true);
+}
+
+void MainWindow::checkCollision()
+{
+    for(auto k : scene_->items())
+    {
+        QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(k);
+        if(typeid (*k) == typeid (Bullet))
+        {
+            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
+            {
+                if(typeid (*(colliding_Items[i])) == typeid (NPCShip))
+                {
+                    scene_->removeItem(colliding_Items[i]);
+                    scene_->removeItem(k);
+
+                    delete colliding_Items[i];
+                    //delete k;
+                }
+            }
+        }
+        else if(typeid (*k) == typeid (PlayerShip))
+        {
+            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
+            {
+                if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
+                {
+                    // player is on the planet
+                }
+            }
+        }
+    }
+}
+
 void MainWindow::refreshUI()
 {
+    if(galaxy_->isNewShip())
+    {
+        createEnemy();
+    }
+
+    checkCollision();
     ui->graphicsView->centerOn(player_);
 
     QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));

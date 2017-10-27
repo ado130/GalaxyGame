@@ -28,6 +28,9 @@ public:
             std::shared_ptr<Common::IGameRunner> gameRunner = 0);
     ~MainWindow();
 
+public slots:
+    void createEnemy();
+
 private:
     Ui::MainWindow *ui;
 
@@ -44,6 +47,8 @@ private:
     void loadSettings();
     void saveSettings();
     void createPlayer();
+    void createStarSystem();
+    void checkCollision();
 private slots:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();

@@ -6,6 +6,8 @@
 #include "starsystem.hh"
 #include "ieventhandler.hh"
 
+#include <QObject>
+
 namespace Student {
 
 class Galaxy : public Common::IGalaxy, public std::enable_shared_from_this<Galaxy>
@@ -28,9 +30,15 @@ public:
     std::vector<std::string> getSystemNames();
     std::shared_ptr<Common::StarSystem> getStarSystemByName(std::string name);
     std::shared_ptr<Common::StarSystem> getStarSystemById(unsigned id);
+    Common::StarSystem::StarSystemVector getStarSystemVector() const {return starSystemsInGalaxy_;}
 
+    bool isNewShip() const {return bNewShip_;}
+    void newShipAdded(bool flag) {bNewShip_ = !flag;}
 private:
-    ShipVector shipsInGalaxy;
+    ShipVector shipsInGalaxy_;
+    Common::StarSystem::StarSystemVector starSystemsInGalaxy_;
+
+    bool bNewShip_;
 
 };
 }//Student
