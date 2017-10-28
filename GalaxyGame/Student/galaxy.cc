@@ -11,31 +11,46 @@ Student::Galaxy::Galaxy(QObject *parent) : QObject(parent)
 
 Student::Galaxy::~Galaxy()
 {
-
 }
 
 void Student::Galaxy::addShip(std::shared_ptr<Common::Ship> ship)
 {
-    if(std::find(shipsInGalaxy_.begin(), shipsInGalaxy_.end(), ship) != shipsInGalaxy_.end())
+    auto it = std::find_if(shipsInGalaxy_.begin(), shipsInGalaxy_.end(),
+                           [&](const std::shared_ptr<Common::Ship>& e)
+                           {
+                               return e.get()->getName() == ship.get()->getName()
+                                       && e.get()->getLocation() == ship.get()->getLocation()
+                                       && e.get()->getEngine() == ship.get()->getEngine();
+                           });
+
+    if(it != shipsInGalaxy_.end())
     {
        throw Common::StateException("Ship is already in the galaxy.");
     }
-
-    emit shipEvent(ship, true);
-
-    shipsInGalaxy_.push_back(ship);
+    else
+    {
+        emit shipEvent(ship, true);
+        shipsInGalaxy_.push_back(ship);
+    }
 }
 
 void Student::Galaxy::removeShip(std::shared_ptr<Common::Ship> ship)
 {
-    if(std::find(shipsInGalaxy_.begin(), shipsInGalaxy_.end(), ship) != shipsInGalaxy_.end())
+    auto it = std::find_if(shipsInGalaxy_.begin(), shipsInGalaxy_.end(),
+                           [&](const std::shared_ptr<Common::Ship>& e)
+                           {
+                               return e.get()->getName() == ship.get()->getName()
+                                       && e.get()->getLocation() == ship.get()->getLocation()
+                                       && e.get()->getEngine() == ship.get()->getEngine();
+                           });
+
+    if(it == shipsInGalaxy_.end())
     {
         throw Common::ObjectNotFoundException("Ship does not exist in the galaxy.");
     }
     else
     {
         emit shipEvent(ship, false);
-
         shipsInGalaxy_.erase( std::remove( shipsInGalaxy_.begin(), shipsInGalaxy_.end(), ship ),
                               shipsInGalaxy_.end() );         // erase-remove idiom
     }
@@ -43,15 +58,22 @@ void Student::Galaxy::removeShip(std::shared_ptr<Common::Ship> ship)
 
 void Student::Galaxy::addStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
 {
-    for(auto k : starSystemsInGalaxy_)
-    {
-        if(k->getName() == starSystem->getName() || k->getId() == starSystem->getId() || k->getCoordinates() == starSystem->getCoordinates())
-        {
-            throw Common::StateException("Star system is already in the galaxy.");
-        }
-    }
+    auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(),
+                           [&](const std::shared_ptr<Common::StarSystem>& e)
+                           {
+                               return e.get()->getId() == starSystem.get()->getId()
+                                       || e.get()->getName() == starSystem.get()->getName()
+                                       || e.get()->getCoordinates() == starSystem.get()->getCoordinates();
+                           });
 
-    starSystemsInGalaxy_.push_back(starSystem);
+    if(it != starSystemsInGalaxy_.end())
+    {
+        throw Common::StateException("Star system is already in the galaxy.");
+    }
+    else
+    {
+        starSystemsInGalaxy_.push_back(starSystem);
+    }
 }
 
 std::shared_ptr<Common::IGalaxy::ShipVector> Student::Galaxy::getShips()
@@ -62,7 +84,15 @@ std::shared_ptr<Common::IGalaxy::ShipVector> Student::Galaxy::getShips()
 
 Common::StarSystem::StarSystemVector Student::Galaxy::getSystemsInRange(std::shared_ptr<Common::StarSystem> origin, int range)
 {
-    if(std::find(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(), origin) != starSystemsInGalaxy_.end())
+    auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(),
+                           [&](const std::shared_ptr<Common::StarSystem>& e)
+                           {
+                               return e.get()->getId() == origin.get()->getId()
+                                       && e.get()->getName() == origin.get()->getName()
+                                       && e.get()->getCoordinates() == origin.get()->getCoordinates();
+                           });
+
+    if(it == starSystemsInGalaxy_.end())
     {
         throw Common::ObjectNotFoundException("Star system does not exist in the galaxy.");
     }
@@ -71,7 +101,8 @@ Common::StarSystem::StarSystemVector Student::Galaxy::getSystemsInRange(std::sha
         Common::StarSystem::StarSystemVector returnStarSystemVector;
         for(auto k : starSystemsInGalaxy_)
         {
-            if(k->getCoordinates().distanceTo(origin->getCoordinates()) <= range)
+            if(k.get()->getCoordinates().distanceTo(origin.get()->getCoordinates()) < range
+               && (k.get()->getName() != origin.get()->getName() || k.get()->getId() != origin.get()->getId() ) )
             {
                 returnStarSystemVector.push_back(k);
             }
@@ -93,14 +124,28 @@ std::shared_ptr<Common::StarSystem> Student::Galaxy::getRandomSystem()
 
 Common::IGalaxy::ShipVector Student::Galaxy::getShipsInStarSystem(std::string name)
 {
-     /*auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(), [&](const Common::Ship& e)
-               {
-                   return e.getName() == name;
-               });
-     if(it == starSystemsInGalaxy_.end())
-     {
+    auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(),
+                           [&](const std::shared_ptr<Common::StarSystem>& e)
+           {
+               return e.get()->getName() == name;
+           });
+    if(it == starSystemsInGalaxy_.end())
+    {
+        throw Common::ObjectNotFoundException("This star system is not in galaxy.");
+    }
+    else
+    {
+        Common::IGalaxy::ShipVector returnShipVector;
+        for(auto k : shipsInGalaxy_)
+        {
+            if(k.get()->getLocation().get()->getName() == name)
+            {
+                returnShipVector.push_back(k);
+            }
+        }
 
-     }*/
+        return returnShipVector;
+    }
 }
 
 std::vector<std::string> Student::Galaxy::getSystemNames()
@@ -110,10 +155,11 @@ std::vector<std::string> Student::Galaxy::getSystemNames()
 
 std::shared_ptr<Common::StarSystem> Student::Galaxy::getStarSystemByName(std::string name)
 {
-    /*auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(), [&](const Common::StarSystem& e)
-                   {
-                       return e.getName() == name;
-                   });
+    auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(),
+                           [&](const std::shared_ptr<Common::StarSystem>& e)
+                           {
+                               return e.get()->getName() == name;
+                           });
      if(it == starSystemsInGalaxy_.end())
      {
         throw Common::ObjectNotFoundException("There is not any galaxy with name " + name);
@@ -121,22 +167,22 @@ std::shared_ptr<Common::StarSystem> Student::Galaxy::getStarSystemByName(std::st
      else
      {
          return *it;
-     }*/
+     }
 }
 
 std::shared_ptr<Common::StarSystem> Student::Galaxy::getStarSystemById(unsigned id)
 {
-    /*auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(),
-                           [=](const Common::StarSystem& e)
+    auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(),
+                           [&](const std::shared_ptr<Common::StarSystem>& e)
                            {
-                              return e.getId() == id;
+                              return e.get()->getId() == id;
                            });
     if(it == starSystemsInGalaxy_.end())
     {
-    throw Common::ObjectNotFoundException("There is not any galaxy with id " + std::to_string(id));
+        throw Common::ObjectNotFoundException("There is not any galaxy with id " + std::to_string(id));
     }
     else
     {
-     return *it;
-    }*/
+        return *it;
+    }
 }

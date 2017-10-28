@@ -40,6 +40,7 @@ private:
     ShipVector shipsInGalaxy_;
     Common::StarSystem::StarSystemVector starSystemsInGalaxy_;
 
+    //friend bool operator== ( const Nick &n1, const Nick &n2);
 
 };
 }//Student

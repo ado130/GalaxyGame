@@ -33,11 +33,13 @@ void Student::Statistics::addPoints(unsigned amount)
 
 void Student::Statistics::reducePoints(unsigned amount)
 {
-    if(amount > points){
-//        Todo: error: undefined reference
-//        throw Common::StateException();
+    if(amount > points)
+    {
+        //Todo: error: undefined reference
+        //throw Common::StateException("Some error");
     }
-    else{
+    else
+    {
         points -= amount;
     }
 }
@@ -54,11 +56,13 @@ void Student::Statistics::addCredits(unsigned amount)
 
 void Student::Statistics::reduceCredits(unsigned amount)
 {
-    if(amount > credits+MAX_LOAN_ALLOWANCE){
-//        Todo: error: undefined reference
-//        throw Common::StateException("Amount of credits too low! Cannot reduce.");
+    if(amount > credits+MAX_LOAN_ALLOWANCE)
+    {
+        //Todo: error: undefined reference
+        //throw Common::StateException("Amount of credits too low! Cannot reduce.");
     }
-    else{
+    else
+    {
         credits -= amount;
     }
 }

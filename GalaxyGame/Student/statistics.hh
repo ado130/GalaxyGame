@@ -29,7 +29,6 @@ public:
      int getMaxLoanAllowance();
 
 private:
-
      unsigned savedShips = 0;
      unsigned lostShips = 0;
      unsigned points = 0;
