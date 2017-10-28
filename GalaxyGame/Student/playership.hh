@@ -24,8 +24,8 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event);
 
-signals:
-    void fireBullet();
+Q_SIGNALS:
+    void pressedSpace();
 
 };
 

@@ -38,8 +38,8 @@ MainWindow::MainWindow(QWidget *parent,
     scene_ = new QGraphicsScene(this);
 
     QObject* galaxyObj = galaxy.get();
-    connect(galaxyObj, SIGNAL(newShip(std::shared_ptr<Common::Ship>)),
-            this, SLOT(createShip(std::shared_ptr<Common::Ship>)));
+    connect(galaxyObj, SIGNAL(shipEvent(std::shared_ptr<Common::Ship>, bool)),
+            this, SLOT(shipEvent(std::shared_ptr<Common::Ship>, bool)));
 }
 
 MainWindow::~MainWindow()
@@ -91,10 +91,10 @@ void MainWindow::startGame()
     connect(refreshTimer_, &QTimer::timeout, this, &MainWindow::refreshUI);
     refreshTimer_->start(1);
 
-    // ToDo: maybe execute this function to another thread
+    // ToDo: solve the crash problem
     collisionTimer_ = new QTimer();
-    connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::checkCollision);
-    //collisionTimer_->start(20);
+    connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::executeCollisionCheck);
+    //collisionTimer_->start(500);
 }
 
 void MainWindow::createPlayer()
@@ -102,19 +102,44 @@ void MainWindow::createPlayer()
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
     std::shared_ptr<Common::StarSystem> initialLocation = std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
     player_ = new PlayerShip(this, shipEngine, initialLocation, handler_);
-    connect(player_, &PlayerShip::fireBullet, this, &MainWindow::fireBullet);
+    connect(player_, &PlayerShip::pressedSpace, this, &MainWindow::pressedSpace);
 }
 
-void MainWindow::fireBullet()
+void MainWindow::pressedSpace()
 {
-    qreal width = player_->scale()*player_->boundingRect().size().width()/2;
-    qreal height = player_->scale()*player_->boundingRect().size().height()/2;
+    bool isPlayerTrading = false;
+    for(auto k : scene_->items())
+    {
+        if(typeid (*k) == typeid (PlayerShip))
+        {
+            QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(k);
+            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
+            {
+                if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
+                {
+                    isPlayerTrading = true;
+                }
+            }
+        }
+    }
 
-    Bullet *bullet = new Bullet();
-    bullet->setRotation(player_->rotation());
-    bullet->setPos(player_->x() + width * cos( (player_->rotation()-90) * M_PI / 180.0 ),
-                   player_->y() + height * sin( (player_->rotation()-90) * M_PI / 180.0 ));
-    scene_->addItem(bullet);
+    if(isPlayerTrading)
+    {
+        // ToDo: trade player-planet
+        qDebug() << "Player trade";
+    }
+    else
+    {
+        qreal width = player_->scale()*player_->boundingRect().size().width()/2;
+        qreal height = player_->scale()*player_->boundingRect().size().height()/2;
+
+        Bullet *bullet = new Bullet();
+        bullet->setRotation(player_->rotation());
+        // ToDo: bullet position
+        bullet->setPos(player_->x() - width * cos( (player_->rotation()-90) * M_PI / 180.0 ),
+                       player_->y() - height * sin( (player_->rotation()-90) * M_PI / 180.0 ));
+        scene_->addItem(bullet);
+    }
 }
 
 void MainWindow::createStarSystem()
@@ -127,10 +152,26 @@ void MainWindow::createStarSystem()
     }
 }
 
-void MainWindow::createShip(std::shared_ptr<Common::Ship> ship)
+void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
 {
-    NPCShip *npcship = new NPCShip(ship.get()->getEngine(), ship.get()->getLocation(), handler_);
-    scene_->addItem(npcship);
+    if(newShip)
+    {
+        NPCShip *npcship = new NPCShip(ship.get()->getEngine(), ship.get()->getLocation(), handler_);
+        scene_->addItem(npcship);
+    }
+    else
+    {
+        QList<QGraphicsItem *> sceneItems = scene_->items();
+        for(int i = 0; i<sceneItems.count(); ++i)
+        {
+            NPCShip* npc = dynamic_cast<NPCShip*>(sceneItems.at(i));
+            if(npc->getName() == ship.get()->getName() && npc->getLocation() == ship.get()->getLocation())
+            {
+                scene_->removeItem(sceneItems.at(i));
+                break;
+            }
+        }
+    }
 }
 
 void MainWindow::refreshUI()
@@ -139,6 +180,11 @@ void MainWindow::refreshUI()
 
     QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
     ui->lbPlayerCoor->setText(playerCoor);
+}
+
+void MainWindow::executeCollisionCheck()
+{
+    QFuture<void> collision = QtConcurrent::run(this, &MainWindow::checkCollision);
 }
 
 void MainWindow::checkCollision()
@@ -152,21 +198,12 @@ void MainWindow::checkCollision()
             {
                 if(typeid (*(colliding_Items[i])) == typeid (NPCShip))
                 {
+                    qDebug() << "Bullet-NPC collision";
                     scene_->removeItem(colliding_Items[i]);
                     scene_->removeItem(k);
 
                     delete colliding_Items[i];
                     //delete k;
-                }
-            }
-        }
-        else if(typeid (*k) == typeid (PlayerShip))
-        {
-            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
-            {
-                if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
-                {
-                    // player is on the planet
                 }
             }
         }

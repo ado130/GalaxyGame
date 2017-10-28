@@ -21,7 +21,7 @@ void Student::Galaxy::addShip(std::shared_ptr<Common::Ship> ship)
        throw Common::StateException("Ship is already in the galaxy.");
     }
 
-    emit newShip(ship);
+    emit shipEvent(ship, true);
 
     shipsInGalaxy_.push_back(ship);
 }
@@ -34,6 +34,8 @@ void Student::Galaxy::removeShip(std::shared_ptr<Common::Ship> ship)
     }
     else
     {
+        emit shipEvent(ship, false);
+
         shipsInGalaxy_.erase( std::remove( shipsInGalaxy_.begin(), shipsInGalaxy_.end(), ship ),
                               shipsInGalaxy_.end() );         // erase-remove idiom
     }

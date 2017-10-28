@@ -14,7 +14,9 @@ NPCShip::NPCShip(std::shared_ptr<Common::ShipEngine> engine,
     setScale(0.2);
     setTransformOriginPoint(static_cast<int>(scale()*boundingRect().size().width()/2), static_cast<int>(scale()*boundingRect().size().height()/2));
 
-    setPos(initialLocation->getCoordinates().x*100, initialLocation->getCoordinates().y*100);
+    // ToDo: NPC position
+    int position = Common::randomMinMax(-50, 50);
+    setPos(initialLocation->getCoordinates().x*100 + position, initialLocation->getCoordinates().y*100 + position);
 }
 
 bool NPCShip::decideAction()

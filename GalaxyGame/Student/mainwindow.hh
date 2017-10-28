@@ -11,6 +11,7 @@
 #include "igamerunner.hh"
 
 class PlayerShip;
+class QThread;
 
 namespace Ui {
 class MainWindow;
@@ -28,9 +29,9 @@ public:
             std::shared_ptr<Common::IGameRunner> gameRunner = 0);
     ~MainWindow();
 
-public slots:
-    void createShip(std::shared_ptr<Common::Ship> ship);
-    void fireBullet();
+public Q_SLOTS:
+    void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
+    void pressedSpace();
 private:
     Ui::MainWindow *ui;
 
@@ -49,15 +50,16 @@ private:
     void saveSettings();
     void createPlayer();
     void createStarSystem();
+    void checkCollision();
 
-private slots:
+private Q_SLOTS:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();
     void on_pbNewGame_clicked();
     void on_actionAbout_triggered();
     void on_actionHelp_triggered();
     void refreshUI();
-    void checkCollision();
+    void executeCollisionCheck();
 };
 
 #endif // MAINWINDOW_H

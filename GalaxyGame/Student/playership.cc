@@ -5,7 +5,7 @@
 #include <cmath>
 #include <QGraphicsScene>
 
-#define PLAYERSPEED_MOVEMENT 0.1
+#define PLAYERSPEED_MOVEMENT 0.15
 
 PlayerShip::PlayerShip(QObject *parent, std::shared_ptr<Common::ShipEngine> engine,
                        std::shared_ptr<Common::StarSystem> initialLocation,
@@ -53,6 +53,6 @@ void PlayerShip::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_Space)
     {
-        emit fireBullet();
+        emit pressedSpace();
     }
 }

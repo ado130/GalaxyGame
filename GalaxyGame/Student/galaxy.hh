@@ -33,8 +33,8 @@ public:
     std::shared_ptr<Common::StarSystem> getStarSystemById(unsigned id);
     Common::StarSystem::StarSystemVector getStarSystemVector() const {return starSystemsInGalaxy_;}
 
-signals:
-    void newShip(std::shared_ptr<Common::Ship> ship);
+Q_SIGNALS:
+    void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
 
 private:
     ShipVector shipsInGalaxy_;
