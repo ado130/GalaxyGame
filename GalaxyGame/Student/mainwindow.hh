@@ -29,8 +29,8 @@ public:
     ~MainWindow();
 
 public slots:
-    void createEnemy();
-
+    void createShip(std::shared_ptr<Common::Ship> ship);
+    void fireBullet();
 private:
     Ui::MainWindow *ui;
 
@@ -38,7 +38,8 @@ private:
     std::shared_ptr<Student::Galaxy> galaxy_;
     std::shared_ptr<Common::IGameRunner> gameRunner_;
 
-    QTimer *timer;
+    QTimer *refreshTimer_;
+    QTimer *collisionTimer_;
     QGraphicsScene *scene_;
     PlayerShip *player_;
     QMap<QString, QVariant> playerScore_;
@@ -48,7 +49,7 @@ private:
     void saveSettings();
     void createPlayer();
     void createStarSystem();
-    void checkCollision();
+
 private slots:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();
@@ -56,6 +57,7 @@ private slots:
     void on_actionAbout_triggered();
     void on_actionHelp_triggered();
     void refreshUI();
+    void checkCollision();
 };
 
 #endif // MAINWINDOW_H

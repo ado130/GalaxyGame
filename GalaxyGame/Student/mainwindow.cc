@@ -15,11 +15,16 @@
 #include <QBrush>
 #include <QInputDialog>
 #include <QSettings>
+#include <QtConcurrent>
+#include <QFuture>
 
 #define SCENE_WIDTH 800
 #define SCENE_HEIGHT 600
 
-MainWindow::MainWindow(QWidget *parent, std::shared_ptr<Common::IEventHandler> handler, std::shared_ptr<Student::Galaxy> galaxy, std::shared_ptr<Common::IGameRunner> gameRunner) :
+MainWindow::MainWindow(QWidget *parent,
+                       std::shared_ptr<Common::IEventHandler> handler,
+                       std::shared_ptr<Student::Galaxy> galaxy,
+                       std::shared_ptr<Common::IGameRunner> gameRunner) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -29,13 +34,19 @@ MainWindow::MainWindow(QWidget *parent, std::shared_ptr<Common::IEventHandler> h
     galaxy_ = galaxy;
     gameRunner_ = gameRunner;
 
-    gameRunner->spawnShips(10);
+    // Create scene for the game
+    scene_ = new QGraphicsScene(this);
+
+    QObject* galaxyObj = galaxy.get();
+    connect(galaxyObj, SIGNAL(newShip(std::shared_ptr<Common::Ship>)),
+            this, SLOT(createShip(std::shared_ptr<Common::Ship>)));
 }
 
 MainWindow::~MainWindow()
 {
     saveSettings();
-    delete timer;
+    delete collisionTimer_;
+    delete refreshTimer_;
     delete player_;
     delete ui;
 }
@@ -48,15 +59,11 @@ void MainWindow::startGame()
     //                                      tr("Nickname:"), QLineEdit::Normal,
     //                                      "", &ok);
 
-    qDebug() << "New game";
-    // Create scene for the game
-    scene_ = new QGraphicsScene(this);
+    scene_->clear();
 
+    qDebug() << "New game";
     // Backgroudn for scene
     scene_->setBackgroundBrush( Qt::lightGray );
-
-    // Add star system to the galaxy
-    createStarSystem();
 
     // Add player to the galaxy
     createPlayer();
@@ -64,6 +71,12 @@ void MainWindow::startGame()
     player_->setFlag(QGraphicsItem::ItemIsFocusable);
     player_->setFocus();
     player_->setZValue(1);
+
+    // Add enemies to the galaxy
+    gameRunner_->spawnShips(128);
+
+    // Add star systems to the galaxy
+    createStarSystem();
 
     // Add scene to the view
     ui->graphicsView->setScene(scene_);
@@ -73,17 +86,35 @@ void MainWindow::startGame()
     QString baseCoor = QString(tr("Base coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
     ui->lbBaseCoor->setText(baseCoor);
 
-    // Set timer to refresh UI information
-    timer = new QTimer();
-    connect(timer, &QTimer::timeout, this, &MainWindow::refreshUI);
-    timer->start(10);
+    // Set timers
+    refreshTimer_ = new QTimer();
+    connect(refreshTimer_, &QTimer::timeout, this, &MainWindow::refreshUI);
+    refreshTimer_->start(1);
+
+    // ToDo: maybe execute this function to another thread
+    collisionTimer_ = new QTimer();
+    connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::checkCollision);
+    //collisionTimer_->start(20);
 }
 
 void MainWindow::createPlayer()
 {
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
     std::shared_ptr<Common::StarSystem> initialLocation = std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
-    player_ = new PlayerShip(galaxy_, scene_, shipEngine, initialLocation, handler_);
+    player_ = new PlayerShip(this, shipEngine, initialLocation, handler_);
+    connect(player_, &PlayerShip::fireBullet, this, &MainWindow::fireBullet);
+}
+
+void MainWindow::fireBullet()
+{
+    qreal width = player_->scale()*player_->boundingRect().size().width()/2;
+    qreal height = player_->scale()*player_->boundingRect().size().height()/2;
+
+    Bullet *bullet = new Bullet();
+    bullet->setRotation(player_->rotation());
+    bullet->setPos(player_->x() + width * cos( (player_->rotation()-90) * M_PI / 180.0 ),
+                   player_->y() + height * sin( (player_->rotation()-90) * M_PI / 180.0 ));
+    scene_->addItem(bullet);
 }
 
 void MainWindow::createStarSystem()
@@ -96,15 +127,18 @@ void MainWindow::createStarSystem()
     }
 }
 
-void MainWindow::createEnemy()
+void MainWindow::createShip(std::shared_ptr<Common::Ship> ship)
 {
-    //galaxy_->getShips();
-    qDebug() << "lala";
-    std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
-    std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();
-    NPCShip *npcship = new NPCShip(shipEngine, initialLocation, handler_);
+    NPCShip *npcship = new NPCShip(ship.get()->getEngine(), ship.get()->getLocation(), handler_);
     scene_->addItem(npcship);
-    galaxy_->newShipAdded(true);
+}
+
+void MainWindow::refreshUI()
+{
+    ui->graphicsView->centerOn(player_);
+
+    QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
+    ui->lbPlayerCoor->setText(playerCoor);
 }
 
 void MainWindow::checkCollision()
@@ -137,20 +171,6 @@ void MainWindow::checkCollision()
             }
         }
     }
-}
-
-void MainWindow::refreshUI()
-{
-    if(galaxy_->isNewShip())
-    {
-        createEnemy();
-    }
-
-    checkCollision();
-    ui->graphicsView->centerOn(player_);
-
-    QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
-    ui->lbPlayerCoor->setText(playerCoor);
 }
 
 void MainWindow::on_pbNewGame_clicked()

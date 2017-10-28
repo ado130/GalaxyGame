@@ -7,7 +7,6 @@
 
 #include "ship.hh"
 
-// ToDo: inherit this class from Common::Ship
 class NPCShip : public Common::Ship, public QGraphicsPixmapItem
 {
 

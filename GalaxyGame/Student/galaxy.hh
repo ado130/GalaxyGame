@@ -1,19 +1,20 @@
 #ifndef GALAXY_HH
 #define GALAXY_HH
 
+#include <QObject>
+
 #include "igalaxy.hh"
 #include "ship.hh"
 #include "starsystem.hh"
 #include "ieventhandler.hh"
 
-#include <QObject>
-
 namespace Student {
 
-class Galaxy : public Common::IGalaxy, public std::enable_shared_from_this<Galaxy>
+class Galaxy : public QObject, public Common::IGalaxy, public std::enable_shared_from_this<Galaxy>
 {
+    Q_OBJECT
 public:
-    Galaxy();
+    Galaxy(QObject* parent = 0);
     ~Galaxy();
     //IGalaxy
     virtual void addShip(std::shared_ptr<Common::Ship> ship);
@@ -32,13 +33,13 @@ public:
     std::shared_ptr<Common::StarSystem> getStarSystemById(unsigned id);
     Common::StarSystem::StarSystemVector getStarSystemVector() const {return starSystemsInGalaxy_;}
 
-    bool isNewShip() const {return bNewShip_;}
-    void newShipAdded(bool flag) {bNewShip_ = !flag;}
+signals:
+    void newShip(std::shared_ptr<Common::Ship> ship);
+
 private:
     ShipVector shipsInGalaxy_;
     Common::StarSystem::StarSystemVector starSystemsInGalaxy_;
 
-    bool bNewShip_;
 
 };
 }//Student

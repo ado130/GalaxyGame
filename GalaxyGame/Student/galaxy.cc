@@ -5,9 +5,8 @@
 #include <algorithm>
 #include <QDebug>
 
-Student::Galaxy::Galaxy()
+Student::Galaxy::Galaxy(QObject *parent) : QObject(parent)
 {
-    bNewShip_ = false;
 }
 
 Student::Galaxy::~Galaxy()
@@ -17,29 +16,18 @@ Student::Galaxy::~Galaxy()
 
 void Student::Galaxy::addShip(std::shared_ptr<Common::Ship> ship)
 {
-    qDebug() << "Add ship" << endl;
-    qDebug() << ship->getName().data() << ship->getEngine()->getHealth()
-            << ship->getLocation()->getId() << ship->getLocation()->getName().data()
-            << ship->getLocation()->getCoordinates().x << ship->getLocation()->getCoordinates().y;
-
     if(std::find(shipsInGalaxy_.begin(), shipsInGalaxy_.end(), ship) != shipsInGalaxy_.end())
     {
        throw Common::StateException("Ship is already in the galaxy.");
     }
 
-    // first ship is always player
-    bNewShip_ = true;
-    shipsInGalaxy_.push_back(ship);
+    emit newShip(ship);
 
+    shipsInGalaxy_.push_back(ship);
 }
 
 void Student::Galaxy::removeShip(std::shared_ptr<Common::Ship> ship)
 {
-    qDebug() << "Remove ship" << endl;
-    qDebug() << ship->getName().data() << ship->getEngine()->getHealth() << endl
-             << ship->getLocation()->getId() << ship->getLocation()->getName().data()
-             << ship->getLocation()->getCoordinates().x << ship->getLocation()->getCoordinates().y;
-
     if(std::find(shipsInGalaxy_.begin(), shipsInGalaxy_.end(), ship) != shipsInGalaxy_.end())
     {
         throw Common::ObjectNotFoundException("Ship does not exist in the galaxy.");
@@ -53,9 +41,6 @@ void Student::Galaxy::removeShip(std::shared_ptr<Common::Ship> ship)
 
 void Student::Galaxy::addStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
 {
-    qDebug() << "Add star system" << endl;
-    qDebug() << starSystem->getId() << starSystem->getName().data() << starSystem->getCoordinates().x << starSystem->getCoordinates().y;
-
     for(auto k : starSystemsInGalaxy_)
     {
         if(k->getName() == starSystem->getName() || k->getId() == starSystem->getId() || k->getCoordinates() == starSystem->getCoordinates())

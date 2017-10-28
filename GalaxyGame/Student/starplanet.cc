@@ -4,6 +4,8 @@
 #include <QMap>
 #include <QList>
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+#include <QMenu>
 
 StarPlanet::StarPlanet(std::string name, ECONOMY_TYPE economy, unsigned id, uint64_t population, Common::Point location) :
     Common::StarSystem (name, economy, id, population, location)

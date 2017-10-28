@@ -3,7 +3,6 @@
 #include <QTimer>
 #include <QDebug>
 #include <QGraphicsScene>
-#include <QObject>
 
 NPCShip::NPCShip(std::shared_ptr<Common::ShipEngine> engine,
                  std::shared_ptr<Common::StarSystem> initialLocation,
@@ -16,15 +15,11 @@ NPCShip::NPCShip(std::shared_ptr<Common::ShipEngine> engine,
     setTransformOriginPoint(static_cast<int>(scale()*boundingRect().size().width()/2), static_cast<int>(scale()*boundingRect().size().height()/2));
 
     setPos(initialLocation->getCoordinates().x*100, initialLocation->getCoordinates().y*100);
-
-    //QTimer * timer = new QTimer();
-    //QObject::connect(timer, &QTimer::timeout, this, &NPCShip::move);
-    //timer->start(250);
 }
 
 bool NPCShip::decideAction()
 {
-
+    return 0;
 }
 
 void NPCShip::move()

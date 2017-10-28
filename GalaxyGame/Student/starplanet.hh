@@ -11,6 +11,7 @@ class StarPlanet : public Common::StarSystem, public QGraphicsPixmapItem
 public:
     StarPlanet(std::string name, ECONOMY_TYPE economy, unsigned id,
                uint64_t population, Common::Point location);
+
 private:
 
 };
