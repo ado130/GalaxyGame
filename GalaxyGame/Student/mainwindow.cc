@@ -73,8 +73,7 @@ void MainWindow::startGame()
     player_->setZValue(1);
 
     // Add enemies to the galaxy
-    enemiesCnt_ = 0;
-    gameRunner_->spawnShips(69);
+    gameRunner_->spawnShips(50);
 
     // Add star systems to the galaxy
     createStarSystem();
@@ -99,7 +98,7 @@ void MainWindow::startGame()
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
-    gameTimer_->start(250);
+    gameTimer_->start(50);
 }
 
 void MainWindow::createPlayer()
@@ -150,29 +149,38 @@ void MainWindow::pressedSpace()
 void MainWindow::createStarSystem()
 {
     auto starSystem = galaxy_->getStarSystemVector();
-    for(auto k : starSystem)
+    for(Common::StarSystem::StarSystemVector::size_type i = 0; i<starSystem.size(); ++i)
     {
-        StarPlanet *starPlanet = new StarPlanet(k->getName(), k->getEconomy(),k->getId(), k->getPopulation(), k->getCoordinates());
+        StarPlanet *starPlanet = new StarPlanet(starSystem.at(i).get()->getCoordinates());
         scene_->addItem(starPlanet);
+        starSystemList_.append(qMakePair(starSystem.at(i), starPlanet));
     }
-    ui->lbCntStarSystems->setText(QString::number(starSystem.size()));
+    ui->lbCntStarSystems->setText(QString::number(starSystemList_.count()));
 }
 
 void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
 {
     if(newShip)
     {
-        NPCShip *npcship = new NPCShip(ship, handler_);
+        NPCShip *npcship = new NPCShip();
         scene_->addItem(npcship);
-        ++enemiesCnt_;
+        shipList_.append(qMakePair(ship, npcship));
     }
     else
     {
-        scene_->removeItem(getSceneShip(ship));
-        --enemiesCnt_;
+        QGraphicsItem *item = getSceneShip(ship);
+        scene_->removeItem(item);
+        for(int i = 0; i<shipList_.size(); ++i)
+        {
+            if(shipList_.at(i).first == ship)
+            {
+                shipList_.removeAt(i);
+                break;
+            }
+        }
     }
 
-    ui->lbCntEnemies->setText(QString::number(enemiesCnt_));
+    ui->lbCntEnemies->setText(QString::number(shipList_.count()));
 }
 
 void MainWindow::shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY)
@@ -186,14 +194,11 @@ void MainWindow::shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int
 
 QGraphicsItem* MainWindow::getSceneShip(std::shared_ptr<Common::Ship> ship)
 {
-    QList<QGraphicsItem *> sceneItems = scene_->items();
-    for(int i = 0; i<sceneItems.count(); ++i)
+    for(auto k : shipList_)
     {
-        NPCShip* npc = dynamic_cast<NPCShip*>(sceneItems.at(i));
-        if(npc == nullptr) continue;
-        if(npc->getName() == ship.get()->getName() && npc->getEngine() == ship.get()->getEngine())
+        if(k.first == ship)
         {
-            return sceneItems.at(i);
+            return k.second;
         }
     }
 

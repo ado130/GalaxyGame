@@ -5,20 +5,12 @@
 #include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 
-#include "ship.hh"
-
-class NPCShip : public Common::Ship, public QGraphicsPixmapItem
+class NPCShip : public QGraphicsPixmapItem
 {
 
 public:
-    NPCShip(std::shared_ptr<Common::Ship> ship,
-            std::shared_ptr<Common::IEventHandler> events);
+    NPCShip();
 
-    bool decideAction();
-
-private:
-
-    bool decideToMove();
 private slots:
     void move();
 };

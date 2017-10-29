@@ -3,12 +3,9 @@
 #include <QDebug>
 #include <QMap>
 #include <QList>
-#include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
-#include <QMenu>
 
-StarPlanet::StarPlanet(std::string name, ECONOMY_TYPE economy, unsigned id, uint64_t population, Common::Point location) :
-    Common::StarSystem (name, economy, id, population, location)
+StarPlanet::StarPlanet(Common::Point point)
 {
     QMap<unsigned int, QString> planets;
     planets[0] = "earth";
@@ -25,5 +22,5 @@ StarPlanet::StarPlanet(std::string name, ECONOMY_TYPE economy, unsigned id, uint
     setPixmap(QPixmap(planet));
     setScale(0.3);
 
-    setPos(location.x*100, location.y*100);
+    setPos(point.x*100, point.y*100);
 }

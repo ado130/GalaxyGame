@@ -5,17 +5,24 @@
 #include <QGraphicsScene>
 #include <memory>
 #include <QMap>
+#include <QPair>
+#include <QList>
 
 #include "galaxy.hh"
 #include "utility.hh"
 #include "igamerunner.hh"
 
 class PlayerShip;
+class NPCShip;
+class StarPlanet;
 class QThread;
 
 namespace Ui {
 class MainWindow;
 }
+
+typedef QList< QPair<std::shared_ptr<Common::Ship>, NPCShip*> > shipUI_t;
+typedef QList< QPair<std::shared_ptr<Common::StarSystem>, StarPlanet*> > starSystemUI_t;
 
 class MainWindow : public QMainWindow
 {
@@ -45,8 +52,9 @@ private:
     QTimer *gameTimer_;
     QGraphicsScene *scene_;
     PlayerShip *player_;
-    unsigned int enemiesCnt_;
     QMap<QString, QVariant> playerScore_;
+    shipUI_t shipList_;
+    starSystemUI_t starSystemList_;
 
     void startGame();
     void loadSettings();
