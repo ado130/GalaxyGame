@@ -1,14 +1,17 @@
 #ifndef EVENTHANDLER_HH
 #define EVENTHANDLER_HH
 
+#include <QObject>
+
 #include "ieventhandler.hh"
 #include "point.hh"
 
 namespace Student {
-class EventHandler: public Common::IEventHandler
+class EventHandler: public QObject, public Common::IEventHandler
 {
+    Q_OBJECT
 public:
-    EventHandler();
+    EventHandler(QObject* parent = 0);
     ~EventHandler();
     void shipSpawned(std::shared_ptr<Common::Ship> ship);
     void shipRemoved(std::shared_ptr<Common::Ship> ship);
@@ -21,6 +24,10 @@ public:
     void distressOn(std::shared_ptr<Common::Ship> ship);
     void distressOff(std::shared_ptr<Common::Ship> ship);
     void shipAbandoned(std::shared_ptr<Common::Ship> ship);
+
+Q_SIGNALS:
+    void shipMovement(std::shared_ptr<Common::Ship>, int diffX, int diffY);
+    void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
 };
 }
 

@@ -18,9 +18,6 @@
 #include <QtConcurrent>
 #include <QFuture>
 
-#define SCENE_WIDTH 800
-#define SCENE_HEIGHT 600
-
 MainWindow::MainWindow(QWidget *parent,
                        std::shared_ptr<Common::IEventHandler> handler,
                        std::shared_ptr<Student::Galaxy> galaxy,
@@ -37,16 +34,19 @@ MainWindow::MainWindow(QWidget *parent,
     // Create scene for the game
     scene_ = new QGraphicsScene(this);
 
-    QObject* galaxyObj = galaxy.get();
-    connect(galaxyObj, SIGNAL(shipEvent(std::shared_ptr<Common::Ship>, bool)),
+    QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
+    connect(eventHandlerObj, SIGNAL(shipEvent(std::shared_ptr<Common::Ship>, bool)),
             this, SLOT(shipEvent(std::shared_ptr<Common::Ship>, bool)));
+    connect(eventHandlerObj, SIGNAL(shipMovement(std::shared_ptr<Common::Ship>, int, int)),
+            this, SLOT(shipMovement(std::shared_ptr<Common::Ship>, int, int)));
 }
 
 MainWindow::~MainWindow()
 {
     saveSettings();
-    delete collisionTimer_;
     delete refreshTimer_;
+    delete gameTimer_;
+    delete collisionTimer_;
     delete player_;
     delete ui;
 }
@@ -73,7 +73,8 @@ void MainWindow::startGame()
     player_->setZValue(1);
 
     // Add enemies to the galaxy
-    gameRunner_->spawnShips(128);
+    enemiesCnt_ = 0;
+    gameRunner_->spawnShips(69);
 
     // Add star systems to the galaxy
     createStarSystem();
@@ -95,6 +96,10 @@ void MainWindow::startGame()
     collisionTimer_ = new QTimer();
     connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::executeCollisionCheck);
     //collisionTimer_->start(500);
+
+    gameTimer_ = new QTimer();
+    connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
+    gameTimer_->start(250);
 }
 
 void MainWindow::createPlayer()
@@ -150,28 +155,49 @@ void MainWindow::createStarSystem()
         StarPlanet *starPlanet = new StarPlanet(k->getName(), k->getEconomy(),k->getId(), k->getPopulation(), k->getCoordinates());
         scene_->addItem(starPlanet);
     }
+    ui->lbCntStarSystems->setText(QString::number(starSystem.size()));
 }
 
 void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
 {
     if(newShip)
     {
-        NPCShip *npcship = new NPCShip(ship.get()->getEngine(), ship.get()->getLocation(), handler_);
+        NPCShip *npcship = new NPCShip(ship, handler_);
         scene_->addItem(npcship);
+        ++enemiesCnt_;
     }
     else
     {
-        QList<QGraphicsItem *> sceneItems = scene_->items();
-        for(int i = 0; i<sceneItems.count(); ++i)
+        scene_->removeItem(getSceneShip(ship));
+        --enemiesCnt_;
+    }
+
+    ui->lbCntEnemies->setText(QString::number(enemiesCnt_));
+}
+
+void MainWindow::shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY)
+{
+    QGraphicsItem *item = getSceneShip(ship);
+    if(item != nullptr)
+    {
+        item->setPos(item->x() + diffX, item->y() + diffY);
+    }
+}
+
+QGraphicsItem* MainWindow::getSceneShip(std::shared_ptr<Common::Ship> ship)
+{
+    QList<QGraphicsItem *> sceneItems = scene_->items();
+    for(int i = 0; i<sceneItems.count(); ++i)
+    {
+        NPCShip* npc = dynamic_cast<NPCShip*>(sceneItems.at(i));
+        if(npc == nullptr) continue;
+        if(npc->getName() == ship.get()->getName() && npc->getEngine() == ship.get()->getEngine())
         {
-            NPCShip* npc = dynamic_cast<NPCShip*>(sceneItems.at(i));
-            if(npc->getName() == ship.get()->getName() && npc->getLocation() == ship.get()->getLocation())
-            {
-                scene_->removeItem(sceneItems.at(i));
-                break;
-            }
+            return sceneItems.at(i);
         }
     }
+
+    return nullptr;
 }
 
 void MainWindow::refreshUI()
@@ -180,6 +206,12 @@ void MainWindow::refreshUI()
 
     QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
     ui->lbPlayerCoor->setText(playerCoor);
+}
+
+void MainWindow::gameEvent()
+{
+    gameRunner_->createActions();
+    gameRunner_->doActions();
 }
 
 void MainWindow::executeCollisionCheck()

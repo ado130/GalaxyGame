@@ -11,14 +11,14 @@ class NPCShip : public Common::Ship, public QGraphicsPixmapItem
 {
 
 public:
-    NPCShip(std::shared_ptr<Common::ShipEngine> engine,
-            std::shared_ptr<Common::StarSystem> initialLocation,
+    NPCShip(std::shared_ptr<Common::Ship> ship,
             std::shared_ptr<Common::IEventHandler> events);
 
     bool decideAction();
 
 private:
 
+    bool decideToMove();
 private slots:
     void move();
 };

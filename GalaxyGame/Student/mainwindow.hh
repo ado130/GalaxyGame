@@ -30,8 +30,9 @@ public:
     ~MainWindow();
 
 public Q_SLOTS:
-    void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
     void pressedSpace();
+    void shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY);
+    void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
 private:
     Ui::MainWindow *ui;
 
@@ -41,8 +42,10 @@ private:
 
     QTimer *refreshTimer_;
     QTimer *collisionTimer_;
+    QTimer *gameTimer_;
     QGraphicsScene *scene_;
     PlayerShip *player_;
+    unsigned int enemiesCnt_;
     QMap<QString, QVariant> playerScore_;
 
     void startGame();
@@ -51,7 +54,7 @@ private:
     void createPlayer();
     void createStarSystem();
     void checkCollision();
-
+    QGraphicsItem *getSceneShip(std::shared_ptr<Common::Ship> ship);
 private Q_SLOTS:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();
@@ -60,6 +63,7 @@ private Q_SLOTS:
     void on_actionHelp_triggered();
     void refreshUI();
     void executeCollisionCheck();
+    void gameEvent();
 };
 
 #endif // MAINWINDOW_H
