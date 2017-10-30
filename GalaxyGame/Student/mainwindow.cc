@@ -96,7 +96,9 @@ void MainWindow::startGame()
     // ToDo: solve the crash problem
     collisionTimer_ = new QTimer();
     connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::executeCollisionCheck);
-    //collisionTimer_->start(500);
+    connect(this, SIGNAL(startCollisionTimer()), collisionTimer_, SLOT(start()));
+    connect(this, &MainWindow::stopCollisionTimer, collisionTimer_, &QTimer::stop);
+    //collisionTimer_->start(2000);
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
@@ -113,23 +115,7 @@ void MainWindow::createPlayer()
 
 void MainWindow::pressedSpace()
 {
-    bool isPlayerTrading = false;
-    for(auto k : scene_->items())
-    {
-        if(typeid (*k) == typeid (PlayerShip))
-        {
-            QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(k);
-            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
-            {
-                if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
-                {
-                    isPlayerTrading = true;
-                }
-            }
-        }
-    }
-
-    if(isPlayerTrading)
+    if(isPlayerTrading_)
     {
         // ToDo: trade player-planet
         qDebug() << "Player trade";
@@ -207,6 +193,32 @@ QGraphicsItem* MainWindow::getSceneShip(std::shared_ptr<Common::Ship> ship)
     return nullptr;
 }
 
+QGraphicsItem* MainWindow::getSceneStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
+{
+    for(auto k : starSystemList_)
+    {
+        if(k.first == starSystem)
+        {
+            return k.second;
+        }
+    }
+
+    return nullptr;
+}
+
+std::shared_ptr<Common::StarSystem> MainWindow::getStarSystemByItem(QGraphicsItem* item)
+{
+    for(auto k : starSystemList_)
+    {
+        if(k.second == item)
+        {
+            return k.first;
+        }
+    }
+
+    return nullptr;
+}
+
 void MainWindow::refreshUI()
 {
     ui->graphicsView->centerOn(player_);
@@ -228,6 +240,7 @@ void MainWindow::executeCollisionCheck()
 
 void MainWindow::checkCollision()
 {
+    //emit stopCollisionTimer();
     for(auto k : scene_->items())
     {
         QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(k);
@@ -246,7 +259,34 @@ void MainWindow::checkCollision()
                 }
             }
         }
+        else if(typeid (*k) == typeid (PlayerShip))
+        {
+            QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(k);
+            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
+            {
+                if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
+                {
+                    isPlayerTrading_ = true;
+                    const char * economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony" };
+                    auto starSystem = getStarSystemByItem(colliding_Items[i]);
+                    ui->lbName->setText(starSystem->getName().data());
+                    ui->lbEconomy->setText(economy[starSystem->getEconomy()]);
+                    ui->lbPopulation->setText(QString::number(starSystem->getPopulation()));
+                    ui->lbCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x) +
+                                               "y: " + QString::number(starSystem->getCoordinates().y));
+                }
+                else
+                {
+                    isPlayerTrading_ = false;
+                    ui->lbName->clear();
+                    ui->lbEconomy->clear();
+                    ui->lbPopulation->clear();
+                    ui->lbCoordinates->clear();
+                }
+            }
+        }
     }
+    //emit startCollisionTimer();
 }
 
 void MainWindow::on_pbNewGame_clicked()
@@ -300,14 +340,16 @@ void MainWindow::saveSettings()
 void MainWindow::on_actionMy_statistics_triggered()
 {
     //Check if player is initialized
-    if(player_ != nullptr){
+    if(player_ != nullptr)
+    {
         qDebug() << "Player initialized";
         StatisticsWindow* stats = new StatisticsWindow(player_);
         stats->setModal(true);
         stats->exec();
         delete stats;
     }
-    else{
+    else
+    {
         QMessageBox msgBox;
         msgBox.setText("No statistics at the moment, game haven't started yet!");
         msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));

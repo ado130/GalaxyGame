@@ -55,6 +55,7 @@ private:
     QMap<QString, QVariant> playerScore_;
     shipUI_t shipList_;
     starSystemUI_t starSystemList_;
+    bool isPlayerTrading_ = false;
 
     void startGame();
     void loadSettings();
@@ -63,6 +64,8 @@ private:
     void createStarSystem();
     void checkCollision();
     QGraphicsItem *getSceneShip(std::shared_ptr<Common::Ship> ship);
+    QGraphicsItem *getSceneStarSystem(std::shared_ptr<Common::StarSystem> starSystem);
+    std::shared_ptr<Common::StarSystem> getStarSystemByItem(QGraphicsItem *item);
 private Q_SLOTS:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();
@@ -73,6 +76,9 @@ private Q_SLOTS:
     void executeCollisionCheck();
     void on_actionMy_statistics_triggered();
     void gameEvent();
+Q_SIGNALS:
+    void startCollisionTimer();
+    void stopCollisionTimer();
 };
 
 #endif // MAINWINDOW_H
