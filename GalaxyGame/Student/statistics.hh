@@ -2,7 +2,6 @@
 #define STATISTICS_HH
 
 #include "istatistics.hh"
-#include "stateexception.hh"
 
 namespace Student {
 
@@ -10,6 +9,7 @@ class Statistics : public Common::IStatistics
 {
 public:
     Statistics(int MAX_LOAN_ALLOWANCE = 5000);
+    ~Statistics();
 
      void addSavedShip();
      unsigned getSavedShips() const;

@@ -16,10 +16,14 @@ TEMPLATE = app
 
 
 SOURCES += statisticstest.cc \
+            ../../Course/stateexception.cc \
+            ../../Course/gameexception.cc \
            ../../Student/statistics.cc
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
+            ../../Course/stateexception.hh \
+            ../../Course/gameexception.hh \
     ../../Student/statistics.hh \
     ../../Course/istatistics.hh
 INCLUDEPATH += ../../Student ../../Course/

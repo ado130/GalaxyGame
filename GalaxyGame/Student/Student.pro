@@ -20,7 +20,7 @@ SOURCES += \
 	mainwindow.cc \
 	galaxy.cc \
 	eventhandler.cc \
-	statistics.cc \
+        statistics.cc \
 	playership.cc \
     starplanet.cc \
     npcship.cc \

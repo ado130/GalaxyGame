@@ -1,6 +1,8 @@
 #include <QString>
 #include <QtTest>
 #include "statistics.hh"
+#include "stateexception.hh"
+
 class StatisticsTest : public QObject
 {
     Q_OBJECT
