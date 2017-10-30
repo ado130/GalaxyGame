@@ -47,11 +47,11 @@ private:
     std::shared_ptr<Student::Galaxy> galaxy_;
     std::shared_ptr<Common::IGameRunner> gameRunner_;
 
-    QTimer *refreshTimer_;
-    QTimer *collisionTimer_;
-    QTimer *gameTimer_;
-    QGraphicsScene *scene_;
-    PlayerShip *player_;
+    QTimer *refreshTimer_ = nullptr;
+    QTimer *collisionTimer_ = nullptr;
+    QTimer *gameTimer_ = nullptr;
+    QGraphicsScene *scene_ = nullptr;
+    PlayerShip *player_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     shipUI_t shipList_;
     starSystemUI_t starSystemList_;
@@ -71,6 +71,7 @@ private Q_SLOTS:
     void on_actionHelp_triggered();
     void refreshUI();
     void executeCollisionCheck();
+    void on_actionMy_statistics_triggered();
     void gameEvent();
 };
 

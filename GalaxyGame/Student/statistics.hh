@@ -17,6 +17,12 @@ public:
      void addLostShip();
      unsigned getLostShips() const;
 
+     void addDestroyedShip();
+     unsigned getDestroyedShips() const;
+
+     void addCompletedQuest();
+     unsigned getCompletedQuests() const;
+
      void addPoints(unsigned amount);
      void reducePoints(unsigned amount);
      unsigned getPoints() const;
@@ -33,6 +39,9 @@ private:
      unsigned lostShips = 0;
      unsigned points = 0;
      int credits = 0;
+     unsigned destroyedShips = 0;
+     unsigned completedQuest = 0;
+
 
      // ToDo: what is this for? Where is it set? (create "settings" class)
      int MAX_LOAN_ALLOWANCE;

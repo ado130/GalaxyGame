@@ -24,7 +24,8 @@ SOURCES += \
 	playership.cc \
     starplanet.cc \
     npcship.cc \
-    bullet.cc
+    bullet.cc \
+    statisticswindow.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -34,10 +35,12 @@ HEADERS  += \
 	mainwindow.hh \
     starplanet.hh \
     npcship.hh \
-    bullet.hh
+    bullet.hh \
+    statisticswindow.hh
 	
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    statisticswindow.ui
 
 RESOURCES += \
     resources.qrc

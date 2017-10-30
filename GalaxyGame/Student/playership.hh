@@ -8,6 +8,7 @@
 #include <QObject>
 
 #include "ship.hh"
+#include "statistics.hh"
 
 class PlayerShip : public QObject, public Common::Ship, public QGraphicsPixmapItem
 {
@@ -20,12 +21,15 @@ public:
                std::shared_ptr<Common::IEventHandler> events = 0);
 
     bool decideAction();
+    Student::Statistics getStatistics();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
 
 Q_SIGNALS:
     void pressedSpace();
+private:
+    Student::Statistics statistics;
 
 };
 

@@ -8,6 +8,7 @@
 #include "starsystem.hh"
 #include "point.hh"
 #include "bullet.hh"
+#include "statisticswindow.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -17,6 +18,7 @@
 #include <QSettings>
 #include <QtConcurrent>
 #include <QFuture>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent,
                        std::shared_ptr<Common::IEventHandler> handler,
@@ -293,4 +295,22 @@ void MainWindow::loadSettings()
 void MainWindow::saveSettings()
 {
 
+}
+
+void MainWindow::on_actionMy_statistics_triggered()
+{
+    //Check if player is initialized
+    if(player_ != nullptr){
+        qDebug() << "Player initialized";
+        StatisticsWindow* stats = new StatisticsWindow(player_);
+        stats->setModal(true);
+        stats->exec();
+        delete stats;
+    }
+    else{
+        QMessageBox msgBox;
+        msgBox.setText("No statistics at the moment, game haven't started yet!");
+        msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+        msgBox.exec();
+    }
 }

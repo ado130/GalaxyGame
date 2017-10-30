@@ -18,11 +18,19 @@ PlayerShip::PlayerShip(QObject *parent, std::shared_ptr<Common::ShipEngine> engi
     setScale(0.1);
     setTransformOriginPoint(static_cast<int>(scale()*boundingRect().size().width()/2), static_cast<int>(scale()*boundingRect().size().height()/2));
     setPos(800/2, 600/2);
+
+    // ToDo: Settings for MAX_LOAN_ALLOWANCE
+    statistics = Student::Statistics(5000);
 }
 
 bool PlayerShip::decideAction()
 {
     return 0;
+}
+
+Student::Statistics PlayerShip::getStatistics()
+{
+    return statistics;
 }
 
 void PlayerShip::keyPressEvent(QKeyEvent *event)

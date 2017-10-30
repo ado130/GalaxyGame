@@ -192,6 +192,7 @@
     <property name="title">
      <string>Statistics</string>
     </property>
+    <addaction name="actionMy_statistics"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -223,6 +224,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionMy_statistics">
+   <property name="text">
+    <string>My statistics</string>
    </property>
   </action>
  </widget>
