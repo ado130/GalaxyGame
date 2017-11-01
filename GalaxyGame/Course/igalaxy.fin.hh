@@ -5,17 +5,15 @@
 */
 
 /**
-* @namespace Common
-*/
-
+ * @brief Sisältää valmiina annettuja rajapintoja ja muita luokkia, joihin voi viitata opiskelijoiden tekemässä koodissa.
+ * @namespace Common
+ */
 
 /**
 * @class Common::IGalaxy
 * @brief Määrittää rajapinnan galaksille
 *
-*  Jos luokan metodi ei ole poikkeustakuultaan nothrow, voi metodista aina heittää 'std::bad_alloc' (muisti loppui).
-*  ^ Lisätäänkö tää caveat tähän vai ei?
-*  @invariant Tähtijärjestelmän nimi, tunniste ja sijainti on ainutlaatuinen. Alus oliot on oltava ainutlaatuisia
+*  @invariant Tähtijärjestelmän nimi, tunniste ja sijainti on ainutlaatuinen. Samaa alusolioita on galaksissa maksimissaan yksi kappale.
 */
 
 /**
@@ -45,6 +43,7 @@
 * @param ship Galaksiin lisättävä alus.
 * @post Alus lisätty galaksiin.
 * @exception StateException Jos sama alusolio löytyy jo galaksista.
+* @post Poikkeustakuu: vahva
 */
 
 
@@ -54,6 +53,7 @@
 * @param ship Galaksista poistettava alus
 * @post Alus on poistettu galaksista
 * @exception ObjectNotFoundException, jos alus ei ole olemassa
+* @post Poikkeustakuu: vahva
 */
 
 
@@ -63,6 +63,7 @@
 * @param system Galaksiin lisättävä tähtijärjestelmä
 * @post Tähtijärjestelmä on lisätty galaksiin
 * @exception StateException, jos galaksissa on ennestään tähtijärjestelmä, jolla on sama nimi tai tunniste tai sijainti
+* @post Poikkeustakuu: vahva
 */
 
 
@@ -81,6 +82,7 @@
 * @param range Etäisyys valovuosina
 * @exception Heittää poikkeuksen ObjectNotFoundException, jos järjestelmää ei ole galaksissa
 * @return Tähtijärjestelmät, jotka ovat annetun etäisyyden päässä tarkasteltavasta tähtijärjestelmästä. Tyhjä vektori, jos tällaisia tähtijärjestelmiä ei ole.
+* @post Poikkeustakuu: vahva
 */
 
 
@@ -89,6 +91,7 @@
 * @brief getRandomSystem palauttaa satunnaisen tähtijärjestelmän
 * @return Satunnainen tähtijärjestelmä galaksiin lisättyjen järjestelmien joukosta.
 * @exception ObjectNotFoundException, jos galaksissa ei ole yhtään tähtijärjestelmää
+* @post Poikkeustakuu: vahva
 */
 
 
@@ -98,6 +101,7 @@
 * @param name Tähtijärjestelmän nimi
 * @return Vektori, joka sisältää annetun tähtijärjestelmän alukset. Tyhjä vektori, jos tähtijärjestelmässä ei ole yhtään alusta.
 * @exception ObjectNotFoundException, jos annettua tähtijärjestelmää ei ole olemassa
+* @post Poikkeustakuu: vahva
 */
 
 
@@ -107,6 +111,7 @@
 * @param name Tähtijärjestelmän nimi
 * @return Jaettu osoitin tähtijärjestelmäolioon
 * @exception ObjectNotFoundException, jos parametrina annettua tähtijärjestelmää ei ole olemassa
+* @post Poikkeustakuu: vahva
 */
 
 
@@ -116,6 +121,7 @@
 * @param id Tähtijärjestelmän tunniste
 * @return Jaettu osoitin tähtijärjestelmäolioon
 * @exception ObjectNotFoundException, jos parametrina annettua tähtijärjestelmää ei ole olemassa
+* @post Poikkeustakuu: vahva
 */
 
 #endif

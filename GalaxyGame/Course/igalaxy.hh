@@ -15,7 +15,7 @@
 
 #ifdef English_dox
 /**
- * @brief Contains the interfaces and classes common to course side and students
+ * @brief Pre-existing interfaces and classes that can be referred in code written by students.
  */
 #endif
 namespace Common {
@@ -23,9 +23,7 @@ namespace Common {
 /**
  * @brief Interface for Galaxy
  *
- *  If a method in a class does not have exception guarantee 'no throw', it is possible it will throw 'std::bad_alloc', if memory runs out
- *  ^ Shouls we add this note here or not?
- *  @invariant Starsystems have unique name, id and location. Ship objects must be unique.
+ *  @invariant Starsystems have unique name, id and location. Ship objects in a galaxy must be unique.
  */
 #endif
 class IGalaxy
@@ -61,6 +59,7 @@ public:
      * @param ship Ship to be added to the galaxy.
      * @post Ship is added to the galaxy.
      * @exception StateException If the galaxy contains the ship object already.
+     * @post Exception guarantee: strong
      */
 #endif
     virtual void addShip(std::shared_ptr<Ship> ship) = 0;
@@ -71,6 +70,7 @@ public:
      * @param ship Ship to be removed
      * @post Ship is removed from the galaxy
      * @exception ObjectNotFoundException, if the ship does not exist
+     * @post Exception guarantee: strong
      */
 #endif
     virtual void removeShip(std::shared_ptr<Ship> ship) = 0;
@@ -82,6 +82,7 @@ public:
      * @param system Star system to be added to the galaxy
      * @post Star system is added to the galaxy
      * @exception StateException, if a star system with the same name or id or location already exists in the galaxy
+     * @post Exception guarantee: strong
      */
 #endif
     virtual void addStarSystem(std::shared_ptr<StarSystem> system) = 0;
@@ -102,6 +103,7 @@ public:
      * @param range Distance in light years
      * @exception Throws an ObjectNotFoundException, if the star system is not in the galaxy
      * @return Star systems that are within within the distance from the system of interest. Empty vector, if there are no such star systems
+     * @post Exception guarantee: strong
      */
 #endif
     virtual StarSystem::StarSystemVector getSystemsInRange(std::shared_ptr<StarSystem> origin, int range) = 0;
@@ -111,6 +113,7 @@ public:
      * @brief getRandomSystem returns a random star system
      * @return A random star system from the set of star systems added to the galaxy
      * @exception ObjectNotFoundException, if the galaxy has no star systems
+     * @post Exception guarantee: strong
      */
 #endif
     virtual std::shared_ptr<StarSystem> getRandomSystem() = 0;
@@ -121,6 +124,7 @@ public:
      * @param name Name of the star system
      * @return Returns vector of all ships in the star system. Empty vector, if there are no ships in the star system.
      * @exception ObjectNotFoundException, if the star system with given name does not exist
+     * @post Exception guarantee: strong
      */
 #endif
     virtual ShipVector getShipsInStarSystem(std::string name) = 0;
@@ -131,6 +135,7 @@ public:
      * @param name Name of the star system
      * @return Shared pointer to the object of the star system
      * @exception ObjectNotFoundException, if the star system with given name does not exist
+     * @post Exception guarantee: strong
      */
 #endif
     virtual std::shared_ptr<Common::StarSystem> getStarSystemByName(std::string name) = 0 ;
@@ -141,6 +146,7 @@ public:
      * @param id Id of the star system
      * @return Shared pointer to the object of the star system
      * @exception ObjectNotFoundException, if the star system with given id does not exist
+     * @post Exception guarantee: strong
      */
 #endif
     virtual std::shared_ptr<Common::StarSystem> getStarSystemById(unsigned id) = 0;

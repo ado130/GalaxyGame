@@ -76,6 +76,7 @@ public:
     #ifdef English_dox
     /**
      * @return Name of the star system.
+     * @post Exception guarantee: nothrow
      */
     #endif
     std::string getName() const;
@@ -83,13 +84,15 @@ public:
     #ifdef English_dox
     /**
      * @return The main economy of the star system.
+     * @post Exception guarantee: nothrow
      */
     #endif
-    ECONOMY_TYPE getEconomy();
+    ECONOMY_TYPE getEconomy() const;
 
     #ifdef English_dox
     /**
      * @return Id of the star system.
+     * @post Exception guarantee: nothrow
      */
     #endif
     unsigned getId() const;
@@ -97,6 +100,7 @@ public:
     #ifdef English_dox
     /**
      * @return The population of the star system.
+     * @post Exception guarantee: nothrow
      */
     #endif
     uint64_t getPopulation() const;
@@ -104,22 +108,25 @@ public:
     #ifdef English_dox
     /**
      * @return The location of the star system in coordinates.
+     * @post Exception guarantee: nothrow
      */
     #endif
     Point getCoordinates() const;
 
     #ifdef English_dox
     /**
-     * @brief Is the star system inhabited.
-     * @return True, if it is, else false.
+     * @brief Checks if the star system inhabited.
+     * @return True, if the star system inhabited, else false.
+     * @post Exception guarantee: nothrow
      */
     #endif
     bool isInhabited() const;
 
     #ifdef English_dox
     /**
-     * @brief Is it possible to repair in the star system without service equipment.
+     * @brief Checks if it is possible to repair in the star system without service equipment.
      * @return True, if can, else false.
+     * @post Exception guarantee: nothrow
      */
     #endif
     bool canRepair() const;

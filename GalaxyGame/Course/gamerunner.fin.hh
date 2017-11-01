@@ -5,9 +5,9 @@
 */
 
 /**
-* @namespace Course
-*/
-
+ * @brief Sisältää valmiina annettuja luokkia, joihin ei voi viitata opiskelijoiden tekemässä koodissa.
+ * @namespace Course
+ */
 
 /**
 * @class Course::GameRunner

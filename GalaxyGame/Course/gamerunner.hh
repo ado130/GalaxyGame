@@ -6,14 +6,14 @@
 
 #ifdef English_dox
 /**
- * @file
+ * @file gamerunner.hh
  * @brief Implements interface IGamerunner.
  */
 #endif
 
 #ifdef English_dox
 /**
- * @brief Contains the course side implementation
+ * @brief Contains pre-existing classes that may not be referred by code written by students.
  */
 #endif
 namespace Course {

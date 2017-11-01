@@ -55,6 +55,7 @@ public:
     /**
      * @brief shipSpawned A new ship has been created in the galaxy.
      * @param ship Created ship
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void shipSpawned(std::shared_ptr<Ship> ship) = 0;
@@ -63,6 +64,7 @@ public:
     /**
      * @brief shipRemoved A ship has been removed from the galaxy.
      * @param ship Removed ship
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void shipRemoved (std::shared_ptr<Ship> ship) = 0 ;
@@ -73,6 +75,7 @@ public:
      * @param ship Ship, which moved
      * @param origin point, from which the ship moved
      * @param target point, to which the ship moved
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void shipMoved(std::shared_ptr<Ship> ship, Point origin, Point target) = 0 ;
@@ -82,6 +85,7 @@ public:
      * @brief shipRelocated Ship moved to the provided Star system.
      * @param ship Ship, which relocated
      * @param starSystem nullptr, when a ship leaves from the Star system. Destination Star system, if the ship reached one.
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void shipRelocated(std::shared_ptr<Ship> ship, std::shared_ptr<StarSystem> starSystem) = 0;
@@ -89,6 +93,7 @@ public:
 #ifdef English_dox
     /**
      * @brief exceptionInExecution A function executed by the ship caused an exception to be thrown, which has the reason added as a string
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void exceptionInExecution(std::shared_ptr<Ship>, std::string const&) = 0;
@@ -97,6 +102,7 @@ public:
     /**
      * @brief distressOn A ship has made a distress call.
      * @param ship Ship, which made the distress call
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void distressOn(std::shared_ptr<Ship> ship) = 0 ;
@@ -105,6 +111,7 @@ public:
     /**
      * @brief distressOff A ship has removed the distress call.
      * @param ship Ship, which removed the distress call
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void distressOff(std::shared_ptr<Ship> ship) = 0;
@@ -113,6 +120,7 @@ public:
     /**
      * @brief shipAbandoned A ship has been abandoned.
      * @param ship Ship, which has been abandoned
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void shipAbandoned(std::shared_ptr<Ship> ship) = 0;

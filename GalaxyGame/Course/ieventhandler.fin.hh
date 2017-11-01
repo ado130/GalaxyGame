@@ -36,6 +36,7 @@ struct Point;
 /**
 * @fn virtual Common::IEventHandler::~IEventHandler() = default;
 * @brief Rajapintaluokassa on oletusarvoinen virtuaalipurkaja (olemassa, koska kantaluokalla tulee olla virtuaalipurkaja).
+* @post Poikkeustakuu: nothrow
 */
 
 
@@ -43,6 +44,7 @@ struct Point;
 * @fn virtual void Common::IEventHandler::shipSpawned(std::shared_ptr<Ship> ship) = 0;
 * @brief shipSpawned Uusi alus on luotu galaksiin.
 * @param ship luotu alus
+* @post Poikkeustakuu: nothrow
 */
 
 
@@ -50,6 +52,7 @@ struct Point;
 * @fn virtual void Common::IEventHandler::shipRemoved (std::shared_ptr<Ship> ship) = 0 ;
 * @brief shipRemoved Alus poistettu galaksista.
 * @param ship poistettu alus
+* @post Poikkeustakuu: nothrow
 */
 
 
@@ -59,6 +62,7 @@ struct Point;
 * @param ship liikkunut alus
 * @param origin piste, josta alus lähti liikkeelle
 * @param target piste, jonne alus saapui
+* @post Poikkeustakuu: nothrow
 */
 
 
@@ -67,12 +71,14 @@ struct Point;
 * @brief shipRelocated Alus on siirtynyt annettuun tähtijärjestelmään.
 * @param ship, alus joka vaihdoi sijaintia
 * @param starSystem nullptr, kun alus poistuu järjestelmästä, järjestelmä johon saavuttiin, jos alus saapui perille
+* @post Poikkeustakuu: nothrow
 */
 
 
 /**
 * @fn virtual void Common::IEventHandler::exceptionInExecution(std::shared_ptr<Ship>, std::string const&) = 0;
 * @brief exceptionInExecution Aluksen suorittama toiminto on aiheuttanut poikkeuksen, jolla oli annettu merkkijono selitteenä.
+* @post Poikkeustakuu: nothrow
 */
 
 
@@ -80,6 +86,7 @@ struct Point;
 * @fn  virtual void Common::IEventHandler::distressOn(std::shared_ptr<Ship> ship) = 0 ;
 * @brief distressOn Alus on tehnyt hätäkutsun.
 * @param ship hätäkutsun tehnyt alus
+* @post Poikkeustakuu: nothrow
 */
 
 
@@ -88,12 +95,14 @@ struct Point;
 * @fn virtual void Common::IEventHandler::distressOff(std::shared_ptr<Ship> ship) = 0;
 * @brief distressOff Alus on sulkenut hätäkutsun.
 * @param ship hätäkutsun sulkenut alus
+* @post Poikkeustakuu: nothrow
 */
 
 /**
 * @fn virtual void Common::IEventHandler::shipAbandoned(std::shared_ptr<Ship> ship) = 0;
 * @brief shipAbandoned Alus on hylätty.
 * @param ship hylätty alus
+* @post Poikkeustakuu: nothrow
 */
 
 #endif // IEVENTHANDLER_HH

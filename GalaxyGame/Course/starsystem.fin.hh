@@ -46,38 +46,45 @@
 /**
  * @fn std::string Common::StarSystem::getName() const;
  * @return Tähtijärjestelmän nimi.
+ * @post Poikkeustakuu: nothrow
  */
 
 /**
- * @fn Common::StarSystem::ECONOMY_TYPE Common::StarSystem::getEconomy();
+ * @fn Common::StarSystem::ECONOMY_TYPE Common::StarSystem::getEconomy() const;
  * @return Tähtijärjestelmän pääasiallinen elinkeino.
+ * @post Poikkeustakuu: nothrow
  */
 
 /**
  * @fn unsigned Common::StarSystem::getId() const;
  * @return Tähtijärjestelmän tunniste.
+ * @post Poikkeustakuu: nothrow
  */
 
 /**
- * @fn uint64_t getPopulation() const;
+ * @fn uint64_t Common::StarSystem::getPopulation() const;
  * @return Tähtijärjestelmän väkiluku.
+ * @post Poikkeustakuu: nothrow
  */
 
 /**
  * @fn Common::Point Common::StarSystem::getCoordinates() const;
  * @return Tähtijärjestelmän sijainti koordinaateissa.
+ * @post Poikkeustakuu: nothrow
  */
 
 /**
  * @fn bool Common::StarSystem::isInhabited() const;
- * @brief Onko tähtijärjestelmä asutettu.
+ * @brief Tarkistaa, onko tähtijärjestelmä asutettu.
  * @return Tosi, jos on, muutoin epätosi.
+ * @post Poikkeustakuu: nothrow
  */
 
 /**
  * @fn bool Common::StarSystem::canRepair() const;
- * @brief Voiko tähtijärjestelmässä suorittaa korjauksia ilman lisävarusteita.
+ * @brief Tarkistaa, voiko tähtijärjestelmässä suorittaa korjauksia ilman lisävarusteita.
  * @return Tosi, jos voi, muutoin epätosi.
+ * @post Poikkeustakuu: nothrow
  */
 
 /**

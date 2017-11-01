@@ -4,17 +4,19 @@
 #ifdef English_dox
 /**
  *@file
- * @brief Defines the interface which keeps track of the game state
+ * @brief Defines the interface which keeps track of the game state.
  */
 #endif
 namespace Common {
 
 #ifdef English_dox
 /**
- * @brief Defines the interface for the concrete statistics
+ * @brief Defines the interface for statistics class.
  *
- *
- * @invariant getCreditBalance() > MAX_LOAN_ALLOWANCE && getPoints() > 0
+ * @invariant getPoints() >= 0
+ * @invariant getCreditBalance() > MAX_LOAN_ALLOWANCE
+ * MAX_LOAN_ALLOWANCE is the limit that the player is allowed to have debt.
+ * The actual value is to be decided by the implementer of inherited class.
  */
 #endif
 class IStatistics
@@ -23,97 +25,102 @@ public:
 #ifdef English_dox
     /**
      * @brief Default constructor for the interface (exists for the sake of documentation).
-     * @post Initial values are set according to the selection
      */
 #endif
     IStatistics() = default;
 
 #ifdef English_dox
     /**
-     * @brief Default destructor for the interface (needed since a base class should have a virtual destructor)
+     * @brief Default destructor for the interface (needed since a base class should have a virtual destructor).
      */
 #endif
     virtual ~IStatistics() = default;
 
 #ifdef English_dox
     /**
-     * @brief addSavedShip increases the number of ships saved from distress
-     *
+     * @brief Increases the number of ships saved from distress.
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void addSavedShip() = 0;
 
 #ifdef English_dox
     /**
-      *@brief getSavedShips returns the number of saved ships
+      * @return Returns the number of saved ships.
+      * @post Exception guarantee: nothrow
       */
 #endif
     virtual unsigned getSavedShips() const = 0;
 
 #ifdef English_dox
     /**
-     * @brief addLostShip increases the number of ships lost (the ones that have left the galaxy)
+     * @brief Increases the number of lost ships by one. Used to track also other removed ships.
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void addLostShip() = 0;
 
 #ifdef English_dox
     /**
-     * @brief getLostShips returns the number of lost ships
+     * @return The number of lost ships.
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual unsigned getLostShips() const = 0;
 
 #ifdef English_dox
     /**
-     * @brief addPoints increses the points of the player by the given amount
-     * @param amount Points to be added
+     * @brief Increases the points of the player.
+     * @param amount Points to be added.
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void addPoints(unsigned amount) = 0;
 
 #ifdef English_dox
     /**
-     * @brief reducePoints reduces the points of the player by the given amount
-     * @param amount Points to be reduced
-     * @exception StateException, if the invariant gets broken
+     * @brief Reduces the points of the player.
+     * @param amount Points to be reduced.
+     * @exception StateException, if points would go under zero
+     * @post Exception guarantee: strong
      */
 #endif
     virtual void reducePoints(unsigned amount) = 0;
 
 #ifdef English_dox
     /**
-     * @brief getPoints returns the total points of the players
+     * @return The total points of the player.
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual unsigned getPoints() const = 0;
 
 #ifdef English_dox
     /**
-     * @brief addCredits adds credits to the player's account
+     * @brief Adds credits to the player's account.
      * @param amount Credits to be added
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual void addCredits(unsigned amount) = 0;
 
 #ifdef English_dox
     /**
-     * @brief reduceCredits reduces credits from the player's account
-     * @param amount Credits to be removed
-     * @exception StateException, if the invariant gets broken
+     * @brief Reduces credits from the player's account.
+     * @param amount Credits to be removed.
+     * @exception StateException, if the invariant gets broken.
+     * @post Exception guarantee: strong
      */
 #endif
     virtual void reduceCredits(unsigned amount) = 0;
 
-
 #ifdef English_dox
     /**
-     * @brief getCreditBalance returns the number of credits left
+     * @return The number of credits left.
+     * @post Exception guarantee: nothrow
      */
 #endif
     virtual int getCreditBalance() const = 0;
-
-
 };
 
 }//Common

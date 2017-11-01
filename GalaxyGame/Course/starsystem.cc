@@ -24,7 +24,7 @@ std::string StarSystem::getName() const
     return name_;
 }
 
-StarSystem::ECONOMY_TYPE StarSystem::getEconomy()
+StarSystem::ECONOMY_TYPE StarSystem::getEconomy() const
 {
     return economy_;
 }
