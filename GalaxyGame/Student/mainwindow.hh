@@ -11,6 +11,8 @@
 #include "galaxy.hh"
 #include "utility.hh"
 #include "igamerunner.hh"
+#include "mapwindow.hh"
+#include "useractionhandler.hh"
 
 class PlayerShip;
 class NPCShip;
@@ -22,7 +24,7 @@ class MainWindow;
 }
 
 typedef QList< QPair<std::shared_ptr<Common::Ship>, NPCShip*> > shipUI_t;
-typedef QList< QPair<std::shared_ptr<Common::StarSystem>, StarPlanet*> > starSystemUI_t;
+typedef QList< QPair<std::shared_ptr<Common::StarSystem>, StarPlanet*> > starPlanetUI_t;
 
 class MainWindow : public QMainWindow
 {
@@ -40,28 +42,31 @@ public Q_SLOTS:
     void pressedSpace();
     void shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY);
     void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
+    void travelToStarSystem(unsigned starSystemId);
 private:
     Ui::MainWindow *ui;
 
     std::shared_ptr<Common::IEventHandler> handler_;
     std::shared_ptr<Student::Galaxy> galaxy_;
     std::shared_ptr<Common::IGameRunner> gameRunner_;
+    std::shared_ptr<Student::UserActionHandler> userActionHandler_;
 
     QTimer *refreshTimer_ = nullptr;
     QTimer *collisionTimer_ = nullptr;
     QTimer *gameTimer_ = nullptr;
     QGraphicsScene *scene_ = nullptr;
     PlayerShip *player_ = nullptr;
+    MapWindow *map = nullptr;
     QMap<QString, QVariant> playerScore_;
     shipUI_t shipList_;
-    starSystemUI_t starSystemList_;
+    starPlanetUI_t starPlanetList_;
     bool isPlayerTrading_ = false;
 
     void startGame();
     void loadSettings();
     void saveSettings();
     void createPlayer();
-    void createStarSystem();
+    void createPlanetsForStarSystem(unsigned starSystemId);
     void checkCollision();
     QGraphicsItem *getSceneShip(std::shared_ptr<Common::Ship> ship);
     QGraphicsItem *getSceneStarSystem(std::shared_ptr<Common::StarSystem> starSystem);
@@ -76,6 +81,9 @@ private Q_SLOTS:
     void executeCollisionCheck();
     void on_actionMy_statistics_triggered();
     void gameEvent();
+    void on_pbShowMap_clicked();
+
+
 Q_SIGNALS:
     void startCollisionTimer();
     void stopCollisionTimer();

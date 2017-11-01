@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent,
     handler_ = handler;
     galaxy_ = galaxy;
     gameRunner_ = gameRunner;
+    userActionHandler_ = std::make_shared<Student::UserActionHandler>();
 
     // Create scene for the game
     scene_ = new QGraphicsScene(this);
@@ -77,8 +78,8 @@ void MainWindow::startGame()
     // Add enemies to the galaxy
     gameRunner_->spawnShips(50);
 
-    // Add star systems to the galaxy
-    createStarSystem();
+    // Generate environment for initialposition of player (initial starSystem)
+    createPlanetsForStarSystem(player_->getLocation().get()->getId());
 
     // Add scene to the view
     ui->graphicsView->setScene(scene_);
@@ -134,16 +135,20 @@ void MainWindow::pressedSpace()
     }
 }
 
-void MainWindow::createStarSystem()
+void MainWindow::createPlanetsForStarSystem(unsigned starSystemId)
 {
+    // ToDo: if player in SS for the first time -> generate planets
+    //       Store planets somewhere so they are the same for certain SS everyTime
+
+    // ToDo: Create random positions of planets
     auto starSystem = galaxy_->getStarSystemVector();
     for(Common::StarSystem::StarSystemVector::size_type i = 0; i<starSystem.size(); ++i)
     {
         StarPlanet *starPlanet = new StarPlanet(starSystem.at(i).get()->getCoordinates());
         scene_->addItem(starPlanet);
-        starSystemList_.append(qMakePair(starSystem.at(i), starPlanet));
+        starPlanetList_.append(qMakePair(starSystem.at(i), starPlanet));
     }
-    ui->lbCntStarSystems->setText(QString::number(starSystemList_.count()));
+//    ui->lbCntStarSystems->setText(QString::number(starSystemList_.count()));
 }
 
 void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
@@ -171,6 +176,13 @@ void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
     ui->lbCntEnemies->setText(QString::number(shipList_.count()));
 }
 
+void MainWindow::travelToStarSystem(unsigned starSystemId)
+{
+    // ToDo: implement repaint() of starsystems and move with playership
+    map->hide();
+    qDebug() << "Mainwindow - playerShip make move to starSystem " << starSystemId;
+}
+
 void MainWindow::shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY)
 {
     QGraphicsItem *item = getSceneShip(ship);
@@ -195,7 +207,7 @@ QGraphicsItem* MainWindow::getSceneShip(std::shared_ptr<Common::Ship> ship)
 
 QGraphicsItem* MainWindow::getSceneStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
 {
-    for(auto k : starSystemList_)
+    for(auto k : starPlanetList_)
     {
         if(k.first == starSystem)
         {
@@ -208,7 +220,7 @@ QGraphicsItem* MainWindow::getSceneStarSystem(std::shared_ptr<Common::StarSystem
 
 std::shared_ptr<Common::StarSystem> MainWindow::getStarSystemByItem(QGraphicsItem* item)
 {
-    for(auto k : starSystemList_)
+    for(auto k : starPlanetList_)
     {
         if(k.second == item)
         {
@@ -342,7 +354,6 @@ void MainWindow::on_actionMy_statistics_triggered()
     //Check if player is initialized
     if(player_ != nullptr)
     {
-        qDebug() << "Player initialized";
         StatisticsWindow* stats = new StatisticsWindow(player_);
         stats->setModal(true);
         stats->exec();
@@ -356,3 +367,20 @@ void MainWindow::on_actionMy_statistics_triggered()
         msgBox.exec();
     }
 }
+
+void MainWindow::on_pbShowMap_clicked()
+{
+    if(map == nullptr)
+    {
+        QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
+        connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)), this, SLOT(travelToStarSystem(unsigned)));
+        map = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), this);
+        map->setModal(true);
+        map->exec();
+    }
+    else
+    {
+        map->show();
+    }
+}
+
