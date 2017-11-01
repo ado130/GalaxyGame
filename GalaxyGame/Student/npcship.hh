@@ -5,11 +5,13 @@
 #include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 
+#include "ship.hh"
+
 class NPCShip : public QGraphicsPixmapItem
 {
 
 public:
-    NPCShip();
+    NPCShip(Common::Point point);
 
 private slots:
     void move();

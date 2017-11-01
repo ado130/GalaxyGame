@@ -27,7 +27,7 @@ void Student::EventHandler::shipRelocated(std::shared_ptr<Common::Ship> ship, st
 
 void Student::EventHandler::shipMoved(std::shared_ptr<Common::Ship> ship, Common::Point origin, Common::Point target)
 {
-    emit shipMovement(ship, (target.x-origin.x)*2, (target.y-origin.y)*2);
+    emit shipMovement(ship, target.x-origin.x, target.y-origin.y);
 }
 
 void Student::EventHandler::exceptionInExecution(std::shared_ptr<Common::Ship> ship, const std::string &msg)

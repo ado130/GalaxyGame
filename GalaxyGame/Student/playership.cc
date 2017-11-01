@@ -42,7 +42,8 @@ Student::Statistics PlayerShip::getStatistics()
 
 void PlayerShip::keyPressEvent(QKeyEvent *event)
 {    
-    if(!event->isAutoRepeat()){
+    if(!event->isAutoRepeat())
+    {
         pressedKeys.insert(event->key());
         updateMovement();
     }
@@ -50,7 +51,8 @@ void PlayerShip::keyPressEvent(QKeyEvent *event)
 
 void PlayerShip::keyReleaseEvent(QKeyEvent *event)
 {
-    if(!event->isAutoRepeat()){
+    if(!event->isAutoRepeat())
+    {
         pressedKeys.remove(event->key());
     }
 }
@@ -81,8 +83,9 @@ void PlayerShip::goDown(qreal width, qreal height)
 
 void PlayerShip::updateMovement()
 {
-    for(int key : pressedKeys){
-        qDebug() << key << endl;
+    for(int key : pressedKeys)
+    {
+        //qDebug() << key << endl;
         moveAccordingToPressedKey(key);
     }
 }
@@ -95,19 +98,23 @@ void PlayerShip::moveAccordingToPressedKey(int key)
     {
         //The ship goes back -> we want to rotate back of the ship
         //to the left -> front goes to the right
-        if(pressedKeys.contains(Qt::Key_Down)){
+        if(pressedKeys.contains(Qt::Key_Down))
+        {
             goRight();
         }
-        else{
+        else
+        {
             goLeft();
         }
     }
     else if(key == Qt::Key_Right)
     {
-        if(pressedKeys.contains(Qt::Key_Down)){
+        if(pressedKeys.contains(Qt::Key_Down))
+        {
             goLeft();
         }
-        else{
+        else
+        {
             goRight();
         }
     }

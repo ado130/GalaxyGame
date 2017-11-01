@@ -155,7 +155,7 @@ void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
 {
     if(newShip)
     {
-        NPCShip *npcship = new NPCShip();
+        NPCShip *npcship = new NPCShip(ship->getLocation()->getCoordinates());
         scene_->addItem(npcship);
         shipList_.append(qMakePair(ship, npcship));
     }

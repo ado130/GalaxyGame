@@ -2,7 +2,7 @@
 #include "ship.hh"
 #include <QDebug>
 
-NPCShip::NPCShip():
+NPCShip::NPCShip(Common::Point point):
     QGraphicsPixmapItem()
 {  
     setPixmap(QPixmap(":/images/images/NPCShip.png"));
@@ -10,9 +10,7 @@ NPCShip::NPCShip():
     setTransformOriginPoint(static_cast<int>(scale()*boundingRect().size().width()/2), static_cast<int>(scale()*boundingRect().size().height()/2));
 
     // ToDo: NPC position
-    int posX = Common::randomMinMax(-1000, 1000);
-    int posY = Common::randomMinMax(-1000, 1000);
-    setPos(posX, posY);
+    setPos(point.x, point.y);
 }
 
 void NPCShip::move()
