@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent,
             this, SLOT(shipEvent(std::shared_ptr<Common::Ship>, bool)));
     connect(eventHandlerObj, SIGNAL(shipMovement(std::shared_ptr<Common::Ship>, int, int)),
             this, SLOT(shipMovement(std::shared_ptr<Common::Ship>, int, int)));
+
+    ui->pbShowMap->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -51,6 +53,7 @@ MainWindow::~MainWindow()
     delete gameTimer_;
     delete collisionTimer_;
     delete player_;
+    delete map_;
     delete ui;
 }
 
@@ -65,52 +68,50 @@ void MainWindow::startGame()
     scene_->clear();
 
     qDebug() << "New game";
-    // Backgroudn for scene
+    // Background for scene
     scene_->setBackgroundBrush( Qt::lightGray );
 
     // Add player to the galaxy
     createPlayer();
-    scene_->addItem(player_);
-    player_->setFlag(QGraphicsItem::ItemIsFocusable);
-    player_->setFocus();
-    player_->setZValue(1);
 
     // Add enemies to the galaxy
-    gameRunner_->spawnShips(50);
+    gameRunner_->spawnShips(100);
 
     // Generate environment for initialposition of player (initial starSystem)
-    createPlanetsForStarSystem(player_->getLocation().get()->getId());
+    createPlanetsForStarSystem();
+
+    // Start location is player's location
+    travelToStarSystem(player_->getLocation()->getId());
 
     // Add scene to the view
     ui->graphicsView->setScene(scene_);
     ui->graphicsView->scene()->setFocusItem(player_);
 
-    // Base coordinates == player start position, there will be player's base
-    QString baseCoor = QString(tr("Base coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
-    ui->lbBaseCoor->setText(baseCoor);
-
     // Set timers
     refreshTimer_ = new QTimer();
     connect(refreshTimer_, &QTimer::timeout, this, &MainWindow::refreshUI);
-    refreshTimer_->start(1);
+    refreshTimer_->start(5);
 
     // ToDo: solve the crash problem
     collisionTimer_ = new QTimer();
-    connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::executeCollisionCheck);
-    connect(this, SIGNAL(startCollisionTimer()), collisionTimer_, SLOT(start()));
-    connect(this, &MainWindow::stopCollisionTimer, collisionTimer_, &QTimer::stop);
-    //collisionTimer_->start(2000);
+    connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::checkCollision);
+    collisionTimer_->start(500);
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
-    gameTimer_->start(50);
+    gameTimer_->start(2000);
+
+    ui->pbShowMap->setEnabled(true);
 }
 
 void MainWindow::createPlayer()
 {
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
-    std::shared_ptr<Common::StarSystem> initialLocation = std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
+    std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();//std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
     player_ = new PlayerShip(this, shipEngine, initialLocation, handler_);
+    player_->setFlag(QGraphicsItem::ItemIsFocusable);
+    player_->setFocus();
+    player_->setZValue(1);
     connect(player_, &PlayerShip::pressedSpace, this, &MainWindow::pressedSpace);
 }
 
@@ -121,34 +122,24 @@ void MainWindow::pressedSpace()
         // ToDo: trade player-planet
         qDebug() << "Player trade";
     }
-    else
-    {
-        qreal width = player_->scale()*player_->boundingRect().size().width()/2;
-        qreal height = player_->scale()*player_->boundingRect().size().height()/2;
-
-        Bullet *bullet = new Bullet();
-        bullet->setRotation(player_->rotation());
-        // ToDo: bullet position
-        bullet->setPos(player_->x() - width * cos( (player_->rotation()-90) * M_PI / 180.0 ),
-                       player_->y() - height * sin( (player_->rotation()-90) * M_PI / 180.0 ));
-        scene_->addItem(bullet);
-    }
 }
 
-void MainWindow::createPlanetsForStarSystem(unsigned starSystemId)
+void MainWindow::createPlanetsForStarSystem()
 {
     // ToDo: if player in SS for the first time -> generate planets
     //       Store planets somewhere so they are the same for certain SS everyTime
 
-    // ToDo: Create random positions of planets
-    auto starSystem = galaxy_->getStarSystemVector();
-    for(Common::StarSystem::StarSystemVector::size_type i = 0; i<starSystem.size(); ++i)
+    unsigned int id = 0;
+    auto starSystems = galaxy_->getStarSystemVector();
+    for(auto k : starSystems)
     {
-        StarPlanet *starPlanet = new StarPlanet(starSystem.at(i).get()->getCoordinates());
-        scene_->addItem(starPlanet);
-        starPlanetList_.append(qMakePair(starSystem.at(i), starPlanet));
+        for(unsigned int i = 0; i<5; ++i)      // e.g. 5 planets for each star system
+        {
+            StarPlanet *starPlanet = new StarPlanet(id++, k->getPopulation(), k->getCoordinates());      // ToDo: maybe change the popilation?
+            starPlanetList_.insert(k->getId(), qMakePair(k, starPlanet));
+        }
     }
-//    ui->lbCntStarSystems->setText(QString::number(starSystemList_.count()));
+    ui->lbCntStarSystems->setText(QString::number(starSystems.size()));
 }
 
 void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
@@ -156,7 +147,6 @@ void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
     if(newShip)
     {
         NPCShip *npcship = new NPCShip(ship->getLocation()->getCoordinates());
-        scene_->addItem(npcship);
         shipList_.append(qMakePair(ship, npcship));
     }
     else
@@ -178,14 +168,49 @@ void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
 
 void MainWindow::travelToStarSystem(unsigned starSystemId)
 {
-    // ToDo: implement repaint() of starsystems and move with playership
-    map->hide();
-    qDebug() << "Mainwindow - playerShip make move to starSystem " << starSystemId;
+    if(map_ != nullptr)
+    {
+        map_->hide();
+        scene_->removeItem(player_);
+        scene_->clear();
+    }
+
+    scene_->addItem(player_);
+
+    auto starSystem = galaxy_->getStarSystemById(starSystemId);
+    auto ships = galaxy_->getShipsInStarSystem(starSystem->getName());
+    for(auto k : ships)
+    {
+        for(auto m : shipList_)
+        {
+            if(k == m.first)
+            {
+                scene_->addItem(m.second);
+                break;
+            }
+        }
+    }
+
+    ui->lbSSEnemies->setText(QString::number(scene_->items().size()-1));
+
+    for (auto k : starPlanetList_.values(starSystemId))
+    {
+        scene_->addItem(k.second);
+    }
+
+    const char* economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony", "None" };
+    ui->lbSSName->setText(starSystem->getName().data());
+    ui->lbSSEconomy->setText(economy[starSystem->getEconomy()]);
+    ui->lbSSPopulation->setText(QString::number(starSystem->getPopulation()));
+    ui->lbSSCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x*50) +
+                                 " y: " + QString::number(starSystem->getCoordinates().y*50));
+
+    ui->graphicsView->setFocus();
 }
 
 void MainWindow::shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY)
 {
-    QGraphicsItem *item = getSceneShip(ship);
+    QGraphicsItem* item = getSceneShip(ship);
     if(item != nullptr)
     {
         item->setPos(item->x() + diffX, item->y() + diffY);
@@ -218,13 +243,13 @@ QGraphicsItem* MainWindow::getSceneStarSystem(std::shared_ptr<Common::StarSystem
     return nullptr;
 }
 
-std::shared_ptr<Common::StarSystem> MainWindow::getStarSystemByItem(QGraphicsItem* item)
+StarPlanet* MainWindow::getStarPlanetByItem(QGraphicsItem* item)
 {
     for(auto k : starPlanetList_)
     {
         if(k.second == item)
         {
-            return k.first;
+            return k.second;
         }
     }
 
@@ -234,9 +259,6 @@ std::shared_ptr<Common::StarSystem> MainWindow::getStarSystemByItem(QGraphicsIte
 void MainWindow::refreshUI()
 {
     ui->graphicsView->centerOn(player_);
-
-    QString playerCoor = QString(tr("Player coordinates: %1 %2")).arg(QString::number(player_->x(), 'f', 1)).arg(QString::number(player_->y(), 'f', 1));
-    ui->lbPlayerCoor->setText(playerCoor);
 }
 
 void MainWindow::gameEvent()
@@ -245,60 +267,48 @@ void MainWindow::gameEvent()
     gameRunner_->doActions();
 }
 
-void MainWindow::executeCollisionCheck()
-{
-    QFuture<void> collision = QtConcurrent::run(this, &MainWindow::checkCollision);
-}
-
 void MainWindow::checkCollision()
 {
-    //emit stopCollisionTimer();
-    for(auto k : scene_->items())
+    QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(player_);
+    for(int i = 0, n = colliding_Items.size(); i<n; ++i)
     {
-        QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(k);
-        if(typeid (*k) == typeid (Bullet))
+        if(typeid (*(colliding_Items[i])) == typeid (NPCShip))
         {
-            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
-            {
-                if(typeid (*(colliding_Items[i])) == typeid (NPCShip))
-                {
-                    qDebug() << "Bullet-NPC collision";
-                    scene_->removeItem(colliding_Items[i]);
-                    scene_->removeItem(k);
-
-                    delete colliding_Items[i];
-                    //delete k;
-                }
-            }
+            // ToDo: collision with NPC ship
         }
-        else if(typeid (*k) == typeid (PlayerShip))
+        else if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
         {
-            QList<QGraphicsItem *> colliding_Items = scene_->collidingItems(k);
-            for(int i = 0, n = colliding_Items.size(); i<n; ++i)
-            {
-                if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
-                {
-                    isPlayerTrading_ = true;
-                    const char * economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony" };
-                    auto starSystem = getStarSystemByItem(colliding_Items[i]);
-                    ui->lbName->setText(starSystem->getName().data());
-                    ui->lbEconomy->setText(economy[starSystem->getEconomy()]);
-                    ui->lbPopulation->setText(QString::number(starSystem->getPopulation()));
-                    ui->lbCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x) +
-                                               "y: " + QString::number(starSystem->getCoordinates().y));
-                }
-                else
-                {
-                    isPlayerTrading_ = false;
-                    ui->lbName->clear();
-                    ui->lbEconomy->clear();
-                    ui->lbPopulation->clear();
-                    ui->lbCoordinates->clear();
-                }
-            }
+            isPlayerTrading_ = true;
+            const char* economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony" };
+            const char* goods[] = {"Oil", "Natural_gas", "Wood", "Diamonds", "Coal", "None"};
+            auto starPlanet = getStarPlanetByItem(colliding_Items[i]);
+            ui->lbSPName->setText(starPlanet->getName().data());
+            ui->lbSPEconomy->setText(economy[starPlanet->getEconomy()]);
+            ui->lbSPPopulation->setText(QString::number(starPlanet->getPopulation()));
+            ui->lbSPCoordinates->setText("x: " + QString::number(starPlanet->getCoordinates().x) +
+                                         " y: " + QString::number(starPlanet->getCoordinates().y));
+            ui->lbSPGoods->setText(goods[starPlanet->getGoods()]);
+        }
+        else
+        {
+            isPlayerTrading_ = false;
+            ui->lbSPName->clear();
+            ui->lbSPEconomy->clear();
+            ui->lbSPPopulation->clear();
+            ui->lbSPCoordinates->clear();
+            ui->lbSPGoods->clear();
         }
     }
-    //emit startCollisionTimer();
+}
+
+void MainWindow::loadSettings()
+{
+
+}
+
+void MainWindow::saveSettings()
+{
+
 }
 
 void MainWindow::on_pbNewGame_clicked()
@@ -339,16 +349,6 @@ void MainWindow::on_actionHelp_triggered()
     help->show();
 }
 
-void MainWindow::loadSettings()
-{
-
-}
-
-void MainWindow::saveSettings()
-{
-
-}
-
 void MainWindow::on_actionMy_statistics_triggered()
 {
     //Check if player is initialized
@@ -370,17 +370,17 @@ void MainWindow::on_actionMy_statistics_triggered()
 
 void MainWindow::on_pbShowMap_clicked()
 {
-    if(map == nullptr)
+    if(map_ == nullptr)
     {
         QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
         connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)), this, SLOT(travelToStarSystem(unsigned)));
-        map = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), this);
-        map->setModal(true);
-        map->exec();
+        map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), this);
+        map_->setModal(true);
+        map_->exec();
     }
     else
     {
-        map->show();
+        map_->show();
     }
 }
 

@@ -5,22 +5,37 @@
 #include <QList>
 #include <QGraphicsSceneMouseEvent>
 
-StarPlanet::StarPlanet(Common::Point point)
+StarPlanet::StarPlanet(unsigned id, uint64_t population, Common::Point point) :
+    id_(id), population_(population), coordinates_(point)
 {
-    QMap<unsigned int, QString> planets;
-    planets[0] = "earth";
-    planets[1] = "jupiter";
-    planets[2] = "mars";
-    planets[3] = "mercury";
-    planets[4] = "moon";
-    planets[5] = "pluto";
-    planets[6] = "venus";
+    const char* planets[] =  {"Earth", "Jupiter", "Mars", "Mercury", "Moon", "Pluto", "Venus"};
 
     unsigned int randomPlanet = Common::randomMinMax(0, 7);
-    QString planet = QString(":/images/images/planets/%1.png").arg(planets.value(randomPlanet));
+    QString planet = QString(":/images/images/planets/%1.png").arg(QString(planets[randomPlanet]).toLower());
+
+    name_ = planets[randomPlanet];
+    goods_ = static_cast<GOODS_TYPE>(Common::randomMinMax(0, 6));
+    economy_ = static_cast<Common::StarSystem::ECONOMY_TYPE>(Common::randomMinMax(0, 11));;
 
     setPixmap(QPixmap(planet));
     setScale(0.3);
 
-    setPos(point.x*100, point.y*100);
+    int posX = Common::randomMinMax(-500, 500);
+    int posY = Common::randomMinMax(-500, 500);
+
+    coordinates_ = Common::Point(posX, posY);
+
+    setPos(posX, posY);
 }
+
+
+
+
+
+
+
+
+
+
+
+

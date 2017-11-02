@@ -24,7 +24,7 @@ class MainWindow;
 }
 
 typedef QList< QPair<std::shared_ptr<Common::Ship>, NPCShip*> > shipUI_t;
-typedef QList< QPair<std::shared_ptr<Common::StarSystem>, StarPlanet*> > starPlanetUI_t;
+typedef QMultiMap<unsigned int, QPair<std::shared_ptr<Common::StarSystem>, StarPlanet*> > starPlanetUI_t;
 
 class MainWindow : public QMainWindow
 {
@@ -56,7 +56,7 @@ private:
     QTimer *gameTimer_ = nullptr;
     QGraphicsScene *scene_ = nullptr;
     PlayerShip *player_ = nullptr;
-    MapWindow *map = nullptr;
+    MapWindow *map_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     shipUI_t shipList_;
     starPlanetUI_t starPlanetList_;
@@ -66,11 +66,10 @@ private:
     void loadSettings();
     void saveSettings();
     void createPlayer();
-    void createPlanetsForStarSystem(unsigned starSystemId);
-    void checkCollision();
+    void createPlanetsForStarSystem();
     QGraphicsItem *getSceneShip(std::shared_ptr<Common::Ship> ship);
     QGraphicsItem *getSceneStarSystem(std::shared_ptr<Common::StarSystem> starSystem);
-    std::shared_ptr<Common::StarSystem> getStarSystemByItem(QGraphicsItem *item);
+    StarPlanet *getStarPlanetByItem(QGraphicsItem *item);
 private Q_SLOTS:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();
@@ -78,9 +77,9 @@ private Q_SLOTS:
     void on_actionAbout_triggered();
     void on_actionHelp_triggered();
     void refreshUI();
-    void executeCollisionCheck();
     void on_actionMy_statistics_triggered();
     void gameEvent();
+    void checkCollision();
     void on_pbShowMap_clicked();
 
 

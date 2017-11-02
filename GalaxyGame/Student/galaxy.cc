@@ -136,7 +136,8 @@ Common::IGalaxy::ShipVector Student::Galaxy::getShipsInStarSystem(std::string na
         Common::IGalaxy::ShipVector returnShipVector;
         for(auto k : shipsInGalaxy_)
         {
-            if(k.get()->getLocation().get()->getName() == name)
+            if(k == nullptr || k->getLocation() == nullptr) continue;
+            if(k->getLocation()->getName() == name)
             {
                 returnShipVector.push_back(k);
             }
