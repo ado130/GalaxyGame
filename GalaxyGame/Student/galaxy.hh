@@ -30,6 +30,8 @@ public:
     std::shared_ptr<Common::StarSystem> getStarSystemById(unsigned id);
     Common::StarSystem::StarSystemVector getStarSystemVector() const {return starSystemsInGalaxy_;}
 
+    void removeShips() { shipsInGalaxy_.clear(); }
+
 private:
     ShipVector shipsInGalaxy_;
     Common::StarSystem::StarSystemVector starSystemsInGalaxy_;

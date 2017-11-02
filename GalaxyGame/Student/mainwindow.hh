@@ -68,7 +68,6 @@ private:
     void createPlayer();
     void createPlanetsForStarSystem();
     QGraphicsItem *getSceneShip(std::shared_ptr<Common::Ship> ship);
-    QGraphicsItem *getSceneStarSystem(std::shared_ptr<Common::StarSystem> starSystem);
     StarPlanet *getStarPlanetByItem(QGraphicsItem *item);
 private Q_SLOTS:
     void on_actionNew_Game_triggered();

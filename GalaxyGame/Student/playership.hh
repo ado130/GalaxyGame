@@ -23,6 +23,7 @@ public:
     bool decideAction();
     Student::Statistics getStatistics();
 
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);

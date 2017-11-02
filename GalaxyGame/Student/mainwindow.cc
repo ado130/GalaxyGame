@@ -9,6 +9,7 @@
 #include "point.hh"
 #include "bullet.hh"
 #include "statisticswindow.hh"
+#include "objectnotfoundexception.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -59,6 +60,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::startGame()
 {
+    ui->pbNewGame->setEnabled(false);
     // ToDo: do not ignore ToDo's
     //bool ok;
     //QString nickName = QInputDialog::getText(this, tr("Enter nickname"),
@@ -71,14 +73,17 @@ void MainWindow::startGame()
     // Background for scene
     scene_->setBackgroundBrush( Qt::lightGray );
 
-    // Add player to the galaxy
+    // Add player to the galaxy, must be called before travelToStarSystem
     createPlayer();
 
-    // Add enemies to the galaxy
-    gameRunner_->spawnShips(100);
-
     // Generate environment for initialposition of player (initial starSystem)
+    starPlanetList_.clear();
     createPlanetsForStarSystem();
+
+    // Add enemies to the galaxy
+    shipList_.clear();
+    galaxy_->removeShips();
+    gameRunner_->spawnShips(150);
 
     // Start location is player's location
     travelToStarSystem(player_->getLocation()->getId());
@@ -92,7 +97,6 @@ void MainWindow::startGame()
     connect(refreshTimer_, &QTimer::timeout, this, &MainWindow::refreshUI);
     refreshTimer_->start(5);
 
-    // ToDo: solve the crash problem
     collisionTimer_ = new QTimer();
     connect(collisionTimer_, &QTimer::timeout, this, &MainWindow::checkCollision);
     collisionTimer_->start(500);
@@ -102,6 +106,7 @@ void MainWindow::startGame()
     gameTimer_->start(2000);
 
     ui->pbShowMap->setEnabled(true);
+    ui->pbNewGame->setEnabled(true);
 }
 
 void MainWindow::createPlayer()
@@ -126,9 +131,6 @@ void MainWindow::pressedSpace()
 
 void MainWindow::createPlanetsForStarSystem()
 {
-    // ToDo: if player in SS for the first time -> generate planets
-    //       Store planets somewhere so they are the same for certain SS everyTime
-
     unsigned int id = 0;
     auto starSystems = galaxy_->getStarSystemVector();
     for(auto k : starSystems)
@@ -152,6 +154,7 @@ void MainWindow::shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip)
     else
     {
         QGraphicsItem *item = getSceneShip(ship);
+        if(item == nullptr) return;
         scene_->removeItem(item);
         for(int i = 0; i<shipList_.size(); ++i)
         {
@@ -170,7 +173,12 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
 {
     if(map_ != nullptr)
     {
+        gameTimer_->stop();
         map_->hide();
+        if(player_->getLocation()->getId() == starSystemId)
+        {
+            return;
+        }
         scene_->removeItem(player_);
         scene_->clear();
     }
@@ -178,6 +186,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     scene_->addItem(player_);
 
     auto starSystem = galaxy_->getStarSystemById(starSystemId);
+    if(starSystem == nullptr) throw Common::ObjectNotFoundException("Star system does not exist in the galaxy.");
     auto ships = galaxy_->getShipsInStarSystem(starSystem->getName());
     for(auto k : ships)
     {
@@ -205,7 +214,11 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     ui->lbSSCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x*50) +
                                  " y: " + QString::number(starSystem->getCoordinates().y*50));
 
-    ui->graphicsView->setFocus();
+    player_->setFocus();
+    if(map_ != nullptr)
+    {
+        gameTimer_->start();
+    }
 }
 
 void MainWindow::shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY)
@@ -222,19 +235,6 @@ QGraphicsItem* MainWindow::getSceneShip(std::shared_ptr<Common::Ship> ship)
     for(auto k : shipList_)
     {
         if(k.first == ship)
-        {
-            return k.second;
-        }
-    }
-
-    return nullptr;
-}
-
-QGraphicsItem* MainWindow::getSceneStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
-{
-    for(auto k : starPlanetList_)
-    {
-        if(k.first == starSystem)
         {
             return k.second;
         }
@@ -275,12 +275,13 @@ void MainWindow::checkCollision()
         if(typeid (*(colliding_Items[i])) == typeid (NPCShip))
         {
             // ToDo: collision with NPC ship
+            return;
         }
         else if(typeid (*(colliding_Items[i])) == typeid (StarPlanet))
         {
             isPlayerTrading_ = true;
             const char* economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony" };
-            const char* goods[] = {"Oil", "Natural_gas", "Wood", "Diamonds", "Coal", "None"};
+            const char* goods[] = { "Oil", "Natural gas", "Wood", "Diamonds", "Coal", "None" };
             auto starPlanet = getStarPlanetByItem(colliding_Items[i]);
             ui->lbSPName->setText(starPlanet->getName().data());
             ui->lbSPEconomy->setText(economy[starPlanet->getEconomy()]);
@@ -288,17 +289,17 @@ void MainWindow::checkCollision()
             ui->lbSPCoordinates->setText("x: " + QString::number(starPlanet->getCoordinates().x) +
                                          " y: " + QString::number(starPlanet->getCoordinates().y));
             ui->lbSPGoods->setText(goods[starPlanet->getGoods()]);
-        }
-        else
-        {
-            isPlayerTrading_ = false;
-            ui->lbSPName->clear();
-            ui->lbSPEconomy->clear();
-            ui->lbSPPopulation->clear();
-            ui->lbSPCoordinates->clear();
-            ui->lbSPGoods->clear();
+
+            return;
         }
     }
+
+    isPlayerTrading_ = false;
+    ui->lbSPName->clear();
+    ui->lbSPEconomy->clear();
+    ui->lbSPPopulation->clear();
+    ui->lbSPCoordinates->clear();
+    ui->lbSPGoods->clear();
 }
 
 void MainWindow::loadSettings()
@@ -329,8 +330,9 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     QTextEdit* help = new QTextEdit();
-    help->setWindowFlag(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
+    help->setWindowFlags(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
     help->setReadOnly(true);
+    help->resize(384, 256);
     help->append(tr("<h1>About</h1>Welcome to Semicolon Spaceship game."
                  "<br/>Lucia Kuchárová & Andrej Vlasatý"
                  "<br/> Hope you like it."));
@@ -340,8 +342,9 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionHelp_triggered()
 {
     QTextEdit* help = new QTextEdit();
-    help->setWindowFlag(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
+    help->setWindowFlags(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
     help->setReadOnly(true);
+    help->resize(384, 256);
     help->append(tr("<h1>Help</h1>Use arrow keys to move."
                  "<br/>Fly over the planet and press space to trade with the planet."
                  "<br/>You can not shoot during trading."

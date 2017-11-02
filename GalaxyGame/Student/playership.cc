@@ -6,7 +6,7 @@
 #include <QGraphicsScene>
 #include <QTimer>
 
-#define PLAYERSPEED_MOVEMENT 0.4
+#define PLAYERSPEED_MOVEMENT 0.3
 
 // ToDo: "Cleaning the code" - logic here, move QT-related stuff to new class
 PlayerShip::PlayerShip(QObject *parent, std::shared_ptr<Common::ShipEngine> engine,
