@@ -1,0 +1,78 @@
+#include "starsystemscene.hh"
+#include "cargoship.hh"
+#include "typeinfo"
+#include "string"
+#include "planetui.hh"
+
+#include <QDebug>
+
+Student::StarSystemScene::StarSystemScene(QWidget *parent)
+{
+    setBackgroundBrush( Qt::lightGray );
+}
+
+
+Student::PlanetUi *Student::StarSystemScene::gePlanetUiByItem(QGraphicsItem* item)
+{
+    for(auto planet : planetList_)
+    {
+        if(planet == item)
+        {
+            return planet;
+        }
+    }
+    return nullptr;
+}
+
+void Student::StarSystemScene::drawShip(NPCShipUi* ship)
+{
+    shipList_.push_back(ship);
+    addItem(ship);
+}
+
+void Student::StarSystemScene::eraseShip(NPCShipUi *ship)
+{
+    std::vector<NPCShipUi*>::iterator iter = std::find(shipList_.begin(), shipList_.end(), ship);
+    if(iter != shipList_.end()){
+        shipList_.erase(iter);
+        removeItem(ship);
+    }
+}
+
+void Student::StarSystemScene::eraseAllShips()
+{
+    for(NPCShipUi* ship : shipList_){
+        removeItem(ship);
+    }
+    shipList_.clear();
+}
+
+void Student::StarSystemScene::drawPlanet(Student::PlanetUi *planet)
+{
+    planetList_.push_back(planet);
+    addItem(planet);
+}
+
+void Student::StarSystemScene::erasePlanet(Student::PlanetUi *planet)
+{
+    std::vector<Student::PlanetUi*>::iterator iter = std::find(planetList_.begin(), planetList_.end(), planet);
+    if(iter != planetList_.end()){
+        planetList_.erase(iter);
+        removeItem(planet);
+    }
+}
+
+void Student::StarSystemScene::eraseAllPlanets()
+{
+    for(Student::PlanetUi* planet : planetList_){
+        removeItem(planet);
+    }
+    planetList_.clear();
+}
+
+void Student::StarSystemScene::eraseEverything()
+{
+    eraseAllPlanets();
+    eraseAllShips();
+    clear();
+}

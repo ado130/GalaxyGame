@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGraphicsScene>
+//#include <QGraphicsScene>
 #include <memory>
 #include <QMap>
 #include <QPair>
@@ -13,18 +13,17 @@
 #include "igamerunner.hh"
 #include "mapwindow.hh"
 #include "useractionhandler.hh"
+#include "starsystemscene.hh"
+#include "drawableobjectsmanager.hh"
 
 class PlayerShip;
-class NPCShip;
-class StarPlanet;
+class NPCShipUi;
+class Planet;
 class QThread;
 
 namespace Ui {
 class MainWindow;
 }
-
-typedef QList< QPair<std::shared_ptr<Common::Ship>, NPCShip*> > shipUI_t;
-typedef QMultiMap<unsigned int, QPair<std::shared_ptr<Common::StarSystem>, StarPlanet*> > starPlanetUI_t;
 
 class MainWindow : public QMainWindow
 {
@@ -41,7 +40,6 @@ public:
 public Q_SLOTS:
     void pressedSpace();
     void shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY);
-    void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
     void travelToStarSystem(unsigned starSystemId);
 private:
     Ui::MainWindow *ui;
@@ -50,25 +48,22 @@ private:
     std::shared_ptr<Student::Galaxy> galaxy_;
     std::shared_ptr<Common::IGameRunner> gameRunner_;
     std::shared_ptr<Student::UserActionHandler> userActionHandler_;
+    std::shared_ptr<Student::DrawableObjectsManager> drawManager_;
 
     QTimer *refreshTimer_ = nullptr;
     QTimer *collisionTimer_ = nullptr;
     QTimer *gameTimer_ = nullptr;
-    QGraphicsScene *scene_ = nullptr;
+    Student::StarSystemScene *scene_ = nullptr;
     PlayerShip *player_ = nullptr;
     MapWindow *map_ = nullptr;
     QMap<QString, QVariant> playerScore_;
-    shipUI_t shipList_;
-    starPlanetUI_t starPlanetList_;
     bool isPlayerTrading_ = false;
 
     void startGame();
     void loadSettings();
     void saveSettings();
     void createPlayer();
-    void createPlanetsForStarSystem();
-    QGraphicsItem *getSceneShip(std::shared_ptr<Common::Ship> ship);
-    StarPlanet *getStarPlanetByItem(QGraphicsItem *item);
+
 private Q_SLOTS:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();
@@ -80,7 +75,6 @@ private Q_SLOTS:
     void gameEvent();
     void checkCollision();
     void on_pbShowMap_clicked();
-
 
 Q_SIGNALS:
     void startCollisionTimer();

@@ -22,13 +22,17 @@ SOURCES += \
 	eventhandler.cc \
         statistics.cc \
 	playership.cc \
-    starplanet.cc \
-    npcship.cc \
     bullet.cc \
     statisticswindow.cc \
     mapwindow.cc \
     starsystemui.cc \
-    useractionhandler.cc
+    useractionhandler.cc \
+    starsystemscene.cc \
+    planet.cc \
+    planetui.cc \
+    planetcoredrive.cc \
+    npcshipui.cc \
+    drawableobjectsmanager.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -36,13 +40,17 @@ HEADERS  += \
     statistics.hh \
 	playership.hh \
 	mainwindow.hh \
-    starplanet.hh \
-    npcship.hh \
     bullet.hh \
     statisticswindow.hh \
     mapwindow.hh \
     starsystemui.hh \
-    useractionhandler.hh
+    useractionhandler.hh \
+    starsystemscene.hh \
+    planet.hh \
+    planetui.hh \
+    planetcoredrive.hh \
+    npcshipui.hh \
+    drawableobjectsmanager.hh
 	
 FORMS += \
     mainwindow.ui \

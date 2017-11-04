@@ -1,5 +1,5 @@
 #include "bullet.hh"
-#include "npcship.hh"
+#include "npcshipui.hh"
 
 #include <QObject>
 #include <QTimer>

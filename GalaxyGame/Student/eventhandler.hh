@@ -27,7 +27,8 @@ public:
 
 Q_SIGNALS:
     void shipMovement(std::shared_ptr<Common::Ship>, int diffX, int diffY);
-    void shipEvent(std::shared_ptr<Common::Ship> ship, bool newShip);
+    void registerShipToUi(std::shared_ptr<Common::Ship> ship);
+    void unregisterShipFromUi(std::shared_ptr<Common::Ship> ship);
 };
 }
 

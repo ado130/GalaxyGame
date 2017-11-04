@@ -12,12 +12,12 @@ Student::EventHandler::~EventHandler()
 
 void Student::EventHandler::shipSpawned(std::shared_ptr<Common::Ship> ship)
 {
-    emit shipEvent(ship, true);
+    emit registerShipToUi(ship);
 }
 
 void Student::EventHandler::shipRemoved(std::shared_ptr<Common::Ship> ship)
 {
-    emit shipEvent(ship, false);
+    emit unregisterShipFromUi(ship);
 }
 
 void Student::EventHandler::shipRelocated(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)

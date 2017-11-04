@@ -1,19 +1,22 @@
-#include "npcship.hh"
-#include "ship.hh"
+#include "npcshipui.hh"
+
 #include <QDebug>
 
-NPCShip::NPCShip(Common::Point point):
-    QGraphicsPixmapItem()
+NPCShipUi::NPCShipUi(QPixmap pixmap)
 {  
-    setPixmap(QPixmap(":/images/images/NPCShip.png"));
+    setPixmap(pixmap);
     setScale(0.2);
     setTransformOriginPoint(static_cast<int>(scale()*boundingRect().size().width()/2), static_cast<int>(scale()*boundingRect().size().height()/2));
 
-    // ToDo: NPC position
-    setPos(point.x, point.y);
+    int posX = Common::randomMinMax(-500, 500);
+    int posY = Common::randomMinMax(-500, 500);
+
+    coordinates_ = Common::Point(posX, posY);
+
+    setPos(posX, posY);
 }
 
-void NPCShip::move()
+void NPCShipUi::move()
 {
     qreal width = scale()*boundingRect().size().width()/2;
     qreal height = scale()*boundingRect().size().height()/2;

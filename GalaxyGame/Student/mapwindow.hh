@@ -26,7 +26,6 @@ private:
     Ui::MapWindow *ui;
     std::shared_ptr<Student::UserActionHandler> handler_ = nullptr;
     QGraphicsScene *scene_ = nullptr;
-//    Common::StarSystem::StarSystemVector starSystem;
     starSystemUI_t starSystemList_;
 
     void showStarSystems(Common::StarSystem::StarSystemVector starSystem);
