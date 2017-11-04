@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 
 #include "starsystem.hh"
+#include "point.hh"
 #include "useractionhandler.hh"
 
 namespace Student {

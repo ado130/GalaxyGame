@@ -1,7 +1,6 @@
 #ifndef PLANETCOREDRIVE_HH
 #define PLANETCOREDRIVE_HH
 
-#include "shipengine.hh"
 #include "galaxy.hh"
 
 class PlanetCoreDrive : public Common::ShipEngine

@@ -1,11 +1,11 @@
 #ifndef DRAWABLEOBJECTSMANAGER_HH
 #define DRAWABLEOBJECTSMANAGER_HH
 
-//#include "ship.hh"
 //#include "cargoship.hh"
 //#include "planet.hh"
 #include "starsystemscene.hh"
 
+#include <QObject>
 #include <Qlist>
 
 typedef QList< QPair<std::shared_ptr<Common::Ship>, NPCShipUi*> > shipUiPair;
@@ -16,7 +16,8 @@ class DrawableObjectsManager : public QObject
 {
     Q_OBJECT
 public:
-    DrawableObjectsManager(StarSystemScene *scene);
+
+    DrawableObjectsManager(StarSystemScene *scene, QObject *parent = 0);
 
     Student::StarSystemScene* getScene();
 

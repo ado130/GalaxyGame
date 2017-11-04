@@ -1,9 +1,12 @@
 #include "drawableobjectsmanager.hh"
+#include "planet.hh"
+#include "cargoship.hh"
 
-#include "qdebug.h"
+#include <qdebug.h>
 
-Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene *scene):
-    scene_(scene)
+
+Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene *scene, QObject *parent) :
+    QObject(parent), scene_(scene)
 {
 
 }
