@@ -29,6 +29,7 @@ Q_SIGNALS:
     void shipMovement(std::shared_ptr<Common::Ship>, int diffX, int diffY);
     void registerShipToUi(std::shared_ptr<Common::Ship> ship);
     void unregisterShipFromUi(std::shared_ptr<Common::Ship> ship);
+    void changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem);
 };
 }
 

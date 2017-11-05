@@ -4,6 +4,7 @@
 #include "npcshipui.hh"
 #include "planetui.hh"
 #include "ship.hh"
+#include "playershipui.hh"
 
 #include <QGraphicsScene>
 
@@ -16,9 +17,13 @@ public:
     PlanetUi *gePlanetUiByItem(QGraphicsItem *item);
     QGraphicsItem *getSceneShip(std::shared_ptr<Common::Ship> ship);
 
-    void drawShip(NPCShipUi *ship);
-    void eraseShip(NPCShipUi *ship);
-    void eraseAllShips();
+    void drawPlayerShip(PlayerShipUi *ship);
+    void erasePlayerShip(PlayerShipUi *ship);
+    void eraseAllPlayerShips();
+
+    void drawNPCShip(NPCShipUi *ship);
+    void eraseNPCShip(NPCShipUi *ship);
+    void eraseAllNPCShips();
 
     void drawPlanet(PlanetUi *planet);
     void erasePlanet(PlanetUi *planet);
@@ -28,6 +33,7 @@ public:
 private:
     std::vector<NPCShipUi*> shipList_;
     std::vector<PlanetUi*> planetList_;
+    std::vector<PlayerShipUi*> playerShipList_;
 };
 }
 

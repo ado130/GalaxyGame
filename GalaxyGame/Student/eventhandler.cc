@@ -12,6 +12,8 @@ Student::EventHandler::~EventHandler()
 
 void Student::EventHandler::shipSpawned(std::shared_ptr<Common::Ship> ship)
 {
+    //This signal invokes drawableObjManager, but nothing is drawed yet.
+    //It creates UI reprezentation of this ship and pairs them in drawableObjManager
     emit registerShipToUi(ship);
 }
 
@@ -22,11 +24,15 @@ void Student::EventHandler::shipRemoved(std::shared_ptr<Common::Ship> ship)
 
 void Student::EventHandler::shipRelocated(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)
 {
+    //Here, if ship which is realocated is in our current view, we should only remove it from scene (and vice versa)
 
+//    emit changeShipLocationBetweenStarSystems(ship, starSystem);
 }
 
 void Student::EventHandler::shipMoved(std::shared_ptr<Common::Ship> ship, Common::Point origin, Common::Point target)
 {
+    //Not sure if we can use it this way... their shipMovement are steps between starsystems -> it is called internally in their code,
+    //but i think those are NOT coordinates which correspond with our "shipMovement" in our starSystem view
     emit shipMovement(ship, target.x-origin.x, target.y-origin.y);
 }
 

@@ -21,7 +21,6 @@ SOURCES += \
 	galaxy.cc \
 	eventhandler.cc \
         statistics.cc \
-	playership.cc \
     bullet.cc \
     statisticswindow.cc \
     mapwindow.cc \
@@ -32,13 +31,15 @@ SOURCES += \
     planetui.cc \
     planetcoredrive.cc \
     npcshipui.cc \
-    drawableobjectsmanager.cc
+    drawableobjectsmanager.cc \
+    itemsingalaxy.cc \
+    playershipui.cc \
+    playership.cc
 
 HEADERS  += \
     galaxy.hh \
     eventhandler.hh \
     statistics.hh \
-	playership.hh \
 	mainwindow.hh \
     bullet.hh \
     statisticswindow.hh \
@@ -50,7 +51,13 @@ HEADERS  += \
     planetui.hh \
     planetcoredrive.hh \
     npcshipui.hh \
-    drawableobjectsmanager.hh
+    drawableobjectsmanager.hh \
+    itemsingalaxy.hh \
+    iitemingalaxy.hh \
+    itradableitem.hh \
+    simpletradegoods.hh \
+    playershipui.hh \
+    playership.hh
 	
 FORMS += \
     mainwindow.ui \

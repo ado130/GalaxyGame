@@ -15,7 +15,7 @@ class StatisticsWindow : public QDialog
     Q_OBJECT
 
 public:
-    StatisticsWindow(PlayerShip *player, QWidget *parent = 0);
+    StatisticsWindow(std::shared_ptr<PlayerShip> player, QWidget *parent = 0);
     ~StatisticsWindow();
 
 private:

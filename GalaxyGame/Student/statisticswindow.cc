@@ -1,7 +1,7 @@
 #include "statisticswindow.hh"
 #include "ui_statisticswindow.h"
 
-StatisticsWindow::StatisticsWindow(PlayerShip *player, QWidget *parent) :
+StatisticsWindow::StatisticsWindow(std::shared_ptr<PlayerShip> player, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::StatisticsWindow)
 {

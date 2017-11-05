@@ -24,13 +24,36 @@ Student::PlanetUi *Student::StarSystemScene::gePlanetUiByItem(QGraphicsItem* ite
     return nullptr;
 }
 
-void Student::StarSystemScene::drawShip(NPCShipUi* ship)
+void Student::StarSystemScene::drawPlayerShip(PlayerShipUi *ship)
+{
+    playerShipList_.push_back(ship);
+    addItem(ship);
+}
+
+void Student::StarSystemScene::erasePlayerShip(PlayerShipUi *ship)
+{
+    std::vector<PlayerShipUi*>::iterator iter = std::find(playerShipList_.begin(), playerShipList_.end(), ship);
+    if(iter != playerShipList_.end()){
+        playerShipList_.erase(iter);
+        removeItem(ship);
+    }
+}
+
+void Student::StarSystemScene::eraseAllPlayerShips()
+{
+    for(PlayerShipUi* player : playerShipList_){
+        removeItem(player);
+    }
+    playerShipList_.clear();
+}
+
+void Student::StarSystemScene::drawNPCShip(NPCShipUi* ship)
 {
     shipList_.push_back(ship);
     addItem(ship);
 }
 
-void Student::StarSystemScene::eraseShip(NPCShipUi *ship)
+void Student::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
 {
     std::vector<NPCShipUi*>::iterator iter = std::find(shipList_.begin(), shipList_.end(), ship);
     if(iter != shipList_.end()){
@@ -39,7 +62,7 @@ void Student::StarSystemScene::eraseShip(NPCShipUi *ship)
     }
 }
 
-void Student::StarSystemScene::eraseAllShips()
+void Student::StarSystemScene::eraseAllNPCShips()
 {
     for(NPCShipUi* ship : shipList_){
         removeItem(ship);
@@ -73,6 +96,7 @@ void Student::StarSystemScene::eraseAllPlanets()
 void Student::StarSystemScene::eraseEverything()
 {
     eraseAllPlanets();
-    eraseAllShips();
+    eraseAllNPCShips();
+    eraseAllPlayerShips();
     clear();
 }

@@ -1,48 +1,22 @@
-#ifndef PLAYERSHIP_H
-#define PLAYERSHIP_H
-
-#include <memory>
-#include <QGraphicsItem>
-#include <QGraphicsPixmapItem>
-#include <QKeyEvent>
-#include <QObject>
+#ifndef PLAYERSHIP_HH
+#define PLAYERSHIP_HH
 
 #include "ship.hh"
 #include "statistics.hh"
 
-class PlayerShip : public QObject, public Common::Ship, public QGraphicsPixmapItem
+class PlayerShip : public Common::Ship
 {
-    Q_OBJECT
-
 public:
-    PlayerShip(QObject* parent = 0,
-               std::shared_ptr<Common::ShipEngine> engine = 0,
+    PlayerShip(std::shared_ptr<Common::ShipEngine> engine = 0,
                std::shared_ptr<Common::StarSystem> initialLocation = 0,
                std::shared_ptr<Common::IEventHandler> events = 0);
-
-    bool decideAction();
     Student::Statistics getStatistics();
-
-
-protected:
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
-
-private Q_SLOTS:
-    void updateMovement();
-
-Q_SIGNALS:
-    void pressedSpace();
-
 private:
-    void goLeft();
-    void goRight();
-    void goUp(qreal width, qreal height);
-    void goDown(qreal width, qreal height);
-    Student::Statistics statistics;
-    QSet<int> pressedKeys;
-    QTimer *keyMovement = nullptr;
-    void moveAccordingToPressedKey(int key);
+    Student::Statistics statistics_;
+
+    // Ship interface
+public:
+    bool decideAction();
 };
 
-#endif // PLAYERSHIP_H
+#endif // PLAYERSHIP_HH

@@ -16,6 +16,21 @@ Student::StarSystemScene* Student::DrawableObjectsManager::getScene()
     return scene_;
 }
 
+int Student::DrawableObjectsManager::getNumberOfShips()
+{
+    return cargoShipUiList_.size();
+}
+
+int Student::DrawableObjectsManager::getNumberOfPlanets()
+{
+    return planetUiList_.size();
+}
+
+QList<QGraphicsItem *> Student::DrawableObjectsManager::getCollidingItems(PlayerShipUi* player)
+{
+    return scene_->collidingItems(player);
+}
+
 void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship> ship){
     if( std::dynamic_pointer_cast<Student::Planet> (ship)){
         qDebug() << "It's a planet!";
@@ -25,13 +40,19 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
         QString pathToImage = QString(":/images/images/planets/%1.png").arg(randomPlanetName.toLower());
 
         Student::PlanetUi *planet = new Student::PlanetUi(QPixmap(pathToImage));
-        planetUiList_.append(qMakePair(ship, planet));
+        planetUiList_.append(qMakePair(std::dynamic_pointer_cast<Student::Planet> (ship), planet));
     }
     else if(std::dynamic_pointer_cast<Common::CargoShip> (ship)){
         qDebug() << "It's a cargo!";
 
         NPCShipUi *npcship = new NPCShipUi(QPixmap(":/images/images/NPCShip.png"));
-        shipUiList_.append(qMakePair(ship, npcship));
+        cargoShipUiList_.append(qMakePair(std::dynamic_pointer_cast<Common::CargoShip> (ship), npcship));
+    }
+    else if(std::dynamic_pointer_cast<PlayerShip> (ship)){
+        qDebug() << "It's a player!";
+
+        PlayerShipUi *playership = new PlayerShipUi(QPixmap(":/images/images/playerShip.png"));
+        playerShipUiList_.append(qMakePair(std::dynamic_pointer_cast<PlayerShip> (ship), playership));
     }
 }
 
@@ -47,11 +68,21 @@ void Student::DrawableObjectsManager::unregisterShip(std::shared_ptr<Common::Shi
         }
     }
     else if(std::dynamic_pointer_cast<Common::CargoShip> (ship)){
-        for(int i = 0; i<shipUiList_.size(); ++i)
+        for(int i = 0; i<cargoShipUiList_.size(); ++i)
         {
-            if(shipUiList_.at(i).first == ship)
+            if(cargoShipUiList_.at(i).first == ship)
             {
-                shipUiList_.removeAt(i);
+                cargoShipUiList_.removeAt(i);
+                break;
+            }
+        }
+    }
+    else if(std::dynamic_pointer_cast<PlayerShip> (ship)){
+        for(int i = 0; i<playerShipUiList_.size(); ++i)
+        {
+            if(playerShipUiList_.at(i).first == ship)
+            {
+                playerShipUiList_.removeAt(i);
                 break;
             }
         }
@@ -72,10 +103,54 @@ void Student::DrawableObjectsManager::drawShip(std::shared_ptr<Common::Ship> shi
         }
     }
     else if(std::dynamic_pointer_cast<Common::CargoShip> (ship)){
-        for(auto element : shipUiList_){
+        for(auto element : cargoShipUiList_){
             if(element.first == ship){
-                scene_->drawShip(element.second);
+                scene_->drawNPCShip(element.second);
             }
+        }
+    }
+    else if(std::dynamic_pointer_cast<PlayerShip> (ship)){
+        for(auto element : playerShipUiList_){
+            if(element.first == ship){
+                scene_->drawPlayerShip(element.second);
+                element.second->setFocus();
+            }
+        }
+    }
+}
+
+std::shared_ptr<Student::Planet> Student::DrawableObjectsManager::getPlanetByUiItem(QGraphicsItem* item)
+{
+    for(auto element : planetUiList_){
+        if(element.second == item){
+            return element.first;
+        }
+    }
+}
+
+std::shared_ptr<Common::CargoShip> Student::DrawableObjectsManager::getCargoShiptByUiItem(QGraphicsItem* item)
+{
+    for(auto element : cargoShipUiList_){
+        if(element.second == item){
+            return element.first;
+        }
+    }
+}
+
+PlayerShipUi* Student::DrawableObjectsManager::getPlayerShipUiByObject(std::shared_ptr<PlayerShip> ship)
+{
+    for(auto element : playerShipUiList_){
+        if(element.first == (ship)){
+            return element.second;
+        }
+    }
+}
+
+void Student::DrawableObjectsManager::setFocusOnPlayer(std::shared_ptr<PlayerShip> ship)
+{
+    for(auto element : playerShipUiList_){
+        if(element.first == ship){
+            element.second->setFocus();
         }
     }
 }

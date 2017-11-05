@@ -15,8 +15,9 @@
 #include "useractionhandler.hh"
 #include "starsystemscene.hh"
 #include "drawableobjectsmanager.hh"
+#include "itemsingalaxy.hh"
 
-class PlayerShip;
+class PlayerShipUi;
 class NPCShipUi;
 class Planet;
 class QThread;
@@ -49,12 +50,14 @@ private:
     std::shared_ptr<Common::IGameRunner> gameRunner_;
     std::shared_ptr<Student::UserActionHandler> userActionHandler_;
     std::shared_ptr<Student::DrawableObjectsManager> drawManager_;
+    std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
+    std::shared_ptr<PlayerShip> player_;
+
 
     QTimer *refreshTimer_ = nullptr;
     QTimer *collisionTimer_ = nullptr;
     QTimer *gameTimer_ = nullptr;
-    Student::StarSystemScene *scene_ = nullptr;
-    PlayerShip *player_ = nullptr;
+//    Student::StarSystemScene *scene_ = nullptr;
     MapWindow *map_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     bool isPlayerTrading_ = false;
