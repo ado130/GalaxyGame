@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent,
     userActionHandler_ = std::make_shared<Student::UserActionHandler>();
     drawManager_ = std::make_shared<Student::DrawableObjectsManager>(new Student::StarSystemScene(this));
     itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
+    question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
 
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
     QObject* drawManagerObj = dynamic_cast<QObject*>(drawManager_.get());
@@ -57,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent,
     });
 
     ui->pbShowMap->setEnabled(false);
+    ui->pbQuestions->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -89,6 +91,8 @@ void MainWindow::startGame()
     // Add enemies to the galaxy
     gameRunner_->spawnShips(300);
 
+    question_->generateQuestions();
+
     // Start location is player's location
     travelToStarSystem(player_->getLocation()->getId());
 
@@ -117,6 +121,7 @@ void MainWindow::startGame()
 
     ui->pbShowMap->setEnabled(true);
     ui->pbNewGame->setEnabled(true);
+    ui->pbQuestions->setEnabled(true);
 }
 
 void MainWindow::createPlayer()
@@ -348,4 +353,12 @@ void MainWindow::planetsInStarSystemRequest(unsigned id)
     Common::IGalaxy::ShipVector ships = galaxy_->getShipsInStarSystem(starSystem->getName());
     Common::IGalaxy::ShipVector planets = drawManager_->getPlanetsByStarSystem(ships);
     map_->setPlanetsByStarSystem(planets);
+}
+
+void MainWindow::on_pbQuestions_clicked()
+{
+    questionDlg_ = new QuestionDlg(question_->activeQuestions(), question_->completedQuestions(), this);
+    questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
+    questionDlg_->setModal(true);
+    questionDlg_->exec();
 }

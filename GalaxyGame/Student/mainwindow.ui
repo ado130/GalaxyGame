@@ -443,6 +443,19 @@
       </property>
      </widget>
     </widget>
+    <widget class="QPushButton" name="pbQuestions">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>507</y>
+       <width>100</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Questions</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

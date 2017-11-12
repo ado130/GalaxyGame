@@ -16,11 +16,12 @@
 #include "starsystemscene.hh"
 #include "drawableobjectsmanager.hh"
 #include "itemsingalaxy.hh"
+#include "question.hh"
+#include "questiondlg.hh"
 
 class PlayerShipUi;
 class NPCShipUi;
 class Planet;
-class QThread;
 
 namespace Ui {
 class MainWindow;
@@ -53,12 +54,14 @@ private:
     std::shared_ptr<Student::DrawableObjectsManager> drawManager_;
     std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
     std::shared_ptr<PlayerShip> player_;
+    std::shared_ptr<Student::Question> question_;
 
 
-    QTimer *refreshTimer_ = nullptr;
-    QTimer *collisionTimer_ = nullptr;
-    QTimer *gameTimer_ = nullptr;
-    MapWindow *map_ = nullptr;
+    QTimer* refreshTimer_ = nullptr;
+    QTimer* collisionTimer_ = nullptr;
+    QTimer* gameTimer_ = nullptr;
+    MapWindow* map_ = nullptr;
+    QuestionDlg* questionDlg_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     bool isPlayerTrading_ = false;
     SimpleTradeGoods planetGoods_;
@@ -79,6 +82,8 @@ private Q_SLOTS:
     void gameEvent();
     void checkCollision();
     void on_pbShowMap_clicked();
+
+    void on_pbQuestions_clicked();
 
 Q_SIGNALS:
     void startCollisionTimer();

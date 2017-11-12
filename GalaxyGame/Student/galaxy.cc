@@ -1,6 +1,7 @@
 #include "galaxy.hh"
 #include "stateexception.hh"
 #include "objectnotfoundexception.hh"
+#include "planet.hh"
 
 #include <algorithm>
 #include <QDebug>
@@ -184,4 +185,18 @@ std::shared_ptr<Common::StarSystem> Student::Galaxy::getStarSystemById(unsigned 
     {
         return *it;
     }
+}
+
+Common::IGalaxy::ShipVector Student::Galaxy::getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships)
+{
+    Common::IGalaxy::ShipVector planets;
+    for(auto k : ships)
+    {
+        if( std::dynamic_pointer_cast<Student::Planet> (k))
+        {
+            planets.push_back(k);
+        }
+    }
+
+    return planets;
 }
