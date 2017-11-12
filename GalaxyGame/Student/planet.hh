@@ -25,11 +25,8 @@ public:
     void setLocation(std::shared_ptr<Common::StarSystem> newLocation) { location_ = newLocation; }
 
     void executeAction() {}
-
     void abandonShip() {}
-
     bool isAbandoned() { return false; }
-
     bool decideAction() { return false; }
 
     std::shared_ptr<Common::IAction> getAction() const;

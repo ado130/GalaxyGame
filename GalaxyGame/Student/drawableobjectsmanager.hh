@@ -9,7 +9,7 @@
 #include "playership.hh"
 
 #include <QObject>
-#include <Qlist>
+#include <QList>
 
 typedef QList< QPair<std::shared_ptr<Common::CargoShip>, NPCShipUi*> > cargoShipUiPair;
 typedef QList< QPair<std::shared_ptr<Student::Planet>, Student::PlanetUi*> > planetUiPair;
@@ -35,11 +35,13 @@ public:
     std::shared_ptr<Common::CargoShip> getCargoShiptByUiItem(QGraphicsItem* item);
     PlayerShipUi* getPlayerShipUiByObject(std::shared_ptr<PlayerShip> ship);
     void setFocusOnPlayer(std::shared_ptr<PlayerShip> ship);
+    Common::IGalaxy::ShipVector getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships);
+
 
 public Q_SLOTS:
     void registerShip(std::shared_ptr<Common::Ship> ship);
     void unregisterShip(std::shared_ptr<Common::Ship> ship);
-
+    void pressedSpaceSlot();
 private:
     std::vector<std::string> planets = {"Earth", "Jupiter", "Mars", "Mercury", "Moon", "Pluto", "Venus"};
     Student::StarSystemScene *scene_;
@@ -47,6 +49,9 @@ private:
     cargoShipUiPair cargoShipUiList_;
     planetUiPair planetUiList_;
     playerShipUiPair playerShipUiList_;
+
+Q_SIGNALS:
+    void pressedSpaceSignal();
 };
 }
 

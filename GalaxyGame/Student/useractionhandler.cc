@@ -15,3 +15,8 @@ void Student::UserActionHandler::travelToStarSystemRequest(unsigned idStarUi)
 {
     emit travelRequest(idStarUi);
 }
+
+void Student::UserActionHandler::showStarSystemGoods(unsigned idStarUi)
+{
+    emit showGoodsInfo(idStarUi);
+}

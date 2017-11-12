@@ -8,8 +8,13 @@
 class SimpleTradeGoods : ITradableItem
 {
 public:
+    SimpleTradeGoods() : name_(""), price_(0) {}
     SimpleTradeGoods(std::string name, int price) : name_(name), price_(price) {}
 
+    bool operator==(const SimpleTradeGoods& a)
+    {
+        return (a.name_ == name_ && a.price_ == price_);
+    }
     // IItemInGalaxy interface
 public:
     std::string getName() { return name_; }
@@ -23,3 +28,4 @@ private:
 };
 
 #endif // SIMPLETRADEGOODS_H
+

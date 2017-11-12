@@ -64,10 +64,12 @@ void Student::Statistics::addPoints(unsigned amount)
 
 void Student::Statistics::reducePoints(unsigned amount)
 {
-    if(amount > points){
+    if(amount > points)
+    {
         throw Common::StateException("Amount of points too low! Cannot reduce.");
     }
-    else{
+    else
+    {
         points -= amount;
     }
 }
@@ -85,10 +87,12 @@ void Student::Statistics::addCredits(unsigned amount)
 void Student::Statistics::reduceCredits(unsigned amount)
 {
 
-    if(amount > credits+MAX_LOAN_ALLOWANCE){
+    if(amount > credits+MAX_LOAN_ALLOWANCE)
+    {
         throw Common::StateException("Amount of credits too low! Cannot reduce.");
     }
-    else{
+    else
+    {
         credits -= amount;
     }
 }

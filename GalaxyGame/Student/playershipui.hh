@@ -17,12 +17,6 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
-private Q_SLOTS:
-    void updateMovement();
-
-Q_SIGNALS:
-    void pressedSpace();
-
 private:
     void goLeft();
     void goRight();
@@ -31,6 +25,12 @@ private:
     QSet<int> pressedKeys;
     QTimer *keyMovement = nullptr;
     void moveAccordingToPressedKey(int key);
+
+private Q_SLOTS:
+    void updateMovement();
+
+Q_SIGNALS:
+    void pressedSpace();
 };
 
 #endif // PLAYERSHIPUI_H

@@ -2,11 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-//#include <QGraphicsScene>
 #include <memory>
 #include <QMap>
 #include <QPair>
 #include <QList>
+#include <QVector>
 
 #include "galaxy.hh"
 #include "utility.hh"
@@ -42,6 +42,7 @@ public Q_SLOTS:
     void pressedSpace();
     void shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY);
     void travelToStarSystem(unsigned starSystemId);
+    void planetsInStarSystemRequest(unsigned id);
 private:
     Ui::MainWindow *ui;
 
@@ -57,10 +58,10 @@ private:
     QTimer *refreshTimer_ = nullptr;
     QTimer *collisionTimer_ = nullptr;
     QTimer *gameTimer_ = nullptr;
-//    Student::StarSystemScene *scene_ = nullptr;
     MapWindow *map_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     bool isPlayerTrading_ = false;
+    SimpleTradeGoods planetGoods_;
 
     void startGame();
     void loadSettings();

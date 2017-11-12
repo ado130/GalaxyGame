@@ -18,7 +18,6 @@ PlayerShipUi::PlayerShipUi(QPixmap pixmap, QObject *parent):
     setFlag(QGraphicsItem::ItemIsFocusable);
     setZValue(1);
 
-    // ToDo: Threads
     keyMovement = new QTimer(this);
     connect(keyMovement, SIGNAL(timeout()), this, SLOT(updateMovement()));
     keyMovement->start(50);

@@ -63,7 +63,8 @@ void StatisticsTest::addingCompletedQuest()
     QVERIFY2(stats.getCompletedQuests() == 2, "Number of completed quests doesn't match statistics");
 }
 
-void StatisticsTest::changeMaxLoanAllowance(){
+void StatisticsTest::changeMaxLoanAllowance()
+{
     Student::Statistics stats = Student::Statistics();
     QVERIFY2(stats.getMaxLoanAllowance() > 0, "Initial allowance not set / set wrongly");
     stats.setMaxLoanAllowance(111);
@@ -79,11 +80,13 @@ void StatisticsTest::changeAmountOfPoints()
     QVERIFY2(stats.getPoints() == 0, "Initial points are not 0.");
     stats.addPoints(add);
     QVERIFY2(stats.getPoints() == add, "Amount of points after adding is not correct");
-    if(remove > add){
+    if(remove > add)
+    {
         QVERIFY_EXCEPTION_THROWN(stats.reducePoints(remove), Common::StateException);
         QVERIFY2(stats.getPoints() == add, "Amount of points after exception in removing isn't correct");
     }
-    else{
+    else
+    {
         stats.reducePoints(remove);
         QVERIFY2(stats.getPoints() == add-remove, "Amount of points after removing is not correct");
     }
@@ -110,11 +113,13 @@ void StatisticsTest::changeAmountOfCredits()
     QVERIFY2(stats.getCreditBalance() == 0, "Initial credit is not 0.");
     stats.addCredits(add);
     QVERIFY2(stats.getCreditBalance() == add, "Amount of credits after adding is not correct");
-    if(remove > add + stats.getMaxLoanAllowance()){
+    if(remove > add + stats.getMaxLoanAllowance())
+    {
         QVERIFY_EXCEPTION_THROWN(stats.reduceCredits(remove), Common::StateException);
         QVERIFY2(stats.getCreditBalance() == add, "Amount of points after exception in removing isn't correct");
     }
-    else{
+    else
+    {
         stats.reduceCredits(remove);
 
         QVERIFY2(stats.getCreditBalance() == result, "Amount of points after removing is not correct");

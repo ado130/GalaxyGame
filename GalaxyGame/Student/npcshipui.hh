@@ -13,7 +13,6 @@ public:
     NPCShipUi(QPixmap pixmap);
 
 private slots:
-    void move();
     // Position in scene, not posiiton of starSystem
     Common::Point coordinates_ = Common::Point(0,0);
 };
