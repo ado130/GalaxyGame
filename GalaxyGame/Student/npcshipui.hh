@@ -4,18 +4,27 @@
 #include "point.hh"
 
 #include <QGraphicsPixmapItem>
+#include <QSet>
+#include <QTimer>
 
 
-class NPCShipUi : public QGraphicsPixmapItem
+class NPCShipUi : public QObject, public QGraphicsPixmapItem
 {
-
+    Q_OBJECT
 public:
-    NPCShipUi(QPixmap pixmap);
+    NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent = 0);
 
-private slots:
-    void move();
-    // Position in scene, not posiiton of starSystem
-    Common::Point coordinates_ = Common::Point(0,0);
+private Q_SLOTS:
+    void moveForward();
+    void randomChangeOfDirection();
+private:
+    void goLeft();
+    void goRight();
+    void goUp(qreal width, qreal height);
+    void goDown(qreal width, qreal height);
+    QTimer *keyMovement = nullptr;
+    QTimer *randomKeyPress = nullptr;
+
 };
 
 #endif // NPCSHIP_HH

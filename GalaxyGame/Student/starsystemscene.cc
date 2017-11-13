@@ -70,6 +70,12 @@ void Student::StarSystemScene::eraseAllNPCShips()
     shipList_.clear();
 }
 
+bool Student::StarSystemScene::isNPCShipVisible(NPCShipUi* ship)
+{
+    if(std::find(shipList_.begin(), shipList_.end(), ship) == shipList_.end()) return false;
+    return true;
+}
+
 void Student::StarSystemScene::drawPlanet(Student::PlanetUi *planet)
 {
     planetList_.push_back(planet);
@@ -91,6 +97,12 @@ void Student::StarSystemScene::eraseAllPlanets()
         removeItem(planet);
     }
     planetList_.clear();
+}
+
+bool Student::StarSystemScene::isPlanetShipVisible(PlanetUi *ship)
+{
+    if(std::find(planetList_.begin(), planetList_.end(), ship) == planetList_.end()) return false;
+    return true;
 }
 
 void Student::StarSystemScene::eraseEverything()

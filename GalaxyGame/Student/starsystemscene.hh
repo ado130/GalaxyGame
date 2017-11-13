@@ -24,10 +24,12 @@ public:
     void drawNPCShip(NPCShipUi *ship);
     void eraseNPCShip(NPCShipUi *ship);
     void eraseAllNPCShips();
+    bool isNPCShipVisible(NPCShipUi *ship);
 
     void drawPlanet(PlanetUi *planet);
     void erasePlanet(PlanetUi *planet);
     void eraseAllPlanets();
+    bool isPlanetShipVisible(PlanetUi *ship);
 
     void eraseEverything();
 private:

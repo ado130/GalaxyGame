@@ -1,14 +1,11 @@
 #include "planetui.hh"
 
-Student::PlanetUi::PlanetUi(QPixmap pixmap)
+#include <QDebug>
+
+Student::PlanetUi::PlanetUi(QPixmap pixmap, int posX, int posY)
 {
     setPixmap(pixmap);
-    setScale(0.3);
-
-    int posX = Common::randomMinMax(-500, 500);
-    int posY = Common::randomMinMax(-500, 500);
-
-    coordinates_ = Common::Point(posX, posY);
+//    setScale(0.3);
 
     setPos(posX, posY);
 }

@@ -41,8 +41,12 @@ MainWindow::MainWindow(QWidget *parent,
             drawManagerObj, SLOT(registerShip(std::shared_ptr<Common::Ship>)));
     connect(eventHandlerObj, SIGNAL(unregisterShipFromUi(std::shared_ptr<Common::Ship>)),
             drawManagerObj, SLOT(unregisterShip(std::shared_ptr<Common::Ship>)));
-    connect(eventHandlerObj, SIGNAL(shipMovement(std::shared_ptr<Common::Ship>, int, int)),
-            this, SLOT(shipMovement(std::shared_ptr<Common::Ship>, int, int)));
+    connect(eventHandlerObj, SIGNAL(shipMovement(std::shared_ptr<Common::Ship>, Common::Point, Common::Point)),
+            drawManagerObj, SLOT(changeShipPosition(std::shared_ptr<Common::Ship>, Common::Point, Common::Point)));
+    connect(eventHandlerObj, SIGNAL(shipChangedLocation(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)),
+            drawManagerObj, SLOT(changeShipPosition(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)));
+
+
 
 //    Todo: every ship has to be able to change it's location --> change function travelToStarSystem
 //    connect(eventHandlerObj, SIGNAL(changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)),
@@ -82,18 +86,19 @@ void MainWindow::startGame()
 
     qDebug() << "New game";
 
+
+
     // Add player to the galaxy, must be called before travelToStarSystem
     createPlayer();
 
+    // Add scene to the view
+    ui->graphicsView->setScene(drawManager_->getScene());
+
     // Add enemies to the galaxy
-    gameRunner_->spawnShips(300);
+    gameRunner_->spawnShips(500);
 
     // Start location is player's location
     travelToStarSystem(player_->getLocation()->getId());
-
-    // Add scene to the view
-    ui->graphicsView->setScene(drawManager_->getScene());
-    drawManager_->setFocusOnPlayer(player_);
 
     // Set timers
     refreshTimer_ = new QTimer();
@@ -106,7 +111,7 @@ void MainWindow::startGame()
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
-    gameTimer_->start(2000);
+    gameTimer_->start(10000);
 
     ui->lbCntStarSystems->setText(QString::number(galaxy_->getStarSystemVector().size()));
     //NOTE: galaxy has only vector if ships in it -> we can have more shipTypes and we would have to check
@@ -143,6 +148,11 @@ void MainWindow::pressedSpace()
 
 void MainWindow::travelToStarSystem(unsigned starSystemId)
 {
+
+    qDebug() << "location before: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
+    qDebug() << "health before: " << player_->getEngine()->getHealth();
+    qDebug() << "can start before: " << player_->getEngine()->canStart();
+
     if(map_ != nullptr)
     {
         gameTimer_->stop();
@@ -159,6 +169,10 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
 
     //Set player's new location
     player_->setLocation(galaxy_->getStarSystemById(starSystemId));
+
+    qDebug() << "location after: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
+    qDebug() << "health after: " << player_->getEngine()->getHealth();
+    qDebug() << "can start after: " << player_->getEngine()->canStart();
 
     auto starSystem = galaxy_->getStarSystemById(starSystemId);
     if(starSystem == nullptr) {
@@ -177,27 +191,18 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     ui->lbSSName->setText(starSystem->getName().data());
     ui->lbSSEconomy->setText(economy[starSystem->getEconomy()]);
     ui->lbSSPopulation->setText(QString::number(starSystem->getPopulation()));
-    ui->lbSSCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x*50) +
-                                 " y: " + QString::number(starSystem->getCoordinates().y*50));
-    drawManager_->setFocusOnPlayer(player_);
+    ui->lbSSCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x*5000) +
+                                 " y: " + QString::number(starSystem->getCoordinates().y*5000));
     if(map_ != nullptr)
     {
         gameTimer_->start();
     }
 }
 
-void MainWindow::shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY)
-{
-//    QGraphicsItem* item = scene_->getSceneShip(ship);
-//    if(item != nullptr)
-//    {
-//        item->setPos(item->x() + diffX, item->y() + diffY);
-//    }
-}
-
 void MainWindow::refreshUI()
 {
     ui->graphicsView->centerOn(drawManager_->getPlayerShipUiByObject(player_));
+    drawManager_->setFocusOnPlayer(player_);
 }
 
 void MainWindow::gameEvent()

@@ -1,4 +1,5 @@
 #include "playershipui.hh"
+#include "utility.hh"
 
 #include <QDebug>
 #include <cmath>
@@ -7,13 +8,14 @@
 
 #define PLAYERSPEED_MOVEMENT 0.3
 
-PlayerShipUi::PlayerShipUi(QPixmap pixmap, QObject *parent):
+PlayerShipUi::PlayerShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
     QObject(parent)
 {
     setPixmap(pixmap);
-    setScale(0.1);
+//    setScale(0.1);
     setTransformOriginPoint((boundingRect().center().x()),(boundingRect().center().y()));
-    setPos(800/2, 600/2);
+
+    setPos(posX, posY);
 
     setFlag(QGraphicsItem::ItemIsFocusable);
     setZValue(1);
@@ -28,6 +30,7 @@ PlayerShipUi::PlayerShipUi(QPixmap pixmap, QObject *parent):
 
 void PlayerShipUi::keyPressEvent(QKeyEvent *event)
 {    
+    qDebug() << pos().x() << pos().y();
     if(!event->isAutoRepeat())
     {
         pressedKeys.insert(event->key());

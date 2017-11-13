@@ -11,7 +11,7 @@ class PlayerShipUi : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    PlayerShipUi(QPixmap pixmap, QObject *parent = 0);
+    PlayerShipUi(QPixmap pixmap, int posX, int posY, QObject *parent = 0);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

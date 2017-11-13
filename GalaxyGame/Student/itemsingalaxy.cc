@@ -57,6 +57,6 @@ QJsonArray ItemsInGalaxy::loadFromFile(std::string filename)
 SimpleTradeGoods ItemsInGalaxy::jsonToSimpleTradeGoods(QJsonObject object)
 {
     return SimpleTradeGoods( (object.value("name")).toString().toStdString(),
-                                         (object.value("price")).toString().toInt()
+                                         (object.value("price")).toInt()
                                          );
 }

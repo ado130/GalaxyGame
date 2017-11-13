@@ -26,7 +26,8 @@ public:
     void shipAbandoned(std::shared_ptr<Common::Ship> ship);
 
 Q_SIGNALS:
-    void shipMovement(std::shared_ptr<Common::Ship>, int diffX, int diffY);
+    void shipMovement(std::shared_ptr<Common::Ship>, Common::Point from, Common::Point to);
+    void shipChangedLocation(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem);
     void registerShipToUi(std::shared_ptr<Common::Ship> ship);
     void unregisterShipFromUi(std::shared_ptr<Common::Ship> ship);
     void changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem);

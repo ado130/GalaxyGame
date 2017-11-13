@@ -40,7 +40,7 @@ public:
 
 public Q_SLOTS:
     void pressedSpace();
-    void shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY);
+//    void shipMovement(std::shared_ptr<Common::Ship> ship, Common::Point from, Common::Point to);
     void travelToStarSystem(unsigned starSystemId);
 private:
     Ui::MainWindow *ui;
