@@ -32,11 +32,12 @@ MainWindow::MainWindow(QWidget *parent,
     gameRunner_ = gameRunner;
 //    NOTE: MAYBE this userActionHandler will be deleted, if we can send signals FROM UI via their eventHandler
     userActionHandler_ = std::make_shared<Student::UserActionHandler>();
-    drawManager_ = std::make_shared<Student::DrawableObjectsManager>(new Student::StarSystemScene(this));
+    drawManager_ = std::make_shared<Student::DrawableObjectsManager>(new Student::StarSystemScene(this), userActionHandler_);
     itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
     question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
 
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
+    QObject* userEventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
     QObject* drawManagerObj = dynamic_cast<QObject*>(drawManager_.get());
     QObject* questionObj = dynamic_cast<QObject*>(question_.get());
     connect(eventHandlerObj, SIGNAL(registerShipToUi(std::shared_ptr<Common::Ship>)),
@@ -48,10 +49,9 @@ MainWindow::MainWindow(QWidget *parent,
     connect(eventHandlerObj, SIGNAL(shipChangedLocation(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)),
             drawManagerObj, SLOT(changeShipPosition(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)));
 
-
-    connect(drawManagerObj, SIGNAL(pressedSpaceSignal()), this, SLOT(pressedSpace()));
-//    connect(eventHandlerObj, SIGNAL(shipMovement(std::shared_ptr<Common::Ship>, int, int)),
-//            this, SLOT(shipMovement(std::shared_ptr<Common::Ship>, int, int)));
+    connect(userEventHandlerObj, SIGNAL(playerMovedInSS(QGraphicsPixmapItem*,int, int)),
+            drawManagerObj, SLOT(changeShipUiPosition(QGraphicsPixmapItem*,int, int)));
+    connect(userEventHandlerObj, SIGNAL(tradeRequest()), this, SLOT(pressedSpace()));
     connect(questionObj, SIGNAL(allQuestionsDone()),
             this, SLOT(allQuestionsDone()));
 
@@ -93,8 +93,6 @@ void MainWindow::startGame()
     galaxy_->removeShips();
 
     qDebug() << "New game";
-
-
 
     // Add player to the galaxy, must be called before travelToStarSystem
     createPlayer();
@@ -144,11 +142,6 @@ void MainWindow::createPlayer()
     player_ = std::make_shared<PlayerShip>(shipEngine, initialLocation, handler_);
     galaxy_->addShip(player_);
     handler_->shipSpawned(player_);
-
-//    ToDo: check connection to EventHandler and how to use it for emiting signals FROM UI
-//    QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
-//    connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)), this, SLOT(travelToStarSystem(unsigned)));
-//    connect(player_.get(), SIGNAL(pressedSpace()), this, SLOT(pressedSpace));
 }
 
 void MainWindow::pressedSpace()
@@ -198,9 +191,9 @@ void MainWindow::pressedSpace()
 void MainWindow::travelToStarSystem(unsigned starSystemId)
 {
 
-    qDebug() << "location before: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
-    qDebug() << "health before: " << player_->getEngine()->getHealth();
-    qDebug() << "can start before: " << player_->getEngine()->canStart();
+//    qDebug() << "location before: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
+//    qDebug() << "health before: " << player_->getEngine()->getHealth();
+//    qDebug() << "can start before: " << player_->getEngine()->canStart();
 
     if(map_ != nullptr)
     {
@@ -218,9 +211,9 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
 
     std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(starSystemId);
 
-    qDebug() << "location after: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
-    qDebug() << "health after: " << player_->getEngine()->getHealth();
-    qDebug() << "can start after: " << player_->getEngine()->canStart();
+//    qDebug() << "location after: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
+//    qDebug() << "health after: " << player_->getEngine()->getHealth();
+//    qDebug() << "can start after: " << player_->getEngine()->canStart();
 
     if(starSystem == nullptr) {
         throw Common::ObjectNotFoundException("Star system does not exist in the galaxy.");
@@ -236,7 +229,6 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
         drawManager_->drawShip(ship);
     }
 
-    qDebug() << drawManager_->getNumberOfShips();
     ui->lbSSEnemies->setText(QString::number(drawManager_->getNumberOfShips()));
 
     const char* economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony", "None" };

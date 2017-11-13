@@ -11,7 +11,8 @@ Student::StarSystemUi::StarSystemUi(std::shared_ptr<Student::UserActionHandler> 
 
     setPixmap(QPixmap(icon));
     setScale(0.3);
-    setPos(position.x*50, position.y*50);
+    //ToDo: dynamic map scaling from gui
+    setPos(position.x*30, position.y*30);
 }
 
 void Student::StarSystemUi::mousePressEvent(QGraphicsSceneMouseEvent *event)

@@ -24,8 +24,6 @@ void Student::EventHandler::shipRemoved(std::shared_ptr<Common::Ship> ship)
 
 void Student::EventHandler::shipRelocated(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)
 {
-    //Here, if ship which is realocated is in our current view, we should only remove it from scene (and vice versa)
-
     if(ship != nullptr || starSystem != nullptr)
     {
         emit shipChangedLocation(ship, starSystem);
@@ -34,9 +32,6 @@ void Student::EventHandler::shipRelocated(std::shared_ptr<Common::Ship> ship, st
 
 void Student::EventHandler::shipMoved(std::shared_ptr<Common::Ship> ship, Common::Point origin, Common::Point target)
 {
-    //Not sure if we can use it this way... their shipMovement are steps between starsystems -> it is called internally in their code,
-    //but i think those are NOT coordinates which correspond with our "shipMovement" in our starSystem view
-//    qDebug() << "[ " << target.x << "," << target.y << "]";
     emit shipMovement(ship, origin, target);
 }
 

@@ -4,10 +4,14 @@
 #include "utility"
 
 #include <qdebug.h>
+#include <QPainter>
+#include <QBrush>
 
 //ToDo: create "IDrawableObject" do that there is no need for all the if-elses
-Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene *scene, QObject *parent) :
-    QObject(parent), scene_(scene)
+Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene *scene,
+                                                        std::shared_ptr<Student::UserActionHandler> userActionHandler,
+                                                        QObject *parent) :
+    QObject(parent), userActionHandler_(userActionHandler), scene_(scene)
 {
     QPixmap cargoBigIcon = QPixmap(":/images/images/NPCShip.png");
     cargoShipIcon_ = cargoBigIcon.scaledToWidth(cargoBigIcon.width());
@@ -41,7 +45,6 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
 {
     if( std::dynamic_pointer_cast<Student::Planet> (ship))
     {
-        //qDebug() << "It's a planet!";
         int randomPlanetIndex = Common::randomMinMax(0, planets.size()-1);
         QString randomPlanetName = QString::fromStdString(planets.at(randomPlanetIndex));
         QString pathToImage = QString(":/images/images/planets/%1.png").arg(randomPlanetName.toLower());
@@ -56,7 +59,6 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
 
     else if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
-        //qDebug() << "It's a cargo!";
         NPCShipUi *npcship = new NPCShipUi(cargoShipIcon_,
                                            ship->getLocation()->getCoordinates().x*coordsScale_+
                                             Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius),
@@ -65,11 +67,10 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
         cargoShipUiList_.append(qMakePair(std::dynamic_pointer_cast<Common::CargoShip> (ship), npcship));
     }
     else if(std::dynamic_pointer_cast<PlayerShip> (ship)){
-        qDebug() << "It's a player!";        
         PlayerShipUi *playership = new PlayerShipUi(playerShipIcon_,
                                                     ship->getLocation()->getCoordinates().x*coordsScale_,
-                                                    ship->getLocation()->getCoordinates().y*coordsScale_);
-        connect(playership, SIGNAL(pressedSpace()), this, SLOT(pressedSpaceSlot()));
+                                                    ship->getLocation()->getCoordinates().y*coordsScale_,
+                                                    userActionHandler_);
         playerShipUiList_.append(qMakePair(std::dynamic_pointer_cast<PlayerShip> (ship), playership));
     }
 }
@@ -109,6 +110,11 @@ void Student::DrawableObjectsManager::unregisterShip(std::shared_ptr<Common::Shi
             }
         }
     }
+}
+
+void Student::DrawableObjectsManager::changeShipUiPosition(QGraphicsPixmapItem *shipUi, int x, int y)
+{
+    setPosition(shipUi, x, y);
 }
 
 void Student::DrawableObjectsManager::clearScene()
@@ -209,18 +215,19 @@ void Student::DrawableObjectsManager::setFocusOnPlayer(std::shared_ptr<PlayerShi
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, Common::Point from, Common::Point to)
 {
-    NPCShipUi* uiShip = getCargoShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
-    uiShip->setPos(to.x*coordsScale_, to.y*coordsScale_);
-//    qDebug() << "NPC ship moved by " << Common::distance(from.x, from.y, to.x, to.y)*coordsScale_;
-    if(!isInPlayerShipVisibilityRange(uiShip)){
-        scene_->eraseNPCShip(uiShip);
+    if(std::dynamic_pointer_cast<Common::CargoShip> (ship)){
+        NPCShipUi* uiShip = getCargoShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
+        uiShip->setPos(to.x*coordsScale_, to.y*coordsScale_);
+        if(!isInPlayerShipVisibilityRange(uiShip)){
+            scene_->eraseNPCShip(uiShip);
+        }
     }
+
 }
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)
 {    
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship)){
-//        qDebug() << "NPC ship realocated!";
         NPCShipUi* uiShip = getCargoShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
         if(ship->getLocation() != nullptr){
             uiShip->setPos(ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
@@ -236,13 +243,13 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
         }
     }
     else if(std::dynamic_pointer_cast<PlayerShip> (ship)){
-//        qDebug() << "playerShip travelled!";
         PlayerShipUi* uiShip = getPlayerShipUiByObject(std::dynamic_pointer_cast<PlayerShip> (ship));
-//        scene_->setSceneRect(ship->getLocation()->getCoordinates().x*coordsScale_-starSystemRadius,
-//                             ship->getLocation()->getCoordinates().y*coordsScale_-starSystemRadius,
-//                             2*starSystemRadius, 2*starSystemRadius);
+        QRect rect = QRect(ship->getLocation()->getCoordinates().x*coordsScale_-starSystemSpawnRadius,
+                             ship->getLocation()->getCoordinates().y*coordsScale_-starSystemSpawnRadius,
+                             starSystemSpawnRadius*2, starSystemSpawnRadius*2);
+        scene_->setSceneRect(rect);
         if(ship->getLocation() != nullptr){
-            uiShip->setPos(ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
+            setPosition(uiShip, ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
         }
     }
 }
@@ -251,7 +258,7 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
 bool Student::DrawableObjectsManager::isInPlayerShipVisibilityRange(NPCShipUi* ship)
 {
     //ToDo: set range as variable
-    //ToDo: select which playership -- playerShipUiList_.at(0) is not correct solution
+    //ToDo: select which playership -- playerShipUiList_.at(0) is not correct solution (but in current state enough)
     return Common::distance(ship->pos().x(), ship->pos().y(), playerShipUiList_.at(0).second->pos().x(),
                             playerShipUiList_.at(0).second->pos().y()) > 1000;
 }
@@ -266,12 +273,22 @@ Common::IGalaxy::ShipVector Student::DrawableObjectsManager::getPlanetsByStarSys
             planets.push_back(k);
         }
     }
-
     return planets;
 }
 
 void Student::DrawableObjectsManager::pressedSpaceSlot()
 {
-    qDebug() << "draw manager presses space";
     emit pressedSpaceSignal();
+}
+
+void Student::DrawableObjectsManager::setPosition(QGraphicsPixmapItem *item, int x, int y)
+{
+
+    if(y < scene_->sceneRect().top()+scene_->sceneRect().height()-item->pixmap().height() && x > scene_->sceneRect().left() &&
+            y > scene_->sceneRect().top() && x < scene_->sceneRect().left()+scene_->width()-item->pixmap().width()){
+        item->setPos(x, y);
+    }
+    else{
+        qDebug() << "out of SS";
+    }
 }

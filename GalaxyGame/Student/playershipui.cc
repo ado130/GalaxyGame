@@ -8,11 +8,10 @@
 
 #define PLAYERSPEED_MOVEMENT 0.3
 
-PlayerShipUi::PlayerShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
-    QObject(parent)
+PlayerShipUi::PlayerShipUi(QPixmap pixmap, int posX, int posY, std::shared_ptr<Student::UserActionHandler> userActionHandler, QObject *parent):
+    QObject(parent), handler_(userActionHandler)
 {
     setPixmap(pixmap);
-//    setScale(0.1);
     setTransformOriginPoint((boundingRect().center().x()),(boundingRect().center().y()));
 
     setPos(posX, posY);
@@ -25,11 +24,8 @@ PlayerShipUi::PlayerShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
     keyMovement_->start(50);
 }
 
-
-
 void PlayerShipUi::keyPressEvent(QKeyEvent *event)
-{    
-    qDebug() << pos().x() << pos().y();
+{
     if(!event->isAutoRepeat())
     {
         pressedKeys_.insert(event->key());
@@ -59,14 +55,14 @@ void PlayerShipUi::goUp(qreal width, qreal height)
 {
     qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
     qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
-    setPos(x()+diffX, y()+diffY);
+    handler_->pressedPlayerMovementKey(this, x()+diffX, y()+diffY);
 }
 
 void PlayerShipUi::goDown(qreal width, qreal height)
 {
     qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
     qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
-    setPos(x()-diffX, y()-diffY);
+    handler_->pressedPlayerMovementKey(this, x()-diffX, y()-diffY);
 }
 
 void PlayerShipUi::updateMovement()
@@ -119,7 +115,7 @@ void PlayerShipUi::moveAccordingToPressedKey(int key)
     else if(key == Qt::Key_Space)
     {
         keyMovement_->stop();
-        emit pressedSpace();
+        handler_->pressedSpace();
         pressedKeys_.remove(Qt::Key_Space);
         keyMovement_->start();
     }
