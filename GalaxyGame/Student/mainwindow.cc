@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
     QObject* drawManagerObj = dynamic_cast<QObject*>(drawManager_.get());
+    QObject* questionObj = dynamic_cast<QObject*>(question_.get());
     connect(eventHandlerObj, SIGNAL(registerShipToUi(std::shared_ptr<Common::Ship>)),
             drawManagerObj, SLOT(registerShip(std::shared_ptr<Common::Ship>)));
     connect(eventHandlerObj, SIGNAL(unregisterShipFromUi(std::shared_ptr<Common::Ship>)),
@@ -45,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent,
     connect(drawManagerObj, SIGNAL(pressedSpaceSignal()), this, SLOT(pressedSpace()));
     connect(eventHandlerObj, SIGNAL(shipMovement(std::shared_ptr<Common::Ship>, int, int)),
             this, SLOT(shipMovement(std::shared_ptr<Common::Ship>, int, int)));
+    connect(questionObj, SIGNAL(allQuestionsDone()),
+            this, SLOT(allQuestionsDone()));
 
 //    Todo: every ship has to be able to change it's location --> change function travelToStarSystem
 //    connect(eventHandlerObj, SIGNAL(changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)),
@@ -122,6 +125,9 @@ void MainWindow::startGame()
     ui->pbShowMap->setEnabled(true);
     ui->pbNewGame->setEnabled(true);
     ui->pbQuestions->setEnabled(true);
+
+    playingTime_ = new QTime();
+    playingTime_->start();
 }
 
 void MainWindow::createPlayer()
@@ -142,18 +148,41 @@ void MainWindow::pressedSpace()
 {
     if(isPlayerTrading_)
     {
-        if(player_->getInventory().size() < MAX_PLAYER_INVENTORY)
+        QStringList items;
+        items << tr("Buy") << tr("Sell");
+        bool ok;
+
+        QString item = QInputDialog::getItem(this, tr("Trading"),
+                                             tr("Trade type:"), items, 0, false, &ok);
+        if (ok && !item.isEmpty())
         {
-            //auto it = std::find(player_->getInventory().begin(), player_->getInventory().end(), planetGoods_);
-            for(auto k : player_->getInventory())
+            if(item.toLower() == "buy")
             {
-                if(planetGoods_.getName() == k.getName() && planetGoods_.getPrice() == k.getPrice())
+                if(player_->getInventory().size() < MAX_PLAYER_INVENTORY)
                 {
-                    return;
+                    for(auto k : player_->getInventory())
+                    {
+                        if(currentPlanet_->getGoods().getName() == k.getName() && currentPlanet_->getGoods().getPrice() == k.getPrice())
+                        {
+                            return;
+                        }
+                    }
+
+                    player_->addGoodsToInventory(currentPlanet_->getGoods());
                 }
             }
-
-            player_->addGoodsToInventory(planetGoods_);
+            else if(item.toLower() == "sell")
+            {
+                for(auto k : player_->getInventory())
+                {
+                    bool correct = question_->checkQuestion(currentStarSystem_->getName(), currentPlanet_->getName(), k.getName());
+                    if(correct)
+                    {
+                        player_->removeGoodsFromInventory(k.getName());
+                        return;
+                    }
+                }
+            }
         }
     }
 }
@@ -174,12 +203,14 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     //Remove everything from scene
     drawManager_->clearScene();
 
-    auto starSystem = galaxy_->getStarSystemById(starSystemId);
+    std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(starSystemId);
 
     if(starSystem == nullptr)
     {
         throw Common::ObjectNotFoundException("Star system does not exist in the galaxy.");
     }
+
+    currentStarSystem_ = starSystem;
 
     //Set player's new location
     player_->setLocation(starSystem);
@@ -248,7 +279,7 @@ void MainWindow::checkCollision()
             std::shared_ptr<Student::Planet> planet = drawManager_->getPlanetByUiItem(colliding_Items[i]);
             ui->lbSPName->setText(QString::fromStdString(planet->getName()));
             ui->lbSPGoods->setText(QString::fromStdString(planet->getGoods().getName()));
-            planetGoods_ = planet->getGoods();
+            currentPlanet_ = planet;
             return;
         }
     }
@@ -361,4 +392,12 @@ void MainWindow::on_pbQuestions_clicked()
     questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
     questionDlg_->setModal(true);
     questionDlg_->exec();
+}
+
+void MainWindow::allQuestionsDone()
+{
+    int playingTime = playingTime_->elapsed();
+    QMessageBox msgBox;
+    msgBox.setText("Congratulation! Your time is " + QString::number(playingTime/1000) + "s");
+    msgBox.exec();
 }

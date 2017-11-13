@@ -44,6 +44,7 @@ public Q_SLOTS:
     void shipMovement(std::shared_ptr<Common::Ship> ship, int diffX, int diffY);
     void travelToStarSystem(unsigned starSystemId);
     void planetsInStarSystemRequest(unsigned id);
+    void allQuestionsDone();
 private:
     Ui::MainWindow *ui;
 
@@ -60,11 +61,13 @@ private:
     QTimer* refreshTimer_ = nullptr;
     QTimer* collisionTimer_ = nullptr;
     QTimer* gameTimer_ = nullptr;
+    QTime* playingTime_ = nullptr;
     MapWindow* map_ = nullptr;
     QuestionDlg* questionDlg_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     bool isPlayerTrading_ = false;
-    SimpleTradeGoods planetGoods_;
+    std::shared_ptr<Student::Planet> currentPlanet_;
+    std::shared_ptr<Common::StarSystem> currentStarSystem_;
 
     void startGame();
     void loadSettings();

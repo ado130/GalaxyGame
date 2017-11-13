@@ -18,9 +18,9 @@ PlayerShipUi::PlayerShipUi(QPixmap pixmap, QObject *parent):
     setFlag(QGraphicsItem::ItemIsFocusable);
     setZValue(1);
 
-    keyMovement = new QTimer(this);
-    connect(keyMovement, SIGNAL(timeout()), this, SLOT(updateMovement()));
-    keyMovement->start(50);
+    keyMovement_ = new QTimer(this);
+    connect(keyMovement_, SIGNAL(timeout()), this, SLOT(updateMovement()));
+    keyMovement_->start(50);
 }
 
 
@@ -29,7 +29,7 @@ void PlayerShipUi::keyPressEvent(QKeyEvent *event)
 {    
     if(!event->isAutoRepeat())
     {
-        pressedKeys.insert(event->key());
+        pressedKeys_.insert(event->key());
         updateMovement();
     }
 }
@@ -38,7 +38,7 @@ void PlayerShipUi::keyReleaseEvent(QKeyEvent *event)
 {
     if(!event->isAutoRepeat())
     {
-        pressedKeys.remove(event->key());
+        pressedKeys_.remove(event->key());
     }
 }
 
@@ -68,9 +68,12 @@ void PlayerShipUi::goDown(qreal width, qreal height)
 
 void PlayerShipUi::updateMovement()
 {
-    for(int key : pressedKeys)
+    if(pressedKeys_.count() > 0)
     {
-        moveAccordingToPressedKey(key);
+        foreach(const int &value, pressedKeys_)
+        {
+            moveAccordingToPressedKey(value);
+        }
     }
 }
 
@@ -82,7 +85,7 @@ void PlayerShipUi::moveAccordingToPressedKey(int key)
     {
         //The ship goes back -> we want to rotate back of the ship
         //to the left -> front goes to the right
-        if(pressedKeys.contains(Qt::Key_Down))
+        if(pressedKeys_.contains(Qt::Key_Down))
         {
             goRight();
         }
@@ -93,7 +96,7 @@ void PlayerShipUi::moveAccordingToPressedKey(int key)
     }
     else if(key == Qt::Key_Right)
     {
-        if(pressedKeys.contains(Qt::Key_Down))
+        if(pressedKeys_.contains(Qt::Key_Down))
         {
             goLeft();
         }
@@ -112,6 +115,9 @@ void PlayerShipUi::moveAccordingToPressedKey(int key)
     }
     else if(key == Qt::Key_Space)
     {
+        keyMovement_->stop();
         emit pressedSpace();
+        pressedKeys_.remove(Qt::Key_Space);
+        keyMovement_->start();
     }
 }

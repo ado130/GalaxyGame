@@ -190,9 +190,10 @@ std::shared_ptr<Common::StarSystem> Student::Galaxy::getStarSystemById(unsigned 
 Common::IGalaxy::ShipVector Student::Galaxy::getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships)
 {
     Common::IGalaxy::ShipVector planets;
+    planets.clear();
     for(auto k : ships)
     {
-        if( std::dynamic_pointer_cast<Student::Planet> (k))
+        if( std::dynamic_pointer_cast<Student::Planet>(k))
         {
             planets.push_back(k);
         }

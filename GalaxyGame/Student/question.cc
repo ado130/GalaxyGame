@@ -39,3 +39,24 @@ QList<questions_t> Student::Question::activeQuestions() const
 {
     return activeQuestions_;
 }
+
+bool Student::Question::checkQuestion(std::string starSystem, std::string planet, std::string goods)
+{
+    for(auto k : activeQuestions_)
+    {
+        if(k.first == goods && k.second.first == starSystem && k.second.second == planet)
+        {
+            completedQuestions_.append(k);
+            activeQuestions_.removeOne(k);
+
+            if(activeQuestions_.count() == 0 && completedQuestions_.count() == MAX_QUESTIONS)
+            {
+                emit allQuestionsDone();
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}

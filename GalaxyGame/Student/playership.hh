@@ -17,11 +17,11 @@ public:
 
     std::vector<SimpleTradeGoods> getInventory() const {return inventory_;}
     void addGoodsToInventory(SimpleTradeGoods goods) {inventory_.push_back(goods);}
+    void removeGoodsFromInventory(std::string goods);
 
     bool decideAction();    // ship interface
 private:
     Student::Statistics statistics_;
-
     std::vector<SimpleTradeGoods> inventory_;
 };
 

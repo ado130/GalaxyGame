@@ -25,8 +25,8 @@ void QuestionDlg::showQuestions()
 
     for(auto k : completed_)
     {
-        QString text = "Planet " + QString(k.second.second.data()) + "in" + QString(k.second.first.data()) + "Star system" +
-                "is looking for " + QString(k.first.data());
-        ui->lwActive->addItem(text);
+        QString text = "Planet " + QString(k.second.second.data()) + "in " + QString(k.second.first.data()) + " Star system" +
+                " is looking for " + QString(k.first.data()) + "\n";
+        ui->lwCompleted->addItem(text);
     }
 }
