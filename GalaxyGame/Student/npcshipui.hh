@@ -24,7 +24,6 @@ private:
     void goDown(qreal width, qreal height);
     QTimer *keyMovement = nullptr;
     QTimer *randomKeyPress = nullptr;
-
 };
 
 #endif // NPCSHIP_HH

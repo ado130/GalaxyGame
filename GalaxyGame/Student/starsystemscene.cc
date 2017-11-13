@@ -33,7 +33,8 @@ void Student::StarSystemScene::drawPlayerShip(PlayerShipUi *ship)
 void Student::StarSystemScene::erasePlayerShip(PlayerShipUi *ship)
 {
     std::vector<PlayerShipUi*>::iterator iter = std::find(playerShipList_.begin(), playerShipList_.end(), ship);
-    if(iter != playerShipList_.end()){
+    if(iter != playerShipList_.end())
+    {
         playerShipList_.erase(iter);
         removeItem(ship);
     }
@@ -41,7 +42,8 @@ void Student::StarSystemScene::erasePlayerShip(PlayerShipUi *ship)
 
 void Student::StarSystemScene::eraseAllPlayerShips()
 {
-    for(PlayerShipUi* player : playerShipList_){
+    for(PlayerShipUi* player : playerShipList_)
+    {
         removeItem(player);
     }
     playerShipList_.clear();

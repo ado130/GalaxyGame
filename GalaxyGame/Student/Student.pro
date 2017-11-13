@@ -34,7 +34,9 @@ SOURCES += \
     drawableobjectsmanager.cc \
     itemsingalaxy.cc \
     playershipui.cc \
-    playership.cc
+    playership.cc \
+    question.cc \
+    questiondlg.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -57,12 +59,15 @@ HEADERS  += \
     itradableitem.hh \
     simpletradegoods.hh \
     playershipui.hh \
-    playership.hh
+    playership.hh \
+    question.hh \
+    questiondlg.hh
 	
 FORMS += \
     mainwindow.ui \
     statisticswindow.ui \
-    mapwindow.ui
+    mapwindow.ui \
+    questiondlg.ui
 
 RESOURCES += \
     resources.qrc

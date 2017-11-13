@@ -34,9 +34,11 @@ MainWindow::MainWindow(QWidget *parent,
     userActionHandler_ = std::make_shared<Student::UserActionHandler>();
     drawManager_ = std::make_shared<Student::DrawableObjectsManager>(new Student::StarSystemScene(this));
     itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
+    question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
 
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
     QObject* drawManagerObj = dynamic_cast<QObject*>(drawManager_.get());
+    QObject* questionObj = dynamic_cast<QObject*>(question_.get());
     connect(eventHandlerObj, SIGNAL(registerShipToUi(std::shared_ptr<Common::Ship>)),
             drawManagerObj, SLOT(registerShip(std::shared_ptr<Common::Ship>)));
     connect(eventHandlerObj, SIGNAL(unregisterShipFromUi(std::shared_ptr<Common::Ship>)),
@@ -47,6 +49,11 @@ MainWindow::MainWindow(QWidget *parent,
             drawManagerObj, SLOT(changeShipPosition(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)));
 
 
+    connect(drawManagerObj, SIGNAL(pressedSpaceSignal()), this, SLOT(pressedSpace()));
+//    connect(eventHandlerObj, SIGNAL(shipMovement(std::shared_ptr<Common::Ship>, int, int)),
+//            this, SLOT(shipMovement(std::shared_ptr<Common::Ship>, int, int)));
+    connect(questionObj, SIGNAL(allQuestionsDone()),
+            this, SLOT(allQuestionsDone()));
 
 //    Todo: every ship has to be able to change it's location --> change function travelToStarSystem
 //    connect(eventHandlerObj, SIGNAL(changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)),
@@ -60,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent,
     });
 
     ui->pbShowMap->setEnabled(false);
+    ui->pbQuestions->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -97,6 +105,8 @@ void MainWindow::startGame()
     // Add enemies to the galaxy
     gameRunner_->spawnShips(500);
 
+    question_->generateQuestions();
+
     // Start location is player's location
     travelToStarSystem(player_->getLocation()->getId());
 
@@ -121,6 +131,10 @@ void MainWindow::startGame()
 
     ui->pbShowMap->setEnabled(true);
     ui->pbNewGame->setEnabled(true);
+    ui->pbQuestions->setEnabled(true);
+
+    playingTime_ = new QTime();
+    playingTime_->start();
 }
 
 void MainWindow::createPlayer()
@@ -134,15 +148,50 @@ void MainWindow::createPlayer()
 //    ToDo: check connection to EventHandler and how to use it for emiting signals FROM UI
 //    QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
 //    connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)), this, SLOT(travelToStarSystem(unsigned)));
-//    connect(player_, &PlayerShipUi::pressedSpace, this, &MainWindow::pressedSpace);
+//    connect(player_.get(), SIGNAL(pressedSpace()), this, SLOT(pressedSpace));
 }
 
 void MainWindow::pressedSpace()
 {
+    qDebug() << "pressed space";
     if(isPlayerTrading_)
     {
-        // ToDo: trade player-planet
-        qDebug() << "Player trade";
+        QStringList items;
+        items << tr("Buy") << tr("Sell");
+        bool ok;
+
+        QString item = QInputDialog::getItem(this, tr("Trading"),
+                                             tr("Trade type:"), items, 0, false, &ok);
+        if (ok && !item.isEmpty())
+        {
+            if(item.toLower() == "buy")
+            {
+                if(player_->getInventory().size() < MAX_PLAYER_INVENTORY)
+                {
+                    for(auto k : player_->getInventory())
+                    {
+                        if(currentPlanet_->getGoods().getName() == k.getName() && currentPlanet_->getGoods().getPrice() == k.getPrice())
+                        {
+                            return;
+                        }
+                    }
+
+                    player_->addGoodsToInventory(currentPlanet_->getGoods());
+                }
+            }
+            else if(item.toLower() == "sell")
+            {
+                for(auto k : player_->getInventory())
+                {
+                    bool correct = question_->checkQuestion(currentStarSystem_->getName(), currentPlanet_->getName(), k.getName());
+                    if(correct)
+                    {
+                        player_->removeGoodsFromInventory(k.getName());
+                        return;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -157,7 +206,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     {
         gameTimer_->stop();
         map_->hide();
-        if(player_->getLocation()->getId() == starSystemId)
+        if(player_->getLocation()->getId() == starSystemId)     // if destination is equal to current star system
         {
             gameTimer_->start();
             return;
@@ -167,20 +216,23 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     //Remove everything from scene
     drawManager_->clearScene();
 
-    //Set player's new location
-    player_->setLocation(galaxy_->getStarSystemById(starSystemId));
+    std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(starSystemId);
 
     qDebug() << "location after: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
     qDebug() << "health after: " << player_->getEngine()->getHealth();
     qDebug() << "can start after: " << player_->getEngine()->canStart();
 
-    auto starSystem = galaxy_->getStarSystemById(starSystemId);
     if(starSystem == nullptr) {
         throw Common::ObjectNotFoundException("Star system does not exist in the galaxy.");
-        return;
     }
 
-    for(auto ship : galaxy_->getShipsInStarSystem(starSystem->getName())){
+    currentStarSystem_ = starSystem;
+
+    //Set player's new location
+    player_->setLocation(starSystem);
+
+    for(auto ship : galaxy_->getShipsInStarSystem(starSystem->getName()))
+    {
         drawManager_->drawShip(ship);
     }
 
@@ -203,6 +255,13 @@ void MainWindow::refreshUI()
 {
     ui->graphicsView->centerOn(drawManager_->getPlayerShipUiByObject(player_));
     drawManager_->setFocusOnPlayer(player_);
+    ui->ptPlayerInventory->clear();
+    QString inventory = "";
+    for(auto k : player_->getInventory())
+    {
+        inventory += QString(k.getName().data()) + " : " + QString::number(k.getPrice()) + "\n";
+    }
+    ui->ptPlayerInventory->appendPlainText(inventory);
 }
 
 void MainWindow::gameEvent()
@@ -227,23 +286,13 @@ void MainWindow::checkCollision()
             std::shared_ptr<Student::Planet> planet = drawManager_->getPlanetByUiItem(colliding_Items[i]);
             ui->lbSPName->setText(QString::fromStdString(planet->getName()));
             ui->lbSPGoods->setText(QString::fromStdString(planet->getGoods().getName()));
-
-//            NOTE: see planet.hh about notes about values below:
-//            const char* economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony" };
-//            ui->lbSPEconomy->setText(economy[starPlanet->getEconomy()]);
-//            ui->lbSPPopulation->setText(QString::number(starPlanet->getPopulation()));
-//            ui->lbSPCoordinates->setText("x: " + QString::number(starPlanet->getCoordinates().x) +
-//                                         " y: " + QString::number(starPlanet->getCoordinates().y));
-
+            currentPlanet_ = planet;
             return;
         }
     }
 
     isPlayerTrading_ = false;
     ui->lbSPName->clear();
-    ui->lbSPEconomy->clear();
-    ui->lbSPPopulation->clear();
-    ui->lbSPCoordinates->clear();
     ui->lbSPGoods->clear();
 }
 
@@ -292,8 +341,7 @@ void MainWindow::on_actionHelp_triggered()
     help->resize(384, 256);
     help->append(tr("<h1>Help</h1>Use arrow keys to move."
                  "<br/>Fly over the planet and press space to trade with the planet."
-                 "<br/>You can not shoot during trading."
-                 "<br/> Hope you like it."));
+                 "<br/>Hope you like it."));
     help->show();
 }
 
@@ -321,8 +369,13 @@ void MainWindow::on_pbShowMap_clicked()
     if(map_ == nullptr)
     {
         QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
-        connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)), this, SLOT(travelToStarSystem(unsigned)));
+        connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)),
+                this, SLOT(travelToStarSystem(unsigned)));
         map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), this);
+        connect(eventHandlerObj, SIGNAL(showGoodsInfo(unsigned)),
+                map_, SLOT(showGoodsInfo(unsigned)));
+        connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
+                this, SLOT(planetsInStarSystemRequest(unsigned)));
         map_->setModal(true);
         map_->exec();
     }
@@ -332,3 +385,26 @@ void MainWindow::on_pbShowMap_clicked()
     }
 }
 
+void MainWindow::planetsInStarSystemRequest(unsigned id)
+{
+    std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(id);
+    Common::IGalaxy::ShipVector ships = galaxy_->getShipsInStarSystem(starSystem->getName());
+    Common::IGalaxy::ShipVector planets = drawManager_->getPlanetsByStarSystem(ships);
+    map_->setPlanetsByStarSystem(planets);
+}
+
+void MainWindow::on_pbQuestions_clicked()
+{
+    questionDlg_ = new QuestionDlg(question_->activeQuestions(), question_->completedQuestions(), this);
+    questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
+    questionDlg_->setModal(true);
+    questionDlg_->exec();
+}
+
+void MainWindow::allQuestionsDone()
+{
+    int playingTime = playingTime_->elapsed();
+    QMessageBox msgBox;
+    msgBox.setText("Congratulation! Your time is " + QString::number(playingTime/1000) + "s");
+    msgBox.exec();
+}

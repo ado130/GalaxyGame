@@ -11,8 +11,10 @@ public:
     UserActionHandler(QObject* parent = 0);
     ~UserActionHandler();
     void travelToStarSystemRequest(unsigned idStarUi);
+    void showStarSystemGoods(unsigned idStarUi);
 Q_SIGNALS:
     void travelRequest(unsigned idStarUi);
+    void showGoodsInfo(unsigned idStarUi);
 };
 }
 

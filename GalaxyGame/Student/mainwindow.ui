@@ -80,7 +80,7 @@
       <x>820</x>
       <y>50</y>
       <width>201</width>
-      <height>421</height>
+      <height>561</height>
      </rect>
     </property>
     <property name="title">
@@ -346,7 +346,7 @@
        <x>10</x>
        <y>290</y>
        <width>181</width>
-       <height>121</height>
+       <height>61</height>
       </rect>
      </property>
      <property name="title">
@@ -357,8 +357,8 @@
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>71</width>
-        <height>16</height>
+        <width>41</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
@@ -368,109 +368,13 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Economy:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_10">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>60</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Population:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>80</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Coordinates:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lbSPEconomy">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>40</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lbSPPopulation">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>60</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
      <widget class="QLabel" name="lbSPName">
       <property name="geometry">
        <rect>
-        <x>90</x>
+        <x>60</x>
         <y>20</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lbSPCoordinates">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>80</y>
-        <width>71</width>
-        <height>16</height>
+        <width>101</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
@@ -483,10 +387,10 @@
      <widget class="QLabel" name="lbSPGoods">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>100</y>
-        <width>71</width>
-        <height>16</height>
+        <x>60</x>
+        <y>40</y>
+        <width>101</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
@@ -500,9 +404,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>100</y>
-        <width>71</width>
-        <height>16</height>
+        <y>40</y>
+        <width>41</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
@@ -512,6 +416,45 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
+    </widget>
+    <widget class="QGroupBox" name="gbInventory">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>360</y>
+       <width>181</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Player's inventory</string>
+     </property>
+     <widget class="QPlainTextEdit" name="ptPlayerInventory">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>161</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="pbQuestions">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>507</y>
+       <width>100</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Questions</string>
+     </property>
     </widget>
    </widget>
   </widget>

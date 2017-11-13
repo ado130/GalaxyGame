@@ -13,13 +13,14 @@ namespace Student {
 class StarSystemUi : public QGraphicsPixmapItem
 {
 public:
-    StarSystemUi(std::shared_ptr<Student::UserActionHandler> handler, Common::Point position, unsigned id);
+    StarSystemUi(std::shared_ptr<Student::UserActionHandler> handler, Common::Point position, unsigned id_);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 private:
     std::shared_ptr<Student::UserActionHandler> handler_ = nullptr;
-    unsigned id = 0;
+    unsigned id_ = 0;
 };
 }
 

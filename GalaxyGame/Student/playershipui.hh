@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
 #include <QObject>
+#include <QSet>
 
 class PlayerShipUi : public QObject, public QGraphicsPixmapItem
 {
@@ -16,21 +17,21 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
+private:
+    QSet<int> pressedKeys_;
+    QTimer *keyMovement_ = nullptr;
+
+    void goLeft();
+    void goRight();
+    void goUp(qreal width, qreal height);
+    void goDown(qreal width, qreal height);
+    void moveAccordingToPressedKey(int key);
 
 private Q_SLOTS:
     void updateMovement();
 
 Q_SIGNALS:
     void pressedSpace();
-
-private:
-    void goLeft();
-    void goRight();
-    void goUp(qreal width, qreal height);
-    void goDown(qreal width, qreal height);
-    QSet<int> pressedKeys;
-    QTimer *keyMovement = nullptr;
-    void moveAccordingToPressedKey(int key);
 };
 
 #endif // PLAYERSHIPUI_H

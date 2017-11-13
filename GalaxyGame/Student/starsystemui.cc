@@ -1,9 +1,11 @@
 #include "starsystemui.hh"
 
 #include <QDebug>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QMenu>
 
 Student::StarSystemUi::StarSystemUi(std::shared_ptr<Student::UserActionHandler> handler, Common::Point position, unsigned id):
-    handler_(handler), id(id)
+    handler_(handler), id_(id)
 {
     QString icon = QString(":/images/images/deathStar.png");
 
@@ -14,12 +16,12 @@ Student::StarSystemUi::StarSystemUi(std::shared_ptr<Student::UserActionHandler> 
 
 void Student::StarSystemUi::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    // ToDo: show info about starSystem
-    qDebug() << "User clicked on starSystem";
+    Q_UNUSED(event);
+    handler_->showStarSystemGoods(id_);
 }
 
 void Student::StarSystemUi::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug() << "Travel request!";
-    handler_->travelToStarSystemRequest(id);
+    Q_UNUSED(event);
+    handler_->travelToStarSystemRequest(id_);
 }
