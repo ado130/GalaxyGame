@@ -51,9 +51,9 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
         QPixmap bigPixmap = QPixmap(pathToImage);
         Student::PlanetUi *planet = new Student::PlanetUi(bigPixmap.scaledToWidth(bigPixmap.width()/3),
                                                           ship->getLocation()->getCoordinates().x*coordsScale_+
-                                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius),
+                                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius-bigPixmap.width()/3),
                                                           ship->getLocation()->getCoordinates().y*coordsScale_+
-                                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius));
+                                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius-bigPixmap.height()/3));
         planetUiList_.append(qMakePair(std::dynamic_pointer_cast<Student::Planet> (ship), planet));
     }
 
