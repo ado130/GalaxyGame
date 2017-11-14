@@ -20,7 +20,7 @@ public:
 
 private:
     Ui::StatisticsWindow *ui;
-    void fillStatistics(Student::Statistics stats);
+    void fillStatistics(Student::Statistics *stats);
 };
 
 #endif // STATISTICSWINDOW_H

@@ -36,7 +36,8 @@ SOURCES += \
     playershipui.cc \
     playership.cc \
     question.cc \
-    questiondlg.cc
+    questiondlg.cc \
+    settings.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -61,7 +62,8 @@ HEADERS  += \
     playershipui.hh \
     playership.hh \
     question.hh \
-    questiondlg.hh
+    questiondlg.hh \
+    settings.hh
 	
 FORMS += \
     mainwindow.ui \

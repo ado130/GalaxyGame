@@ -12,8 +12,8 @@ class PlayerShip : public Common::Ship
 public:
     PlayerShip(std::shared_ptr<Common::ShipEngine> engine = 0,
                std::shared_ptr<Common::StarSystem> initialLocation = 0,
-               std::shared_ptr<Common::IEventHandler> events = 0);
-    Student::Statistics getStatistics();
+               std::shared_ptr<Common::IEventHandler> events = 0, Student::Statistics *statistics = nullptr);
+    Student::Statistics* getStatistics();
 
     std::vector<SimpleTradeGoods> getInventory() const {return inventory_;}
     void addGoodsToInventory(SimpleTradeGoods goods) {inventory_.push_back(goods);}
@@ -21,7 +21,7 @@ public:
 
     bool decideAction();    // ship interface
 private:
-    Student::Statistics statistics_;
+    Student::Statistics *statistics_;
     std::vector<SimpleTradeGoods> inventory_;
 };
 

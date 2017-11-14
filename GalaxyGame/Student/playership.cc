@@ -4,12 +4,11 @@
 
 PlayerShip::PlayerShip(std::shared_ptr<Common::ShipEngine> engine,
                        std::shared_ptr<Common::StarSystem> initialLocation,
-                       std::shared_ptr<Common::IEventHandler> events):
-    Ship(engine, initialLocation, events)
+                       std::shared_ptr<Common::IEventHandler> events,
+                       Student::Statistics *statistics):
+    Ship(engine, initialLocation, events), statistics_(statistics)
 {
 
-    // ToDo: Settings for MAX_LOAN_ALLOWANCE
-    statistics_ = Student::Statistics(5000);
 }
 
 bool PlayerShip::decideAction()
@@ -17,7 +16,7 @@ bool PlayerShip::decideAction()
     return 0;
 }
 
-Student::Statistics PlayerShip::getStatistics()
+Student::Statistics *PlayerShip::getStatistics()
 {
     return statistics_;
 }

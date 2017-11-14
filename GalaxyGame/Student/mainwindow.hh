@@ -18,6 +18,7 @@
 #include "itemsingalaxy.hh"
 #include "question.hh"
 #include "questiondlg.hh"
+#include "settings.hh"
 
 class PlayerShipUi;
 class NPCShipUi;
@@ -45,6 +46,7 @@ public Q_SLOTS:
     void travelToStarSystem(unsigned starSystemId);
     void planetsInStarSystemRequest(unsigned id);
     void allQuestionsDone();
+    void questionCompleted();
 private:
     Ui::MainWindow *ui;
 
@@ -56,6 +58,7 @@ private:
     std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
     std::shared_ptr<PlayerShip> player_;
     std::shared_ptr<Student::Question> question_;
+    std::shared_ptr<Student::Settings> settings_;
 
 
     QTimer* refreshTimer_ = nullptr;

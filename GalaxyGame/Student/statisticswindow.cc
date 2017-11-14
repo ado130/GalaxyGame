@@ -15,12 +15,12 @@ StatisticsWindow::~StatisticsWindow()
     delete ui;
 }
 
-void StatisticsWindow::fillStatistics(Student::Statistics stats)
+void StatisticsWindow::fillStatistics(Student::Statistics* stats)
 {
-    ui->creditsLbl->setText(QString::number(stats.getCreditBalance()));
-    ui->pointsLbl->setText(QString::number(stats.getPoints()));
-    ui->lostShipsLbl->setText(QString::number(stats.getLostShips()));
-    ui->savedShipsLbl->setText(QString::number(stats.getSavedShips()));
-    ui->completedQuestsLbl->setText(QString::number(stats.getCompletedQuests()));
-    ui->destroyedShipsLbl->setText(QString::number(stats.getDestroyedShips()));
+    ui->creditsLbl->setText(QString::number(stats->getCreditBalance()));
+    ui->pointsLbl->setText(QString::number(stats->getPoints()));
+    ui->lostShipsLbl->setText(QString::number(stats->getLostShips()));
+    ui->savedShipsLbl->setText(QString::number(stats->getSavedShips()));
+    ui->completedQuestsLbl->setText(QString::number(stats->getCompletedQuests()));
+    ui->destroyedShipsLbl->setText(QString::number(stats->getDestroyedShips()));
 }

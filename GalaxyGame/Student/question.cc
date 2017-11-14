@@ -48,6 +48,7 @@ bool Student::Question::checkQuestion(std::string starSystem, std::string planet
         {
             completedQuestions_.append(k);
             activeQuestions_.removeOne(k);
+            emit questionCompleted();
 
             if(activeQuestions_.count() == 0 && completedQuestions_.count() == MAX_QUESTIONS)
             {

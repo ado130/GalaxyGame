@@ -8,7 +8,7 @@ namespace Student {
 class Statistics : public Common::IStatistics
 {
 public:
-    Statistics(int MAX_LOAN_ALLOWANCE = 5000);
+    Statistics(int MAX_LOAN_ALLOWANCE = 100);
     ~Statistics();
 
      void addSavedShip();

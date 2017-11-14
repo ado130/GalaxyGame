@@ -18,6 +18,8 @@
 #include <QFuture>
 #include <QMessageBox>
 
+
+
 MainWindow::MainWindow(QWidget *parent,
                        std::shared_ptr<Common::IEventHandler> handler,
                        std::shared_ptr<Student::Galaxy> galaxy,
@@ -35,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent,
     drawManager_ = std::make_shared<Student::DrawableObjectsManager>(new Student::StarSystemScene(this), userActionHandler_);
     itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
     question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
+    settings_ = std::make_shared<Student::Settings>();
 
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
     QObject* userEventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
@@ -54,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent,
     connect(userEventHandlerObj, SIGNAL(tradeRequest()), this, SLOT(pressedSpace()));
     connect(questionObj, SIGNAL(allQuestionsDone()),
             this, SLOT(allQuestionsDone()));
+    connect(questionObj, SIGNAL(questionCompleted()),
+            this, SLOT(questionCompleted()));
 
 //    Todo: every ship has to be able to change it's location --> change function travelToStarSystem
 //    connect(eventHandlerObj, SIGNAL(changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)),
@@ -79,6 +84,8 @@ MainWindow::~MainWindow()
     delete map_;
     delete ui;
 }
+
+
 
 void MainWindow::startGame()
 {
@@ -139,7 +146,10 @@ void MainWindow::createPlayer()
 {
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
     std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();//std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
-    player_ = std::make_shared<PlayerShip>(shipEngine, initialLocation, handler_);
+    Student::Statistics *stats = new Student::Statistics(settings_->getMaxCreditAllowance());
+    player_ = std::make_shared<PlayerShip>(shipEngine, initialLocation, handler_, stats);
+    //set initial credit for trading
+    player_->getStatistics()->addCredits(settings_->getInitialPlayerCredit());
     galaxy_->addShip(player_);
     handler_->shipSpawned(player_);
 }
@@ -168,8 +178,16 @@ void MainWindow::pressedSpace()
                             return;
                         }
                     }
-
-                    player_->addGoodsToInventory(currentPlanet_->getGoods());
+                    if(currentPlanet_->getGoods().getPrice() <= player_->getStatistics()->getCreditBalance()){
+                        player_->addGoodsToInventory(currentPlanet_->getGoods());
+                        player_->getStatistics()->reduceCredits(currentPlanet_->getGoods().getPrice());
+                    }
+                    else{
+                        QMessageBox msgBox;
+                        msgBox.setText("You don't have enough credits!");
+                        msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+                        msgBox.exec();
+                    }
                 }
             }
             else if(item.toLower() == "sell")
@@ -180,6 +198,7 @@ void MainWindow::pressedSpace()
                     if(correct)
                     {
                         player_->removeGoodsFromInventory(k.getName());
+                        player_->getStatistics()->addCredits(k.getPrice() + (k.getPrice()*settings_->getCreditProfitFromSale()));
                         return;
                     }
                 }
@@ -399,4 +418,10 @@ void MainWindow::allQuestionsDone()
     QMessageBox msgBox;
     msgBox.setText("Congratulation! Your time is " + QString::number(playingTime/1000) + "s");
     msgBox.exec();
+}
+
+void MainWindow::questionCompleted()
+{
+    player_->getStatistics()->addCompletedQuest();
+    player_->getStatistics()->addPoints(settings_->getPointsFromQuestion());
 }

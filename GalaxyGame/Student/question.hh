@@ -35,6 +35,7 @@ private:
 
 Q_SIGNALS:
     void allQuestionsDone();
+    void questionCompleted();
 };
 }
 #endif // QUESTION_H
