@@ -116,7 +116,7 @@ void PlayerShipUi::moveAccordingToPressedKey(int key)
     {
         keyMovement_->stop();
         handler_->pressedSpace();
-        pressedKeys_.remove(Qt::Key_Space);
+        pressedKeys_.clear();
         keyMovement_->start();
     }
 }
