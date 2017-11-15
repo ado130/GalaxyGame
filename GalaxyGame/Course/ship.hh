@@ -50,25 +50,22 @@ public:
 
     #ifdef English_dox
     /**
-     * @brief Returns the engine which is utilized by the ship.
-     * @post Exception guarantee: basic
-     * @return Aluksen käyttämä moottori.
+     * @post Exception guarantee: nothrow
+     * @return The engine which is utilized by the ship.
      */
     #endif
     virtual std::shared_ptr<ShipEngine> getEngine();
 
     #ifdef English_dox
     /**
-     * @brief Returns the current location of the ship.
-     * @post Exception guarantee: basic
-     * @return The current location of the ship.
+     * @post Exception guarantee: nothrow
+     * @return The current location of the ship. Nullptr, if the ship is moving between systems.
      */
     #endif
     virtual std::shared_ptr<StarSystem> getLocation();
 
     #ifdef English_dox
     /**
-     * @brief Returns the name of the ship.
      * @post Exception guarantee: nothrow
      * @return The name of the ship.
      */

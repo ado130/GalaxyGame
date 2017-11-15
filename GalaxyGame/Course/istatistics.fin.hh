@@ -9,7 +9,8 @@
 * @class Common::IStatistics
 * @brief Määrittelee rajapinnan tilastoluokalle.
 *
-* @invariant getCreditBalance() > MAX_LOAN_ALLOWANCE
+* @invariant getPoints() >= 0
+* @invariant getCreditBalance() >= MAX_LOAN_ALLOWANCE
 * MAX_LOAN_ALLOWANCE on raja-arvo sille, paljonko pelaajalla voi olla velkaa
 * Varsinaisen arvon saa päättää luokan toteuttaja.
 */

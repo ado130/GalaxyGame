@@ -7,7 +7,7 @@
 #ifdef English_dox
 /**
  * @file
- * @brief Defines the interface for handling events
+ * @brief Defines the interface for handling events.
  */
 #endif
 
@@ -16,12 +16,15 @@ namespace Common {
 #ifdef English_dox
 /**
  * @class Common::IEventHandler
- * @brief Event handler acts as an intermediary between objects that receives events and the objects that are interested in those events.
- * EventHander is used as a parameter in the construction of those objects which need to notify others about events/happenings.
- * Vessels and some action classes are an example of this.
+ * @brief Event handler acts as an intermediary between objects that receives events and
+ * the objects that are interested in those events. Objects spawn events by calling functions of
+ * the event handler. See more details in the sequence diagrams within the course assignment.
  *
- * These events can be used to update the user interface for example.
+ * THUS, IN THIS CLASS THE DESCRIPTIONS OF THE FUNCTIONS ARE REALLY ABOUT
+ * WHEN THE FUNCTION IS CALLED FROM OUTSIDE OF THE CLASS.
  *
+ * In practise, event handler is used to notify the user interface about changes in
+ * the game state.
  */
 #endif
 
@@ -53,8 +56,8 @@ public:
 
 #ifdef English_dox
     /**
-     * @brief shipSpawned A new ship has been created in the galaxy.
-     * @param ship Created ship
+     * @brief A new ship has been created in the galaxy.
+     * @param ship The created ship
      * @post Exception guarantee: nothrow
      */
 #endif
@@ -62,8 +65,8 @@ public:
 
 #ifdef English_dox
     /**
-     * @brief shipRemoved A ship has been removed from the galaxy.
-     * @param ship Removed ship
+     * @brief A ship has been removed from the galaxy.
+     * @param ship The removed ship
      * @post Exception guarantee: nothrow
      */
 #endif
@@ -71,10 +74,10 @@ public:
 
 #ifdef English_dox
     /**
-     * @brief shipMoved A ship moved from one point to another
-     * @param ship Ship, which moved
-     * @param origin point, from which the ship moved
-     * @param target point, to which the ship moved
+     * @brief A ship moved from one point to another.
+     * @param ship The ship, which moved
+     * @param origin The point, from which the ship moved
+     * @param target The point, to which the ship moved
      * @post Exception guarantee: nothrow
      */
 #endif
@@ -82,9 +85,9 @@ public:
 
 #ifdef English_dox
     /**
-     * @brief shipRelocated Ship moved to the provided Star system.
-     * @param ship Ship, which relocated
-     * @param starSystem nullptr, when a ship leaves from the Star system. Destination Star system, if the ship reached one.
+     * @brief A ship has moved to a star system, or moved away from a star system.
+     * @param ship The ship, which relocated
+     * @param starSystem The previous system where the ship was located. Can be nullptr.
      * @post Exception guarantee: nothrow
      */
 #endif
@@ -92,16 +95,18 @@ public:
 
 #ifdef English_dox
     /**
-     * @brief exceptionInExecution A function executed by the ship caused an exception to be thrown, which has the reason added as a string
+     * @brief An action executed by a ship caused an exception, and thus it was cancelled.
+     * @param ship The ship that caused the exception.
+     * @param msg Description of the exception.
      * @post Exception guarantee: nothrow
      */
 #endif
-    virtual void exceptionInExecution(std::shared_ptr<Ship>, std::string const&) = 0;
+    virtual void exceptionInExecution(std::shared_ptr<Ship> ship, std::string const& msg) = 0;
 
 #ifdef English_dox
     /**
-     * @brief distressOn A ship has made a distress call.
-     * @param ship Ship, which made the distress call
+     * @brief A ship has switched on distress call.
+     * @param ship The ship, which switched on the distress call
      * @post Exception guarantee: nothrow
      */
 #endif
@@ -109,8 +114,8 @@ public:
 
 #ifdef English_dox
     /**
-     * @brief distressOff A ship has removed the distress call.
-     * @param ship Ship, which removed the distress call
+     * @brief A ship has switched off distress call.
+     * @param ship The ship, which switched off the distress call
      * @post Exception guarantee: nothrow
      */
 #endif
@@ -118,8 +123,8 @@ public:
 
 #ifdef English_dox
     /**
-     * @brief shipAbandoned A ship has been abandoned.
-     * @param ship Ship, which has been abandoned
+     * @brief A ship has been abandoned.
+     * @param ship The ship, which has been abandoned
      * @post Exception guarantee: nothrow
      */
 #endif

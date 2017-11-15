@@ -35,23 +35,20 @@
 
 /**
  * @fn virtual std::shared_ptr<ShipEngine> Common::Ship::getEngine();
- * @brief Palauttaa aluksen käyttämän moottorin.
- * @post Poikkeustakuu: perus
+ * @post Poikkeustakuu: nothrow
  * @return Aluksen käyttämä moottori.
  */
 
 /**
  * @fn virtual std::shared_ptr<StarSystem> Common::Ship::getLocation();
- * @brief Palauttaa aluksen tämänhetkisen sijainnin.
- * @post Poikkeustakuu: perus
- * @return Aluksen tämänhetkisen sijainti.
+ * @post Poikkeustakuu: nothrow
+ * @return Aluksen tämänhetkinen sijainti. Nullptr, jos alus on matkalla tähtijärjestelmien välillä.
  */
 
 /**
  * @fn virtual std::string Common::Ship::getName() const;
- * @brief Palauttaa aluksen nimen.
  * @post Poikkeustakuu: nothrow
- * @return Aluksen nimi
+ * @return Aluksen nimi.
  */
 
 /**

@@ -5,6 +5,7 @@
 #include "ieventhandler.hh"
 #include "igamerunner.hh"
 
+#include <functional>
 #include <memory>
 
 #ifdef English_dox

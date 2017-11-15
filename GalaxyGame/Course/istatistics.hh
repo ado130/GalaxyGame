@@ -14,7 +14,7 @@ namespace Common {
  * @brief Defines the interface for statistics class.
  *
  * @invariant getPoints() >= 0
- * @invariant getCreditBalance() > MAX_LOAN_ALLOWANCE
+ * @invariant getCreditBalance() >= MAX_LOAN_ALLOWANCE
  * MAX_LOAN_ALLOWANCE is the limit that the player is allowed to have debt.
  * The actual value is to be decided by the implementer of inherited class.
  */

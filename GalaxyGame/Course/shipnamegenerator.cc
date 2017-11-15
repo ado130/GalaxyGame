@@ -1,7 +1,6 @@
 #include "shipnamegenerator.hh"
 #include "ioexception.hh"
 #include <QFile>
-
 #include <algorithm>
 namespace Course {
 
@@ -16,7 +15,7 @@ ShipNameGenerator::ShipNameGenerator():
       throw Common::IoException("Could not read file");
     }
     while (!nameFile.atEnd()){
-        QString name =  nameFile.readLine();
+        QString name = nameFile.readLine().trimmed();
         shipNames_.push_back(name.toStdString());
     }
     std::random_shuffle(shipNames_.begin(), shipNames_.end());
