@@ -3,16 +3,19 @@
 #include <QDebug>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QMenu>
+//#include <QBitmap>
 
-Student::StarSystemUi::StarSystemUi(std::shared_ptr<Student::UserActionHandler> handler, Common::Point position, unsigned id):
+Student::StarSystemUi::StarSystemUi(QPixmap pixmap, std::shared_ptr<Student::UserActionHandler> handler, Common::Point position, unsigned id):
     handler_(handler), id_(id)
 {
-    QString icon = QString(":/images/images/deathStar.png");
-
-    setPixmap(QPixmap(icon));
-    setScale(0.3);
+    setPixmap(pixmap);
     //ToDo: dynamic map scaling from gui
     setPos(position.x*30, position.y*30);
+}
+
+void Student::StarSystemUi::changeApperanceDistressed()
+{
+
 }
 
 void Student::StarSystemUi::mousePressEvent(QGraphicsSceneMouseEvent *event)

@@ -11,12 +11,16 @@ public:
     int getMaxCreditAllowance();
     int getInitialPlayerCredit();
     int getPointsFromQuestion();
+    int getPointsFromSaving();
+    int getCreditsFromSaving();
 private:
     void applyDefaultSettings();
     double creditProfitFromSale_;
     int maxCreditAllowance_;
     int initialPlayerCredit_;
     int pointsFromQuestion_;
+    int pointsFromSaving_;
+    int creditsFromSaving_;
 };
 }
 

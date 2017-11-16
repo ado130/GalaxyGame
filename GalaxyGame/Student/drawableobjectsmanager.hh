@@ -35,7 +35,7 @@ public:
     std::shared_ptr<Planet> getPlanetByUiItem(QGraphicsItem *item);
     std::shared_ptr<Common::CargoShip> getCargoShiptByUiItem(QGraphicsItem* item);
     PlayerShipUi* getPlayerShipUiByObject(std::shared_ptr<PlayerShip> ship);
-    NPCShipUi* getCargoShipUiByObject(std::shared_ptr<Common::CargoShip> ship);
+    NPCShipUi* getCargoShipUiByObject(std::shared_ptr<Common::Ship> ship);
     void setFocusOnPlayer(std::shared_ptr<PlayerShip> ship);
     Common::IGalaxy::ShipVector getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships);
 

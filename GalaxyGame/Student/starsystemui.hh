@@ -13,7 +13,9 @@ namespace Student {
 class StarSystemUi : public QGraphicsPixmapItem
 {
 public:
-    StarSystemUi(std::shared_ptr<Student::UserActionHandler> handler, Common::Point position, unsigned id_);
+    StarSystemUi(QPixmap pixmap, std::shared_ptr<Student::UserActionHandler> handler, Common::Point position, unsigned id_);
+
+    void changeApperanceDistressed();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

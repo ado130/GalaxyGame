@@ -12,6 +12,7 @@ NPCShipUi::NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
     setTransformOriginPoint((boundingRect().center().x()),(boundingRect().center().y()));
 
     setPos(posX, posY);
+    canMove_ = true;
 
     keyMovement = new QTimer(this);
     connect(keyMovement, SIGNAL(timeout()), this, SLOT(moveForward()));
@@ -23,6 +24,30 @@ NPCShipUi::NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
 
     randomChangeOfDirection();
 
+}
+
+void NPCShipUi::changePixmapAndRotation(QPixmap pixmap, int rotation)
+{
+    setPixmap(pixmap);
+    setRotation(rotation);
+}
+
+void NPCShipUi::canMove(bool canMove)
+{
+    if(canMove_ && !canMove){
+        keyMovement->stop();
+        randomKeyPress->stop();
+    }
+    else if(!canMove_ && canMove){
+        keyMovement->start();
+        randomKeyPress->start();
+    }
+    canMove_ = canMove;
+}
+
+bool NPCShipUi::canMove()
+{
+    return canMove_;
 }
 
 void NPCShipUi::randomChangeOfDirection()

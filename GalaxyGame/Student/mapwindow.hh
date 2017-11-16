@@ -24,12 +24,15 @@ public:
     ~MapWindow();
 
     void setPlanetsByStarSystem(Common::IGalaxy::ShipVector planets) {planets_ = planets;}
+    void markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> starSystem, QPixmap distressed);
+    void unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> starSystem);
 private:
     Ui::MapWindow *ui;
     std::shared_ptr<Student::UserActionHandler> handler_ = nullptr;
     QGraphicsScene *scene_ = nullptr;
     starSystemUI_t starSystemList_;
     Common::IGalaxy::ShipVector planets_;
+    std::vector<QGraphicsPixmapItem*> distressedStarSystemItems_;
 
     void showStarSystems(Common::StarSystem::StarSystemVector starSystem);
 public Q_SLOTS:

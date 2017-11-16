@@ -42,15 +42,15 @@ void Student::EventHandler::exceptionInExecution(std::shared_ptr<Common::Ship> s
 
 void Student::EventHandler::distressOn(std::shared_ptr<Common::Ship> ship)
 {
-
+    emit shipCallForHelp(ship);
 }
 
 void Student::EventHandler::distressOff(std::shared_ptr<Common::Ship> ship)
 {
-
+    emit shipWasSaved(ship);
 }
 
 void Student::EventHandler::shipAbandoned(std::shared_ptr<Common::Ship> ship)
 {
-
+    emit shipWasAbandoned(ship);
 }

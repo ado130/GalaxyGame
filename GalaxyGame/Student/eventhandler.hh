@@ -31,6 +31,11 @@ Q_SIGNALS:
     void registerShipToUi(std::shared_ptr<Common::Ship> ship);
     void unregisterShipFromUi(std::shared_ptr<Common::Ship> ship);
     void changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem);
+    void shipCallForHelp(std::shared_ptr<Common::Ship> ship);
+    void shipWasSaved(std::shared_ptr<Common::Ship> ship);
+    void shipWasAbandoned(std::shared_ptr<Common::Ship> ship);
+
+
 };
 }
 

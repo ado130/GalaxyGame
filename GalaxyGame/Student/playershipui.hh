@@ -15,8 +15,6 @@ class PlayerShipUi : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 public:
     PlayerShipUi(QPixmap pixmap, int posX, int posY, std::shared_ptr<Student::UserActionHandler> userActionHandler, QObject *parent = 0);
-
-
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);

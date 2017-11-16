@@ -13,6 +13,9 @@ class NPCShipUi : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 public:
     NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent = 0);
+    void changePixmapAndRotation(QPixmap pixmap, int rotation);
+    void canMove(bool canMove);
+    bool canMove();
 
 private Q_SLOTS:
     void moveForward();
@@ -24,6 +27,7 @@ private:
     void goDown(qreal width, qreal height);
     QTimer *keyMovement = nullptr;
     QTimer *randomKeyPress = nullptr;
+    bool canMove_;
 };
 
 #endif // NPCSHIP_HH

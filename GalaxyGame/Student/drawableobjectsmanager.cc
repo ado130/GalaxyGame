@@ -194,7 +194,7 @@ PlayerShipUi* Student::DrawableObjectsManager::getPlayerShipUiByObject(std::shar
 }
 
 
-NPCShipUi* Student::DrawableObjectsManager::getCargoShipUiByObject(std::shared_ptr<Common::CargoShip> ship)
+NPCShipUi* Student::DrawableObjectsManager::getCargoShipUiByObject(std::shared_ptr<Common::Ship> ship)
 {
     for(auto element : cargoShipUiList_){
         if(element.first == (ship)){

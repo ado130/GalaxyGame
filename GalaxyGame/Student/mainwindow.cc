@@ -7,6 +7,7 @@
 #include "objectnotfoundexception.hh"
 #include "statisticswindow.hh"
 #include "playership.hh"
+#include "repairaction.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -32,12 +33,14 @@ MainWindow::MainWindow(QWidget *parent,
     handler_ = handler;
     galaxy_ = galaxy;
     gameRunner_ = gameRunner;
-//    NOTE: MAYBE this userActionHandler will be deleted, if we can send signals FROM UI via their eventHandler
     userActionHandler_ = std::make_shared<Student::UserActionHandler>();
     drawManager_ = std::make_shared<Student::DrawableObjectsManager>(new Student::StarSystemScene(this), userActionHandler_);
     itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
     question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
     settings_ = std::make_shared<Student::Settings>();
+
+    pixDistressed_ = QPixmap(":/images/images/distressed.png");
+    pixAbandoned_ = QPixmap(":/images/images/dead.png");
 
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
     QObject* userEventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
@@ -60,9 +63,12 @@ MainWindow::MainWindow(QWidget *parent,
     connect(questionObj, SIGNAL(questionCompleted()),
             this, SLOT(questionCompleted()));
 
-//    Todo: every ship has to be able to change it's location --> change function travelToStarSystem
-//    connect(eventHandlerObj, SIGNAL(changeShipLocationBetweenStarSystems(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)),
-//            this, SLOT(travelToStarSystem(std::shared_ptr<Common::Ship>, std::shared_ptr<Common::StarSystem>)));
+    connect(eventHandlerObj, SIGNAL(shipCallForHelp(std::shared_ptr<Common::Ship>)),
+            this, SLOT(shipCallingForHelp(std::shared_ptr<Common::Ship>)));
+    connect(eventHandlerObj, SIGNAL(shipWasSaved(std::shared_ptr<Common::Ship>)),
+            this, SLOT(shipSavedFromDistress(std::shared_ptr<Common::Ship>)));
+    connect(eventHandlerObj, SIGNAL(shipWasAbandoned(std::shared_ptr<Common::Ship>)),
+            this, SLOT(shipAbandoned(std::shared_ptr<Common::Ship>)));
 
     Common::addNewShipType("Planet", [=] (std::shared_ptr<Common::StarSystem> initialLocation,
                                                         std::shared_ptr<Common::IEventHandler> events
@@ -129,10 +135,7 @@ void MainWindow::startGame()
     gameTimer_->start(10000);
 
     ui->lbCntStarSystems->setText(QString::number(galaxy_->getStarSystemVector().size()));
-    //NOTE: galaxy has only vector if ships in it -> we can have more shipTypes and we would have to check
-    //every type it it is "enemy" type or not ... also, our playership is in this vector too, so lblCntEnemies
-    //is basically --"lbCntAllCargoShipsAndPlanetsAndPlayership and every future type of ship not yet invented"--
-//    ui->lbCntEnemies
+
 
     ui->pbShowMap->setEnabled(true);
     ui->pbNewGame->setEnabled(true);
@@ -148,7 +151,6 @@ void MainWindow::createPlayer()
     std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();//std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
     Student::Statistics *stats = new Student::Statistics(settings_->getMaxCreditAllowance());
     player_ = std::make_shared<PlayerShip>(shipEngine, initialLocation, handler_, stats);
-    //set initial credit for trading
     player_->getStatistics()->addCredits(settings_->getInitialPlayerCredit());
     galaxy_->addShip(player_);
     handler_->shipSpawned(player_);
@@ -156,8 +158,7 @@ void MainWindow::createPlayer()
 
 void MainWindow::pressedSpace()
 {
-    qDebug() << "pressed space";
-    if(isPlayerTrading_)
+    if(isPlayerTrading_ && !isNPCShipNear_)
     {
         QStringList items;
         items << tr("Buy") << tr("Sell");
@@ -204,6 +205,11 @@ void MainWindow::pressedSpace()
                 }
             }
         }
+    }
+    else if(isNPCShipNear_){
+        qDebug() << "wanna repair!";
+        Common::RepairAction *action = new Common::RepairAction(player_, currentNPCShip_->getEngine(), false);
+        action->execute();
     }
 }
 
@@ -256,6 +262,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     ui->lbSSPopulation->setText(QString::number(starSystem->getPopulation()));
     ui->lbSSCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x*5000) +
                                  " y: " + QString::number(starSystem->getCoordinates().y*5000));
+    drawManager_->setFocusOnPlayer(player_);
     if(map_ != nullptr)
     {
         gameTimer_->start();
@@ -288,7 +295,9 @@ void MainWindow::checkCollision()
     {
         if(typeid (*(colliding_Items[i])) == typeid (NPCShipUi))
         {
-            // ToDo: collision with NPC ship
+            isNPCShipNear_ = true;
+            std::shared_ptr<Common::Ship> ship = drawManager_->getCargoShiptByUiItem(colliding_Items[i]);
+            currentNPCShip_ = ship;
             return;
         }
         else if(typeid (*(colliding_Items[i])) == typeid (Student::PlanetUi))
@@ -303,6 +312,7 @@ void MainWindow::checkCollision()
     }
 
     isPlayerTrading_ = false;
+    isNPCShipNear_ = false;
     ui->lbSPName->clear();
     ui->lbSPGoods->clear();
 }
@@ -424,4 +434,67 @@ void MainWindow::questionCompleted()
 {
     player_->getStatistics()->addCompletedQuest();
     player_->getStatistics()->addPoints(settings_->getPointsFromQuestion());
+}
+
+void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
+{
+    //add ship to distress list
+    shipsInDistress_.push_back(ship);
+    //Stop ship in ui
+    drawManager_->getCargoShipUiByObject(ship)->canMove(false);
+    //Update ui
+    ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
+    map_->markStarSystemAsDistressed(ship->getLocation(), pixDistressed_);
+}
+
+void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
+{
+    qDebug() << "Ship moving again!";
+    bool isStarSystemFullySaved = true;
+    //remove ship from distress list
+    for(int i = 0; i < shipsInDistress_.size(); i++){
+        if(shipsInDistress_[i] == ship){
+            shipsInDistress_.erase(shipsInDistress_.begin()+i);
+            continue;
+        }
+        if(shipsInDistress_[i]->getLocation() == ship->getLocation()){
+            isStarSystemFullySaved = false;
+        }
+    }
+    //Ship in ui can move again
+    drawManager_->getCargoShipUiByObject(ship)->canMove(true);
+    //Update ui
+    ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
+    if(isStarSystemFullySaved){
+        map_->unmarkStarSystemDistress(ship->getLocation());
+    }
+    //update statistics
+    //ToDo: statistics to be updated immediately (now, stats dialog has to be closed and opened again to update)
+    player_->getStatistics()->addPoints(settings_->getPointsFromSaving());
+    player_->getStatistics()->addCredits(settings_->getCreditsFromSaving());
+    player_->getStatistics()->addSavedShip();
+}
+
+void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
+{
+    bool isStarSystemFreeOfDistress = true;
+    //set grave icon
+    drawManager_->getCargoShipUiByObject(ship)->changePixmapAndRotation(pixAbandoned_, 0);
+    //remove ship from distress list
+    for(int i = 0; i < shipsInDistress_.size(); i++){
+        if(shipsInDistress_[i] == ship){
+            shipsInDistress_.erase(shipsInDistress_.begin()+i);
+            continue;
+        }
+        if(shipsInDistress_[i]->getLocation() == ship->getLocation()){
+            isStarSystemFreeOfDistress = false;
+        }
+    }
+    //Update ui
+    ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
+    if(isStarSystemFreeOfDistress){
+        map_->unmarkStarSystemDistress(ship->getLocation());
+    }
+    //update statistics
+    player_->getStatistics()->addLostShip();
 }

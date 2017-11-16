@@ -47,6 +47,10 @@ public Q_SLOTS:
     void planetsInStarSystemRequest(unsigned id);
     void allQuestionsDone();
     void questionCompleted();
+    void shipCallingForHelp(std::shared_ptr<Common::Ship> ship);
+    void shipSavedFromDistress(std::shared_ptr<Common::Ship> ship);
+    void shipAbandoned(std::shared_ptr<Common::Ship> ship);
+
 private:
     Ui::MainWindow *ui;
 
@@ -71,6 +75,11 @@ private:
     bool isPlayerTrading_ = false;
     std::shared_ptr<Student::Planet> currentPlanet_;
     std::shared_ptr<Common::StarSystem> currentStarSystem_;
+    std::vector<std::shared_ptr<Common::Ship>> shipsInDistress_;
+    QPixmap pixDistressed_;
+    QPixmap pixAbandoned_;
+    bool isNPCShipNear_ = false;
+    std::shared_ptr<Common::Ship> currentNPCShip_;
 
     void startGame();
     void loadSettings();

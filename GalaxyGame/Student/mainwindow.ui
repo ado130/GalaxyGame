@@ -274,39 +274,39 @@
      <widget class="QLabel" name="lbCntStarSystems">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>100</x>
         <y>20</y>
-        <width>61</width>
-        <height>16</height>
+        <width>41</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
        <string>0</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="shipsInDistressTitleLbl">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>66</width>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Enemies:</string>
+       <string>Ships in distress:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbCntEnemies">
+     <widget class="QLabel" name="lbShipsInDistress">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>100</x>
         <y>40</y>
-        <width>61</width>
-        <height>16</height>
+        <width>41</width>
+        <height>20</height>
        </rect>
       </property>
       <property name="text">
@@ -318,7 +318,7 @@
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>71</width>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>

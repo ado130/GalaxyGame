@@ -12,5 +12,7 @@
         <file>images/planets/venus.png</file>
         <file>images/bullet.png</file>
         <file>images/deathStar.png</file>
+        <file>images/distressed.png</file>
+        <file>images/dead.png</file>
     </qresource>
 </RCC>
