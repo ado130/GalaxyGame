@@ -2,8 +2,8 @@
 #include "stateexception.hh"
 #include "gameexception.hh"
 
-Student::Statistics::Statistics(int maxLoanAllowance):
-    MAX_LOAN_ALLOWANCE(maxLoanAllowance)
+Student::Statistics::Statistics(int maxLoanAllowance, std::shared_ptr<Student::EventHandler> handler):
+    MAX_LOAN_ALLOWANCE(maxLoanAllowance), handler_(handler)
 {
 
 }
@@ -16,6 +16,7 @@ Student::Statistics::~Statistics()
 void Student::Statistics::addSavedShip()
 {
     savedShips++;
+    handler_->statisticsUpdated();
 }
 
 unsigned Student::Statistics::getSavedShips() const
@@ -26,6 +27,7 @@ unsigned Student::Statistics::getSavedShips() const
 void Student::Statistics::addLostShip()
 {
     lostShips++;
+    handler_->statisticsUpdated();
 }
 
 unsigned Student::Statistics::getLostShips() const
@@ -37,6 +39,7 @@ unsigned Student::Statistics::getLostShips() const
 void Student::Statistics::addDestroyedShip()
 {
     destroyedShips++;
+    handler_->statisticsUpdated();
 }
 
 
@@ -49,6 +52,7 @@ unsigned Student::Statistics::getDestroyedShips() const
 void Student::Statistics::addCompletedQuest()
 {
     completedQuest++;
+    handler_->statisticsUpdated();
 }
 
 
@@ -60,6 +64,7 @@ unsigned Student::Statistics::getCompletedQuests() const
 void Student::Statistics::addPoints(unsigned amount)
 {
     points += amount;
+    handler_->statisticsUpdated();
 }
 
 void Student::Statistics::reducePoints(unsigned amount)
@@ -71,6 +76,7 @@ void Student::Statistics::reducePoints(unsigned amount)
     else
     {
         points -= amount;
+        handler_->statisticsUpdated();
     }
 }
 
@@ -82,6 +88,7 @@ unsigned Student::Statistics::getPoints() const
 void Student::Statistics::addCredits(unsigned amount)
 {
     credits += amount;
+    handler_->statisticsUpdated();
 }
 
 void Student::Statistics::reduceCredits(unsigned amount)
@@ -94,6 +101,7 @@ void Student::Statistics::reduceCredits(unsigned amount)
     else
     {
         credits -= amount;
+        handler_->statisticsUpdated();
     }
 }
 

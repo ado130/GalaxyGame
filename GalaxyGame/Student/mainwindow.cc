@@ -8,6 +8,7 @@
 #include "statisticswindow.hh"
 #include "playership.hh"
 #include "repairaction.hh"
+#include "eventhandler.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -88,6 +89,7 @@ MainWindow::~MainWindow()
     delete gameTimer_;
     delete collisionTimer_;
     delete map_;
+    delete statsWindow_;
     delete ui;
 }
 
@@ -132,7 +134,7 @@ void MainWindow::startGame()
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
-    gameTimer_->start(10000);
+    gameTimer_->start(10000);//10000
 
     ui->lbCntStarSystems->setText(QString::number(galaxy_->getStarSystemVector().size()));
 
@@ -149,7 +151,7 @@ void MainWindow::createPlayer()
 {
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
     std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();//std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
-    Student::Statistics *stats = new Student::Statistics(settings_->getMaxCreditAllowance());
+    Student::Statistics *stats = new Student::Statistics(settings_->getMaxCreditAllowance(), std::dynamic_pointer_cast<Student::EventHandler>(handler_));
     player_ = std::make_shared<PlayerShip>(shipEngine, initialLocation, handler_, stats);
     player_->getStatistics()->addCredits(settings_->getInitialPlayerCredit());
     galaxy_->addShip(player_);
@@ -280,6 +282,9 @@ void MainWindow::refreshUI()
         inventory += QString(k.getName().data()) + " : " + QString::number(k.getPrice()) + "\n";
     }
     ui->ptPlayerInventory->appendPlainText(inventory);
+    if(statsWindow_ != nullptr && player_ != nullptr){
+        statsWindow_->fillStatistics(player_->getStatistics());
+    }
 }
 
 void MainWindow::gameEvent()
@@ -371,10 +376,17 @@ void MainWindow::on_actionMy_statistics_triggered()
     //Check if player is initialized
     if(player_ != nullptr)
     {
-        StatisticsWindow* stats = new StatisticsWindow(player_);
-        stats->setModal(true);
-        stats->exec();
-        delete stats;
+        if(statsWindow_ == nullptr){
+            statsWindow_ = new StatisticsWindow(player_);
+            QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
+            connect(eventHandlerObj, SIGNAL(statisticsNeedUpdate(bool)),
+                    statsWindow_, SLOT(setNeedForUpdate(bool)));
+            statsWindow_->setModal(true);
+            statsWindow_->exec();
+        }
+        else{
+            statsWindow_->show();
+        }
     }
     else
     {
@@ -444,7 +456,9 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
     drawManager_->getCargoShipUiByObject(ship)->canMove(false);
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
-    map_->markStarSystemAsDistressed(ship->getLocation(), pixDistressed_);
+    if(map_ != nullptr){
+        map_->markStarSystemAsDistressed(ship->getLocation(), pixDistressed_);
+    }
 }
 
 void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
@@ -465,11 +479,10 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
     drawManager_->getCargoShipUiByObject(ship)->canMove(true);
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
-    if(isStarSystemFullySaved){
+    if(isStarSystemFullySaved && map_ != nullptr){
         map_->unmarkStarSystemDistress(ship->getLocation());
     }
     //update statistics
-    //ToDo: statistics to be updated immediately (now, stats dialog has to be closed and opened again to update)
     player_->getStatistics()->addPoints(settings_->getPointsFromSaving());
     player_->getStatistics()->addCredits(settings_->getCreditsFromSaving());
     player_->getStatistics()->addSavedShip();
@@ -492,7 +505,7 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
     }
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
-    if(isStarSystemFreeOfDistress){
+    if(isStarSystemFreeOfDistress && map_ != nullptr){
         map_->unmarkStarSystemDistress(ship->getLocation());
     }
     //update statistics

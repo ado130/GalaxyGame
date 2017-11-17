@@ -12,6 +12,7 @@
 #include "utility.hh"
 #include "igamerunner.hh"
 #include "mapwindow.hh"
+#include "statisticswindow.hh"
 #include "useractionhandler.hh"
 #include "starsystemscene.hh"
 #include "drawableobjectsmanager.hh"
@@ -70,6 +71,7 @@ private:
     QTimer* gameTimer_ = nullptr;
     QTime* playingTime_ = nullptr;
     MapWindow* map_ = nullptr;
+    StatisticsWindow *statsWindow_ = nullptr;
     QuestionDlg* questionDlg_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     bool isPlayerTrading_ = false;

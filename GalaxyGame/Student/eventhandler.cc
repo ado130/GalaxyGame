@@ -54,3 +54,8 @@ void Student::EventHandler::shipAbandoned(std::shared_ptr<Common::Ship> ship)
 {
     emit shipWasAbandoned(ship);
 }
+
+void Student::EventHandler::statisticsUpdated()
+{
+    emit statisticsNeedUpdate(true);
+}

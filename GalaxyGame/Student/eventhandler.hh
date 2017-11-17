@@ -13,6 +13,7 @@ class EventHandler: public QObject, public Common::IEventHandler
 public:
     EventHandler(QObject* parent = 0);
     ~EventHandler();
+
     void shipSpawned(std::shared_ptr<Common::Ship> ship);
     void shipRemoved(std::shared_ptr<Common::Ship> ship);
     void shipRelocated(std::shared_ptr<Common::Ship> ship,
@@ -24,6 +25,7 @@ public:
     void distressOn(std::shared_ptr<Common::Ship> ship);
     void distressOff(std::shared_ptr<Common::Ship> ship);
     void shipAbandoned(std::shared_ptr<Common::Ship> ship);
+    virtual void statisticsUpdated();
 
 Q_SIGNALS:
     void shipMovement(std::shared_ptr<Common::Ship>, Common::Point from, Common::Point to);
@@ -34,6 +36,7 @@ Q_SIGNALS:
     void shipCallForHelp(std::shared_ptr<Common::Ship> ship);
     void shipWasSaved(std::shared_ptr<Common::Ship> ship);
     void shipWasAbandoned(std::shared_ptr<Common::Ship> ship);
+    void statisticsNeedUpdate(bool update);
 
 
 };

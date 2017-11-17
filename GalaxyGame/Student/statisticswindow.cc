@@ -8,6 +8,7 @@ StatisticsWindow::StatisticsWindow(std::shared_ptr<PlayerShip> player, QWidget *
     ui->setupUi(this);
     ui->shipNameLbl->setText(QString::fromStdString(player->getName()));
     fillStatistics(player->getStatistics());
+    needForUpdate_ = false;
 }
 
 StatisticsWindow::~StatisticsWindow()

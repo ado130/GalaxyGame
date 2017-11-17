@@ -3,12 +3,15 @@
 
 #include "istatistics.hh"
 
+#include <memory>
+#include "eventhandler.hh"
+
 namespace Student {
 
 class Statistics : public Common::IStatistics
 {
 public:
-    Statistics(int MAX_LOAN_ALLOWANCE = 100);
+    Statistics(int MAX_LOAN_ALLOWANCE = 100, std::shared_ptr<Student::EventHandler> handler = nullptr);
     ~Statistics();
 
      void addSavedShip();
@@ -42,10 +45,8 @@ private:
      unsigned destroyedShips = 0;
      unsigned completedQuest = 0;
 
-
-     // ToDo: what is this for? Where is it set? (create "settings" class)
      int MAX_LOAN_ALLOWANCE;
-
+     std::shared_ptr<Student::EventHandler> handler_;
 
 };
 }//Student

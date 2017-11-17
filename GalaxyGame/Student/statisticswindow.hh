@@ -18,9 +18,15 @@ public:
     StatisticsWindow(std::shared_ptr<PlayerShip> player, QWidget *parent = 0);
     ~StatisticsWindow();
 
+    bool isNeedForUpdate() { return needForUpdate_; }
+    void fillStatistics(Student::Statistics *stats);
+
+public Q_SLOTS:
+    void setNeedForUpdate(bool update) { needForUpdate_ = update; }
+
 private:
     Ui::StatisticsWindow *ui;
-    void fillStatistics(Student::Statistics *stats);
+    bool needForUpdate_;
 };
 
 #endif // STATISTICSWINDOW_H
