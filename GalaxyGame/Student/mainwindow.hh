@@ -66,6 +66,7 @@ private:
     std::shared_ptr<Student::Question> question_;
     std::shared_ptr<Student::Settings> settings_;
 
+    QPixmap pixAbandoned_;
 
     QTimer* refreshTimer_ = nullptr;
     QTimer* collisionTimer_ = nullptr;
@@ -80,8 +81,6 @@ private:
     std::shared_ptr<Student::Planet> currentPlanet_;
     std::shared_ptr<Common::StarSystem> currentStarSystem_;
     std::vector<std::shared_ptr<Common::Ship>> shipsInDistress_;
-    QPixmap pixDistressed_;
-    QPixmap pixAbandoned_;
     bool isNPCShipNear_ = false;
     std::shared_ptr<Common::Ship> currentNPCShip_;
     QString playerName_;

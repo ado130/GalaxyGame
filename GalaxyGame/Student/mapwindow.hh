@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QGraphicsScene>
+#include <memory>
 
 #include "starsystem.hh"
 #include "starsystemui.hh"
@@ -20,19 +21,27 @@ class MapWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit MapWindow(std::shared_ptr<Student::UserActionHandler> handler, Common::StarSystem::StarSystemVector starSystem, QWidget *parent = 0);
+    explicit MapWindow(std::shared_ptr<Student::UserActionHandler> handler,
+                       Common::StarSystem::StarSystemVector starSystem,
+                       std::shared_ptr<Common::StarSystem> currentStarSystem,
+                       QWidget *parent = 0);
     ~MapWindow();
 
     void setPlanetsByStarSystem(Common::IGalaxy::ShipVector planets) {planets_ = planets;}
-    void markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> starSystem, QPixmap distressed);
+    void markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> starSystem);
     void unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> starSystem);
+    void addMarkSign(QGraphicsPixmapItem *starSystemUi, QPixmap pixmap, int x, int y);
 private:
     Ui::MapWindow *ui;
     std::shared_ptr<Student::UserActionHandler> handler_ = nullptr;
     QGraphicsScene *scene_ = nullptr;
     starSystemUI_t starSystemList_;
     Common::IGalaxy::ShipVector planets_;
+    int coordsScale_ = 30;
     std::vector<QGraphicsPixmapItem*> distressedStarSystemItems_;
+    QGraphicsPixmapItem* playerLocation_ = nullptr;
+    QPixmap pixDistressed_;
+    QPixmap pixAbandoned_;
 
     void showStarSystems(Common::StarSystem::StarSystemVector starSystem);
 public Q_SLOTS:

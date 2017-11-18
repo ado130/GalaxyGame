@@ -9,8 +9,7 @@ Student::StarSystemUi::StarSystemUi(QPixmap pixmap, std::shared_ptr<Student::Use
     handler_(handler), id_(id)
 {
     setPixmap(pixmap);
-    //ToDo: dynamic map scaling from gui
-    setPos(position.x*30, position.y*30);
+    setPos(position.x, position.y);
 }
 
 void Student::StarSystemUi::changeApperanceDistressed()

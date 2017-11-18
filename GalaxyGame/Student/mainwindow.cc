@@ -41,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent,
     settings_ = std::make_shared<Student::Settings>();
     topListWindow_ = new TopListWindow();
 
-    pixDistressed_ = QPixmap(":/images/images/distressed.png");
     pixAbandoned_ = QPixmap(":/images/images/dead.png");
 
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
@@ -142,7 +141,7 @@ void MainWindow::startGame()
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
-    gameTimer_->start(10000);//10000
+    gameTimer_->start(200);//10000
 
     ui->lbCntStarSystems->setText(QString::number(galaxy_->getStarSystemVector().size()));
 
@@ -161,7 +160,7 @@ void MainWindow::startGame()
 void MainWindow::createPlayer()
 {
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
-    std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();//std::make_shared<Common::StarSystem>("Earth", Common::StarSystem::Colony, 0, 10000, Common::Point(0, 0));
+    std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();
     Student::Statistics *stats = new Student::Statistics(settings_->getMaxCreditAllowance(), std::dynamic_pointer_cast<Student::EventHandler>(handler_));
     player_ = std::make_shared<PlayerShip>(shipEngine, initialLocation, handler_, stats);
     player_->getStatistics()->addCredits(settings_->getInitialPlayerCredit());
@@ -408,7 +407,7 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
 
     if(map_ != nullptr)
     {
-        map_->markStarSystemAsDistressed(ship->getLocation(), pixDistressed_);
+        map_->markStarSystemAsDistressed(ship->getLocation());
     }
 }
 
@@ -510,16 +509,13 @@ void MainWindow::on_pbShowMap_clicked()
     if(map_ == nullptr)
     {
         QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
-
         connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)),
                 this, SLOT(travelToStarSystem(unsigned)));
-        map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), this);
-
+        map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), player_->getLocation(), this);
         connect(eventHandlerObj, SIGNAL(showGoodsInfo(unsigned)),
                 map_, SLOT(showGoodsInfo(unsigned)));
         connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
                 this, SLOT(planetsInStarSystemRequest(unsigned)));
-
         map_->setModal(true);
         map_->exec();
     }
