@@ -5,13 +5,27 @@
 
 #include <memory>
 #include "eventhandler.hh"
+#include <QDataStream>
+#include <QMap>
 
 namespace Student {
 
 class Statistics : public Common::IStatistics
 {
 public:
+
+    struct playerStat
+    {
+        unsigned savedShips;
+        unsigned lostShips;
+        unsigned points;
+        int credits;
+        unsigned destroyedShips;
+        unsigned completedQuest;
+    };
+
     Statistics(int MAX_LOAN_ALLOWANCE = 100, std::shared_ptr<Student::EventHandler> handler = nullptr);
+
     ~Statistics();
 
      void addSavedShip();
@@ -37,18 +51,29 @@ public:
      void setMaxLoanAllowance(int maxLoan);
      int getMaxLoanAllowance();
 
+     QMap<QString, playerStat> getTotalStat() const;
+     void setTotalStat(const QMap<QString, playerStat> &value);
+
+     void loadSettings();
+     void saveSettings(QString name);
+
 private:
-     unsigned savedShips = 0;
-     unsigned lostShips = 0;
-     unsigned points = 0;
-     int credits = 0;
-     unsigned destroyedShips = 0;
-     unsigned completedQuest = 0;
+     unsigned savedShips_ = 0;
+     unsigned lostShips_ = 0;
+     unsigned points_ = 0;
+     int credits_ = 0;
+     unsigned destroyedShips_ = 0;
+     unsigned completedQuest_ = 0;
+
+     QMap<QString, playerStat> totalStat_;
 
      int MAX_LOAN_ALLOWANCE;
      std::shared_ptr<Student::EventHandler> handler_;
 
 };
 }//Student
+
+QDataStream &operator<<(QDataStream &out, const Student::Statistics::playerStat &playerStat);
+QDataStream &operator>>(QDataStream &in, const Student::Statistics::playerStat &playerStat);
 
 #endif // STATISTICS_HH

@@ -64,9 +64,9 @@
    <widget class="QPushButton" name="pbNewGame">
     <property name="geometry">
      <rect>
-      <x>867</x>
+      <x>820</x>
       <y>10</y>
-      <width>100</width>
+      <width>91</width>
       <height>35</height>
      </rect>
     </property>
@@ -265,7 +265,7 @@
        <x>10</x>
        <y>20</y>
        <width>181</width>
-       <height>80</height>
+       <height>71</height>
       </rect>
      </property>
      <property name="title">
@@ -456,6 +456,19 @@
       <string>Questions</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="pbEndGame">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>10</y>
+      <width>91</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>End game</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

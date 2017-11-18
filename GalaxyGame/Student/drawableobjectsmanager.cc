@@ -66,7 +66,8 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
                                             Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius));
         cargoShipUiList_.append(qMakePair(std::dynamic_pointer_cast<Common::CargoShip> (ship), npcship));
     }
-    else if(std::dynamic_pointer_cast<PlayerShip> (ship)){
+    else if(std::dynamic_pointer_cast<PlayerShip> (ship))
+    {
         PlayerShipUi *playership = new PlayerShipUi(playerShipIcon_,
                                                     ship->getLocation()->getCoordinates().x*coordsScale_,
                                                     ship->getLocation()->getCoordinates().y*coordsScale_,
@@ -196,8 +197,10 @@ PlayerShipUi* Student::DrawableObjectsManager::getPlayerShipUiByObject(std::shar
 
 NPCShipUi* Student::DrawableObjectsManager::getCargoShipUiByObject(std::shared_ptr<Common::Ship> ship)
 {
-    for(auto element : cargoShipUiList_){
-        if(element.first == (ship)){
+    for(auto element : cargoShipUiList_)
+    {
+        if(element.first == (ship))
+        {
             return element.second;
         }
     }
@@ -206,8 +209,10 @@ NPCShipUi* Student::DrawableObjectsManager::getCargoShipUiByObject(std::shared_p
 
 void Student::DrawableObjectsManager::setFocusOnPlayer(std::shared_ptr<PlayerShip> ship)
 {
-    for(auto element : playerShipUiList_){
-        if(element.first == ship){
+    for(auto element : playerShipUiList_)
+    {
+        if(element.first == ship)
+        {
             scene_->setFocusItem(element.second);//->setFocus();
         }
     }
@@ -215,10 +220,12 @@ void Student::DrawableObjectsManager::setFocusOnPlayer(std::shared_ptr<PlayerShi
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, Common::Point from, Common::Point to)
 {
-    if(std::dynamic_pointer_cast<Common::CargoShip> (ship)){
+    if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
+    {
         NPCShipUi* uiShip = getCargoShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
         uiShip->setPos(to.x*coordsScale_, to.y*coordsScale_);
-        if(!isInPlayerShipVisibilityRange(uiShip)){
+        if(!isInPlayerShipVisibilityRange(uiShip))
+        {
             scene_->eraseNPCShip(uiShip);
         }
     }
@@ -227,28 +234,38 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)
 {    
-    if(std::dynamic_pointer_cast<Common::CargoShip> (ship)){
+    if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
+    {
         NPCShipUi* uiShip = getCargoShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
-        if(ship->getLocation() != nullptr){
+
+        if(ship->getLocation() != nullptr)
+        {
             uiShip->setPos(ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
-            if(!isInPlayerShipVisibilityRange(uiShip) && scene_->isNPCShipVisible(uiShip)){
+
+            if(!isInPlayerShipVisibilityRange(uiShip) && scene_->isNPCShipVisible(uiShip))
+            {
                 scene_->eraseNPCShip(uiShip);
             }
-            else if (isInPlayerShipVisibilityRange(uiShip) && !scene_->isNPCShipVisible(uiShip)){
+            else if (isInPlayerShipVisibilityRange(uiShip) && !scene_->isNPCShipVisible(uiShip))
+            {
                 scene_->drawNPCShip(uiShip);
             }
         }
-        else{
+        else
+        {
             scene_->eraseNPCShip(uiShip);
         }
     }
-    else if(std::dynamic_pointer_cast<PlayerShip> (ship)){
+    else if(std::dynamic_pointer_cast<PlayerShip> (ship))
+    {
         PlayerShipUi* uiShip = getPlayerShipUiByObject(std::dynamic_pointer_cast<PlayerShip> (ship));
         QRect rect = QRect(ship->getLocation()->getCoordinates().x*coordsScale_-starSystemSpawnRadius,
                              ship->getLocation()->getCoordinates().y*coordsScale_-starSystemSpawnRadius,
                              starSystemSpawnRadius*2, starSystemSpawnRadius*2);
         scene_->setSceneRect(rect);
-        if(ship->getLocation() != nullptr){
+
+        if(ship->getLocation() != nullptr)
+        {
             setPosition(uiShip, ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
         }
     }
@@ -285,10 +302,12 @@ void Student::DrawableObjectsManager::setPosition(QGraphicsPixmapItem *item, int
 {
 
     if(y < scene_->sceneRect().top()+scene_->sceneRect().height()-item->pixmap().height() && x > scene_->sceneRect().left() &&
-            y > scene_->sceneRect().top() && x < scene_->sceneRect().left()+scene_->width()-item->pixmap().width()){
+            y > scene_->sceneRect().top() && x < scene_->sceneRect().left()+scene_->width()-item->pixmap().width())
+    {
         item->setPos(x, y);
     }
-    else{
+    else
+    {
         qDebug() << "out of SS";
     }
 }

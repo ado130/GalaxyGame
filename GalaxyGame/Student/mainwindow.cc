@@ -80,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     ui->pbShowMap->setEnabled(false);
     ui->pbQuestions->setEnabled(false);
+    ui->pbEndGame->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -98,11 +99,18 @@ MainWindow::~MainWindow()
 void MainWindow::startGame()
 {
     ui->pbNewGame->setEnabled(false);
-    // ToDo: do not ignore ToDo's
-    //bool ok;
-    //QString nickName = QInputDialog::getText(this, tr("Enter nickname"),
-    //                                      tr("Nickname:"), QLineEdit::Normal,
-    //                                      "", &ok);
+
+    QString nickName;
+    bool ok;
+    do{
+        ok = false;
+        nickName = QInputDialog::getText(this, tr("Enter nickname"),
+                                              tr("Nickname:"), QLineEdit::Normal,
+                                              "", &ok);
+        ok = (!ok || !isNameCorrect(nickName));
+    }while(ok);
+
+    playerName_ = nickName;
 
     drawManager_->clearScene();
     galaxy_->removeShips();
@@ -140,11 +148,14 @@ void MainWindow::startGame()
 
 
     ui->pbShowMap->setEnabled(true);
-    ui->pbNewGame->setEnabled(true);
     ui->pbQuestions->setEnabled(true);
+    ui->pbEndGame->setEnabled(true);
+
+    loadSettings();
 
     playingTime_ = new QTime();
     playingTime_->start();
+
 }
 
 void MainWindow::createPlayer()
@@ -181,11 +192,13 @@ void MainWindow::pressedSpace()
                             return;
                         }
                     }
-                    if(currentPlanet_->getGoods().getPrice() <= player_->getStatistics()->getCreditBalance()){
+                    if(currentPlanet_->getGoods().getPrice() <= player_->getStatistics()->getCreditBalance())
+                    {
                         player_->addGoodsToInventory(currentPlanet_->getGoods());
                         player_->getStatistics()->reduceCredits(currentPlanet_->getGoods().getPrice());
                     }
-                    else{
+                    else
+                    {
                         QMessageBox msgBox;
                         msgBox.setText("You don't have enough credits!");
                         msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
@@ -208,7 +221,8 @@ void MainWindow::pressedSpace()
             }
         }
     }
-    else if(isNPCShipNear_){
+    else if(isNPCShipNear_)
+    {
         qDebug() << "wanna repair!";
         Common::RepairAction *action = new Common::RepairAction(player_, currentNPCShip_->getEngine(), false);
         action->execute();
@@ -282,7 +296,9 @@ void MainWindow::refreshUI()
         inventory += QString(k.getName().data()) + " : " + QString::number(k.getPrice()) + "\n";
     }
     ui->ptPlayerInventory->appendPlainText(inventory);
-    if(statsWindow_ != nullptr && player_ != nullptr){
+
+    if(statsWindow_ != nullptr && player_ != nullptr)
+    {
         statsWindow_->fillStatistics(player_->getStatistics());
     }
 }
@@ -324,12 +340,12 @@ void MainWindow::checkCollision()
 
 void MainWindow::loadSettings()
 {
-
+    player_->getStatistics()->loadSettings();
 }
 
 void MainWindow::saveSettings()
 {
-
+    player_->getStatistics()->saveSettings(playerName_);
 }
 
 void MainWindow::on_pbNewGame_clicked()
@@ -376,8 +392,9 @@ void MainWindow::on_actionMy_statistics_triggered()
     //Check if player is initialized
     if(player_ != nullptr)
     {
-        if(statsWindow_ == nullptr){
-            statsWindow_ = new StatisticsWindow(player_);
+        if(statsWindow_ == nullptr)
+        {
+            statsWindow_ = new StatisticsWindow(player_->getStatistics(), playerName_);
             QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
             connect(eventHandlerObj, SIGNAL(statisticsNeedUpdate(bool)),
                     statsWindow_, SLOT(setNeedForUpdate(bool)));
@@ -438,7 +455,7 @@ void MainWindow::allQuestionsDone()
 {
     int playingTime = playingTime_->elapsed();
     QMessageBox msgBox;
-    msgBox.setText("Congratulation! Your time is " + QString::number(playingTime/1000) + "s");
+    msgBox.setText("Congratulation! You finished all questions. Your time is " + QString::number(playingTime/1000) + "s");
     msgBox.exec();
 }
 
@@ -456,7 +473,9 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
     drawManager_->getCargoShipUiByObject(ship)->canMove(false);
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
-    if(map_ != nullptr){
+
+    if(map_ != nullptr)
+    {
         map_->markStarSystemAsDistressed(ship->getLocation(), pixDistressed_);
     }
 }
@@ -465,13 +484,18 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
 {
     qDebug() << "Ship moving again!";
     bool isStarSystemFullySaved = true;
+
     //remove ship from distress list
-    for(int i = 0; i < shipsInDistress_.size(); i++){
-        if(shipsInDistress_[i] == ship){
+    for(int i = 0; i < shipsInDistress_.size(); i++)
+    {
+        if(shipsInDistress_[i] == ship)
+        {
             shipsInDistress_.erase(shipsInDistress_.begin()+i);
             continue;
         }
-        if(shipsInDistress_[i]->getLocation() == ship->getLocation()){
+
+        if(shipsInDistress_[i]->getLocation() == ship->getLocation())
+        {
             isStarSystemFullySaved = false;
         }
     }
@@ -479,7 +503,9 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
     drawManager_->getCargoShipUiByObject(ship)->canMove(true);
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
-    if(isStarSystemFullySaved && map_ != nullptr){
+
+    if(isStarSystemFullySaved && map_ != nullptr)
+    {
         map_->unmarkStarSystemDistress(ship->getLocation());
     }
     //update statistics
@@ -493,21 +519,58 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
     bool isStarSystemFreeOfDistress = true;
     //set grave icon
     drawManager_->getCargoShipUiByObject(ship)->changePixmapAndRotation(pixAbandoned_, 0);
+
     //remove ship from distress list
-    for(int i = 0; i < shipsInDistress_.size(); i++){
-        if(shipsInDistress_[i] == ship){
+    for(int i = 0; i < shipsInDistress_.size(); i++)
+    {
+        if(shipsInDistress_[i] == ship)
+        {
             shipsInDistress_.erase(shipsInDistress_.begin()+i);
             continue;
         }
-        if(shipsInDistress_[i]->getLocation() == ship->getLocation()){
+
+        if(shipsInDistress_[i]->getLocation() == ship->getLocation())
+        {
             isStarSystemFreeOfDistress = false;
         }
     }
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
-    if(isStarSystemFreeOfDistress && map_ != nullptr){
+
+    if(isStarSystemFreeOfDistress && map_ != nullptr)
+    {
         map_->unmarkStarSystemDistress(ship->getLocation());
     }
     //update statistics
     player_->getStatistics()->addLostShip();
+}
+
+bool MainWindow::isNameCorrect(QString name)
+{
+    name = name.trimmed();
+    int count = name.count(QRegExp("[!@#$%^&()_+]"));
+    if(name.length() > 0 && name.length() < 10 && count == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+void MainWindow::on_pbEndGame_clicked()
+{
+    refreshTimer_->stop();
+    collisionTimer_->stop();
+    gameTimer_->stop();
+
+    ui->pbNewGame->setEnabled(true);
+    ui->pbEndGame->setEnabled(false);
+    ui->pbQuestions->setEnabled(false);
+    ui->pbShowMap->setEnabled(false);
+
+    saveSettings();
+
+    drawManager_->clearScene();
+    galaxy_->removeShips();
+
+    player_ = nullptr;
 }

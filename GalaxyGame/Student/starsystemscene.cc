@@ -58,7 +58,9 @@ void Student::StarSystemScene::drawNPCShip(NPCShipUi* ship)
 void Student::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
 {
     std::vector<NPCShipUi*>::iterator iter = std::find(shipList_.begin(), shipList_.end(), ship);
-    if(iter != shipList_.end()){
+
+    if(iter != shipList_.end())
+    {
         shipList_.erase(iter);
         removeItem(ship);
     }
@@ -66,7 +68,8 @@ void Student::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
 
 void Student::StarSystemScene::eraseAllNPCShips()
 {
-    for(NPCShipUi* ship : shipList_){
+    for(NPCShipUi* ship : shipList_)
+    {
         removeItem(ship);
     }
     shipList_.clear();
@@ -87,7 +90,9 @@ void Student::StarSystemScene::drawPlanet(Student::PlanetUi *planet)
 void Student::StarSystemScene::erasePlanet(Student::PlanetUi *planet)
 {
     std::vector<Student::PlanetUi*>::iterator iter = std::find(planetList_.begin(), planetList_.end(), planet);
-    if(iter != planetList_.end()){
+
+    if(iter != planetList_.end())
+    {
         planetList_.erase(iter);
         removeItem(planet);
     }
@@ -95,7 +100,8 @@ void Student::StarSystemScene::erasePlanet(Student::PlanetUi *planet)
 
 void Student::StarSystemScene::eraseAllPlanets()
 {
-    for(Student::PlanetUi* planet : planetList_){
+    for(Student::PlanetUi* planet : planetList_)
+    {
         removeItem(planet);
     }
     planetList_.clear();

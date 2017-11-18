@@ -34,11 +34,13 @@ void NPCShipUi::changePixmapAndRotation(QPixmap pixmap, int rotation)
 
 void NPCShipUi::canMove(bool canMove)
 {
-    if(canMove_ && !canMove){
+    if(canMove_ && !canMove)
+    {
         keyMovement->stop();
         randomKeyPress->stop();
     }
-    else if(!canMove_ && canMove){
+    else if(!canMove_ && canMove)
+    {
         keyMovement->start();
         randomKeyPress->start();
     }
@@ -53,10 +55,12 @@ bool NPCShipUi::canMove()
 void NPCShipUi::randomChangeOfDirection()
 {
     int randomKey = Common::randomMinMax(0,2);
-    if(randomKey == 1){
+    if(randomKey == 1)
+    {
         goLeft();
     }
-    else if (randomKey == 2){
+    else if (randomKey == 2)
+    {
         goRight();
     }
     else{

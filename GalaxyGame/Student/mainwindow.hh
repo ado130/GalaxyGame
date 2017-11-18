@@ -82,12 +82,13 @@ private:
     QPixmap pixAbandoned_;
     bool isNPCShipNear_ = false;
     std::shared_ptr<Common::Ship> currentNPCShip_;
+    QString playerName_;
 
     void startGame();
     void loadSettings();
     void saveSettings();
     void createPlayer();
-
+    bool isNameCorrect(QString name);
 private Q_SLOTS:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();
@@ -101,6 +102,8 @@ private Q_SLOTS:
     void on_pbShowMap_clicked();
 
     void on_pbQuestions_clicked();
+
+    void on_pbEndGame_clicked();
 
 Q_SIGNALS:
     void startCollisionTimer();
