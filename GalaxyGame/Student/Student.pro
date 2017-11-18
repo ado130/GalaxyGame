@@ -37,7 +37,8 @@ SOURCES += \
     playership.cc \
     question.cc \
     questiondlg.cc \
-    settings.cc
+    settings.cc \
+    toplistwindow.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -63,13 +64,15 @@ HEADERS  += \
     playership.hh \
     question.hh \
     questiondlg.hh \
-    settings.hh
+    settings.hh \
+    toplistwindow.hh
 	
 FORMS += \
     mainwindow.ui \
     statisticswindow.ui \
     mapwindow.ui \
-    questiondlg.ui
+    questiondlg.ui \
+    toplistwindow.ui
 
 RESOURCES += \
     resources.qrc

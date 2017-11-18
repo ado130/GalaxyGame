@@ -20,6 +20,7 @@
 #include "question.hh"
 #include "questiondlg.hh"
 #include "settings.hh"
+#include "toplistwindow.hh"
 
 class PlayerShipUi;
 class NPCShipUi;
@@ -71,7 +72,8 @@ private:
     QTimer* gameTimer_ = nullptr;
     QTime* playingTime_ = nullptr;
     MapWindow* map_ = nullptr;
-    StatisticsWindow *statsWindow_ = nullptr;
+    StatisticsWindow* statsWindow_ = nullptr;
+    TopListWindow* topListWindow_ = nullptr;
     QuestionDlg* questionDlg_ = nullptr;
     QMap<QString, QVariant> playerScore_;
     bool isPlayerTrading_ = false;
@@ -104,6 +106,12 @@ private Q_SLOTS:
     void on_pbQuestions_clicked();
 
     void on_pbEndGame_clicked();
+
+    void on_actionTop_list_triggered();
+
+    void on_actionDefault_Settings_triggered();
+
+    void on_actionReset_top_list_triggered();
 
 Q_SIGNALS:
     void startCollisionTimer();

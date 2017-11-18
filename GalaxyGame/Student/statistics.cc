@@ -2,10 +2,6 @@
 #include "stateexception.hh"
 #include "gameexception.hh"
 
-#include <QDataStream>
-#include <QFile>
-
-
 Student::Statistics::Statistics(int maxLoanAllowance, std::shared_ptr<Student::EventHandler> handler):
     MAX_LOAN_ALLOWANCE(maxLoanAllowance), handler_(handler)
 {
@@ -20,6 +16,8 @@ Student::Statistics::~Statistics()
 void Student::Statistics::addSavedShip()
 {
     savedShips_++;
+
+    if(handler_ == nullptr) return;
     handler_->statisticsUpdated();
 }
 
@@ -31,6 +29,8 @@ unsigned Student::Statistics::getSavedShips() const
 void Student::Statistics::addLostShip()
 {
     lostShips_++;
+
+    if(handler_ == nullptr) return;
     handler_->statisticsUpdated();
 }
 
@@ -43,6 +43,8 @@ unsigned Student::Statistics::getLostShips() const
 void Student::Statistics::addDestroyedShip()
 {
     destroyedShips_++;
+
+    if(handler_ == nullptr) return;
     handler_->statisticsUpdated();
 }
 
@@ -56,6 +58,8 @@ unsigned Student::Statistics::getDestroyedShips() const
 void Student::Statistics::addCompletedQuest()
 {
     completedQuest_++;
+
+    if(handler_ == nullptr) return;
     handler_->statisticsUpdated();
 }
 
@@ -68,6 +72,8 @@ unsigned Student::Statistics::getCompletedQuests() const
 void Student::Statistics::addPoints(unsigned amount)
 {
     points_ += amount;
+
+    if(handler_ == nullptr) return;
     handler_->statisticsUpdated();
 }
 
@@ -80,6 +86,8 @@ void Student::Statistics::reducePoints(unsigned amount)
     else
     {
         points_ -= amount;
+
+        if(handler_ == nullptr) return;
         handler_->statisticsUpdated();
     }
 }
@@ -92,6 +100,8 @@ unsigned Student::Statistics::getPoints() const
 void Student::Statistics::addCredits(unsigned amount)
 {
     credits_ += amount;
+
+    if(handler_ == nullptr) return;
     handler_->statisticsUpdated();
 }
 
@@ -105,6 +115,8 @@ void Student::Statistics::reduceCredits(unsigned amount)
     else
     {
         credits_ -= amount;
+
+        if(handler_ == nullptr) return;
         handler_->statisticsUpdated();
     }
 }
@@ -124,45 +136,16 @@ int Student::Statistics::getMaxLoanAllowance()
     return MAX_LOAN_ALLOWANCE;
 }
 
-QMap<QString, Student::Statistics::playerStat> Student::Statistics::getTotalStat() const
+Student::Statistics::playerStat Student::Statistics::getPlayerStat()
 {
-    return totalStat_;
+    Student::Statistics::playerStat stat;
+    stat.completedQuest = completedQuest_;
+    stat.credits = credits_;
+    stat.destroyedShips = destroyedShips_;
+    stat.lostShips = lostShips_;
+    stat.points = points_;
+    stat.savedShips = savedShips_;
+
+    return stat;
 }
 
-void Student::Statistics::loadSettings()
-{
-    QFile file("stats.dat");
-    file.open(QIODevice::ReadOnly);
-    QDataStream in(&file);
-    in >> totalStat_;
-}
-
-void Student::Statistics::saveSettings(QString name)
-{
-    playerStat playerStat;
-    playerStat.completedQuest = completedQuest_;
-    playerStat.credits = credits_;
-    playerStat.destroyedShips = destroyedShips_;
-    playerStat.lostShips = lostShips_;
-    playerStat.points = points_;
-    playerStat.savedShips = savedShips_;
-
-    totalStat_[name] = playerStat;
-
-    QFile file("stats.dat");
-    file.open(QIODevice::WriteOnly);
-    QDataStream out(&file);
-    out << totalStat_;
-}
-
-QDataStream &operator<<(QDataStream &out, const Student::Statistics::playerStat &playerStat)
-{
-    out << playerStat.completedQuest << playerStat.credits << playerStat.destroyedShips << playerStat.lostShips << playerStat.points << playerStat.savedShips;
-    return out;
-}
-
-QDataStream &operator>>(QDataStream &in, Student::Statistics::playerStat &playerStat)
-{
-    in >> playerStat.completedQuest >> playerStat.credits >> playerStat.destroyedShips >> playerStat.lostShips >> playerStat.points >> playerStat.savedShips;
-    return in;
-}

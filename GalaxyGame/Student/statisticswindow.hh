@@ -31,12 +31,6 @@ public Q_SLOTS:
 private:
     Ui::StatisticsWindow *ui;
     bool needForUpdate_;
-
-    void fillTopTen(Student::Statistics *stats);
-    void addRoot(QString name, QString description, Student::Statistics::playerStat stat);
-    void addChild(QTreeWidgetItem *parent, QString name, QString description);
-    QList<QPair<QString, Student::Statistics::playerStat> > sortTopTen(QMap<QString, Student::Statistics::playerStat> stats);
-
 };
 
 #endif // STATISTICSWINDOW_H

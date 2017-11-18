@@ -92,7 +92,7 @@
        <x>10</x>
        <y>160</y>
        <width>181</width>
-       <height>121</height>
+       <height>101</height>
       </rect>
      </property>
      <property name="title">
@@ -146,22 +146,6 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>80</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Coordinates:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
      <widget class="QLabel" name="lbSSEconomy">
       <property name="geometry">
        <rect>
@@ -210,7 +194,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbSSCoordinates">
+     <widget class="QLabel" name="lbSSEnemies">
       <property name="geometry">
        <rect>
         <x>90</x>
@@ -226,27 +210,11 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbSSEnemies">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>100</y>
-        <width>71</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>100</y>
+        <y>80</y>
         <width>71</width>
         <height>16</height>
        </rect>
@@ -344,7 +312,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>290</y>
+       <y>270</y>
        <width>181</width>
        <height>61</height>
       </rect>
@@ -421,25 +389,57 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>360</y>
+       <y>340</y>
        <width>181</width>
-       <height>131</height>
+       <height>161</height>
       </rect>
      </property>
      <property name="title">
-      <string>Player's inventory</string>
+      <string>Player</string>
      </property>
      <widget class="QPlainTextEdit" name="ptPlayerInventory">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>50</y>
         <width>161</width>
         <height>101</height>
        </rect>
       </property>
       <property name="readOnly">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lbCredits">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>20</y>
+        <width>101</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_09">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Credits:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </widget>
@@ -485,6 +485,7 @@
      <string>Game</string>
     </property>
     <addaction name="actionNew_Game"/>
+    <addaction name="actionDefault_Settings"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuStatistics">
@@ -492,6 +493,8 @@
      <string>Statistics</string>
     </property>
     <addaction name="actionMy_statistics"/>
+    <addaction name="actionTop_list"/>
+    <addaction name="actionReset_top_list"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -528,6 +531,21 @@
   <action name="actionMy_statistics">
    <property name="text">
     <string>My statistics</string>
+   </property>
+  </action>
+  <action name="actionTop_list">
+   <property name="text">
+    <string>Top list</string>
+   </property>
+  </action>
+  <action name="actionDefault_Settings">
+   <property name="text">
+    <string>Default Settings</string>
+   </property>
+  </action>
+  <action name="actionReset_top_list">
+   <property name="text">
+    <string>Reset top list</string>
    </property>
   </action>
  </widget>

@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent,
     itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
     question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
     settings_ = std::make_shared<Student::Settings>();
+    topListWindow_ = new TopListWindow();
 
     pixDistressed_ = QPixmap(":/images/images/distressed.png");
     pixAbandoned_ = QPixmap(":/images/images/dead.png");
@@ -85,7 +86,6 @@ MainWindow::MainWindow(QWidget *parent,
 
 MainWindow::~MainWindow()
 {
-    saveSettings();
     delete refreshTimer_;
     delete gameTimer_;
     delete collisionTimer_;
@@ -276,8 +276,6 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     ui->lbSSName->setText(starSystem->getName().data());
     ui->lbSSEconomy->setText(economy[starSystem->getEconomy()]);
     ui->lbSSPopulation->setText(QString::number(starSystem->getPopulation()));
-    ui->lbSSCoordinates->setText("x: " + QString::number(starSystem->getCoordinates().x*5000) +
-                                 " y: " + QString::number(starSystem->getCoordinates().y*5000));
     drawManager_->setFocusOnPlayer(player_);
     if(map_ != nullptr)
     {
@@ -296,6 +294,8 @@ void MainWindow::refreshUI()
         inventory += QString(k.getName().data()) + " : " + QString::number(k.getPrice()) + "\n";
     }
     ui->ptPlayerInventory->appendPlainText(inventory);
+    ui->lbCredits->setText(QString::number(player_->getStatistics()->getCreditBalance()));
+
 
     if(statsWindow_ != nullptr && player_ != nullptr)
     {
@@ -340,12 +340,12 @@ void MainWindow::checkCollision()
 
 void MainWindow::loadSettings()
 {
-    player_->getStatistics()->loadSettings();
+    topListWindow_->loadSettings();
 }
 
 void MainWindow::saveSettings()
 {
-    player_->getStatistics()->saveSettings(playerName_);
+    topListWindow_->saveSettings(playerName_, player_->getStatistics()->getPlayerStat());
 }
 
 void MainWindow::on_pbNewGame_clicked()
@@ -366,6 +366,7 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     QTextEdit* help = new QTextEdit();
+    help->setWindowIcon(QIcon(":/images/images/favicon.png"));
     help->setWindowFlags(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
     help->setReadOnly(true);
     help->resize(384, 256);
@@ -378,6 +379,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionHelp_triggered()
 {
     QTextEdit* help = new QTextEdit();
+    help->setWindowIcon(QIcon(":/images/images/favicon.png"));
     help->setWindowFlags(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
     help->setReadOnly(true);
     help->resize(384, 256);
@@ -387,82 +389,12 @@ void MainWindow::on_actionHelp_triggered()
     help->show();
 }
 
-void MainWindow::on_actionMy_statistics_triggered()
-{
-    //Check if player is initialized
-    if(player_ != nullptr)
-    {
-        if(statsWindow_ == nullptr)
-        {
-            statsWindow_ = new StatisticsWindow(player_->getStatistics(), playerName_);
-            QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
-            connect(eventHandlerObj, SIGNAL(statisticsNeedUpdate(bool)),
-                    statsWindow_, SLOT(setNeedForUpdate(bool)));
-            statsWindow_->setModal(true);
-            statsWindow_->exec();
-        }
-        else{
-            statsWindow_->show();
-        }
-    }
-    else
-    {
-        QMessageBox msgBox;
-        msgBox.setText("No statistics at the moment, game haven't started yet!");
-        msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
-        msgBox.exec();
-    }
-}
-
-void MainWindow::on_pbShowMap_clicked()
-{
-    if(map_ == nullptr)
-    {
-        QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
-        connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)),
-                this, SLOT(travelToStarSystem(unsigned)));
-        map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), this);
-        connect(eventHandlerObj, SIGNAL(showGoodsInfo(unsigned)),
-                map_, SLOT(showGoodsInfo(unsigned)));
-        connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
-                this, SLOT(planetsInStarSystemRequest(unsigned)));
-        map_->setModal(true);
-        map_->exec();
-    }
-    else
-    {
-        map_->show();
-    }
-}
-
 void MainWindow::planetsInStarSystemRequest(unsigned id)
 {
     std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(id);
     Common::IGalaxy::ShipVector ships = galaxy_->getShipsInStarSystem(starSystem->getName());
     Common::IGalaxy::ShipVector planets = drawManager_->getPlanetsByStarSystem(ships);
     map_->setPlanetsByStarSystem(planets);
-}
-
-void MainWindow::on_pbQuestions_clicked()
-{
-    questionDlg_ = new QuestionDlg(question_->activeQuestions(), question_->completedQuestions(), this);
-    questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
-    questionDlg_->setModal(true);
-    questionDlg_->exec();
-}
-
-void MainWindow::allQuestionsDone()
-{
-    int playingTime = playingTime_->elapsed();
-    QMessageBox msgBox;
-    msgBox.setText("Congratulation! You finished all questions. Your time is " + QString::number(playingTime/1000) + "s");
-    msgBox.exec();
-}
-
-void MainWindow::questionCompleted()
-{
-    player_->getStatistics()->addCompletedQuest();
-    player_->getStatistics()->addPoints(settings_->getPointsFromQuestion());
 }
 
 void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
@@ -545,15 +477,56 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
     player_->getStatistics()->addLostShip();
 }
 
-bool MainWindow::isNameCorrect(QString name)
+void MainWindow::on_actionMy_statistics_triggered()
 {
-    name = name.trimmed();
-    int count = name.count(QRegExp("[!@#$%^&()_+]"));
-    if(name.length() > 0 && name.length() < 10 && count == 0)
+    //Check if player is initialized
+    if(player_ != nullptr)
     {
-        return true;
+        if(statsWindow_ == nullptr)
+        {
+            statsWindow_ = new StatisticsWindow(player_->getStatistics(), playerName_);
+            QObject* eventHandlerObj = dynamic_cast<QObject*>(handler_.get());
+            connect(eventHandlerObj, SIGNAL(statisticsNeedUpdate(bool)),
+                    statsWindow_, SLOT(setNeedForUpdate(bool)));
+            statsWindow_->setModal(true);
+            statsWindow_->exec();
+        }
+        else
+        {
+            statsWindow_->show();
+        }
     }
-    return false;
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("No statistics at the moment, game haven't started yet!");
+        msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+        msgBox.exec();
+    }
+}
+
+void MainWindow::on_pbShowMap_clicked()
+{
+    if(map_ == nullptr)
+    {
+        QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
+
+        connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)),
+                this, SLOT(travelToStarSystem(unsigned)));
+        map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), this);
+
+        connect(eventHandlerObj, SIGNAL(showGoodsInfo(unsigned)),
+                map_, SLOT(showGoodsInfo(unsigned)));
+        connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
+                this, SLOT(planetsInStarSystemRequest(unsigned)));
+
+        map_->setModal(true);
+        map_->exec();
+    }
+    else
+    {
+        map_->show();
+    }
 }
 
 void MainWindow::on_pbEndGame_clicked()
@@ -566,6 +539,15 @@ void MainWindow::on_pbEndGame_clicked()
     ui->pbEndGame->setEnabled(false);
     ui->pbQuestions->setEnabled(false);
     ui->pbShowMap->setEnabled(false);
+    ui->pbShowMap->setEnabled(false);
+
+    ui->lbCntStarSystems->setText("0");
+    ui->lbShipsInDistress->setText("0");
+    ui->lbSSName->clear();
+    ui->lbSSEconomy->clear();
+    ui->lbSSPopulation->clear();
+    ui->lbSSEnemies->clear();
+    ui->lbCredits->clear();
 
     saveSettings();
 
@@ -574,3 +556,77 @@ void MainWindow::on_pbEndGame_clicked()
 
     player_ = nullptr;
 }
+
+void MainWindow::on_actionTop_list_triggered()
+{
+    topListWindow_->setModal(true);
+    topListWindow_->show();
+}
+
+void MainWindow::on_actionDefault_Settings_triggered()
+{
+    QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+    msgBox.setText("Do you want to set default settings?");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    int ret = msgBox.exec();
+
+    if(ret == QMessageBox::Yes)
+    {
+        settings_->setDefault();
+    }
+
+}
+
+void MainWindow::on_actionReset_top_list_triggered()
+{
+    QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+    msgBox.setText("Do you want to reset top list?");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    int ret = msgBox.exec();
+
+    if(ret == QMessageBox::Yes)
+    {
+        topListWindow_->resetStats();
+    }
+}
+
+
+void MainWindow::on_pbQuestions_clicked()
+{
+    questionDlg_ = new QuestionDlg(question_->activeQuestions(), question_->completedQuestions(), this);
+    questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
+    questionDlg_->setModal(true);
+    questionDlg_->exec();
+}
+
+void MainWindow::allQuestionsDone()
+{
+    int playingTime = playingTime_->elapsed();
+    QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+    msgBox.setText("Congratulation! You finished all questions. Your time is " + QString::number(playingTime/1000) + "s");
+    msgBox.exec();
+}
+
+void MainWindow::questionCompleted()
+{
+    player_->getStatistics()->addCompletedQuest();
+    player_->getStatistics()->addPoints(settings_->getPointsFromQuestion());
+}
+
+bool MainWindow::isNameCorrect(QString name)
+{
+    name = name.trimmed();
+    int count = name.count(QRegExp("[!@#$%^&()_+]"));
+    if(name.length() > 0 && name.length() < 10 && count == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+

@@ -51,12 +51,7 @@ public:
      void setMaxLoanAllowance(int maxLoan);
      int getMaxLoanAllowance();
 
-     QMap<QString, playerStat> getTotalStat() const;
-     void setTotalStat(const QMap<QString, playerStat> &value);
-
-     void loadSettings();
-     void saveSettings(QString name);
-
+     Student::Statistics::playerStat getPlayerStat();
 private:
      unsigned savedShips_ = 0;
      unsigned lostShips_ = 0;
@@ -65,15 +60,11 @@ private:
      unsigned destroyedShips_ = 0;
      unsigned completedQuest_ = 0;
 
-     QMap<QString, playerStat> totalStat_;
-
      int MAX_LOAN_ALLOWANCE;
      std::shared_ptr<Student::EventHandler> handler_;
 
 };
 }//Student
 
-QDataStream &operator<<(QDataStream &out, const Student::Statistics::playerStat &playerStat);
-QDataStream &operator>>(QDataStream &in, const Student::Statistics::playerStat &playerStat);
 
 #endif // STATISTICS_HH
