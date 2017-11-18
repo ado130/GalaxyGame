@@ -112,6 +112,7 @@ void TopListWindow::loadSettings()
 void TopListWindow::resetStats()
 {
     totalStat_.clear();
+    ui->treeWidget->clear();
 }
 
 void TopListWindow::saveSettings(QString name, Student::Statistics::playerStat stat)

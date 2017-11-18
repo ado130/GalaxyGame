@@ -551,6 +551,7 @@ void MainWindow::on_pbEndGame_clicked()
     galaxy_->removeShips();
 
     player_ = nullptr;
+    map_ = nullptr;
 }
 
 void MainWindow::on_actionTop_list_triggered()
