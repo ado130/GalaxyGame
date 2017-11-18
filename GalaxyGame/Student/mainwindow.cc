@@ -141,7 +141,7 @@ void MainWindow::startGame()
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
-    gameTimer_->start(200);//10000
+    gameTimer_->start(10000);
 
     ui->lbCntStarSystems->setText(QString::number(galaxy_->getStarSystemVector().size()));
 
