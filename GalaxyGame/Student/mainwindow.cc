@@ -296,7 +296,7 @@ void MainWindow::checkCollision()
         if(typeid (*(colliding_Items[i])) == typeid (NPCShipUi))
         {
             isNPCShipNear_ = true;
-            std::shared_ptr<Common::Ship> ship = drawManager_->getCargoShiptByUiItem(colliding_Items[i]);
+            std::shared_ptr<Common::Ship> ship = drawManager_->getCargoShipByUiItem(colliding_Items[i]);
             currentNPCShip_ = ship;
             return;
         }
@@ -381,7 +381,7 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
     //add ship to distress list
     shipsInDistress_.push_back(ship);
     //Stop ship in ui
-    drawManager_->getCargoShipUiByObject(ship)->canMove(false);
+    drawManager_->getShipUiByObject(ship)->canMove(false);
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
 
@@ -411,7 +411,7 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
         }
     }
     //Ship in ui can move again
-    drawManager_->getCargoShipUiByObject(ship)->canMove(true);
+    drawManager_->getShipUiByObject(ship)->canMove(true);
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
 

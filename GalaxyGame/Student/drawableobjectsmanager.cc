@@ -2,6 +2,7 @@
 #include "planet.hh"
 #include "cargoship.hh"
 #include "utility"
+#include "unknownshipexception.hh"
 
 #include <qdebug.h>
 #include <QPainter>
@@ -47,15 +48,15 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
 {
     if( std::dynamic_pointer_cast<Student::Planet> (ship))
     {
-        int randomPlanetIndex = Common::randomMinMax(0, planets.size()-1);
-        QString randomPlanetName = QString::fromStdString(planets.at(randomPlanetIndex));
+        int randomPlanetIndex = Common::randomMinMax(0, planets_.size()-1);
+        QString randomPlanetName = QString::fromStdString(planets_.at(randomPlanetIndex));
         QString pathToImage = QString(":/images/images/planets/%1.png").arg(randomPlanetName.toLower());
         QPixmap bigPixmap = QPixmap(pathToImage);
         Student::PlanetUi *planet = new Student::PlanetUi(bigPixmap.scaledToWidth(bigPixmap.width()/3),
                                                           ship->getLocation()->getCoordinates().x*coordsScale_+
-                                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius-bigPixmap.width()/3),
+                                                            Common::randomMinMax(starSystemSpawnRadius_*(-1), starSystemSpawnRadius_-bigPixmap.width()/3),
                                                           ship->getLocation()->getCoordinates().y*coordsScale_+
-                                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius-bigPixmap.height()/3));
+                                                            Common::randomMinMax(starSystemSpawnRadius_*(-1), starSystemSpawnRadius_-bigPixmap.height()/3));
         planetUiList_.append(qMakePair(std::dynamic_pointer_cast<Student::Planet> (ship), planet));
     }
 
@@ -63,9 +64,9 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
     {
         NPCShipUi *npcship = new NPCShipUi(cargoShipIcon_,
                                            ship->getLocation()->getCoordinates().x*coordsScale_+
-                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius),
+                                            Common::randomMinMax(starSystemSpawnRadius_*(-1), starSystemSpawnRadius_),
                                            ship->getLocation()->getCoordinates().y*coordsScale_+
-                                            Common::randomMinMax(starSystemSpawnRadius*(-1), starSystemSpawnRadius));
+                                            Common::randomMinMax(starSystemSpawnRadius_*(-1), starSystemSpawnRadius_));
         cargoShipUiList_.append(qMakePair(std::dynamic_pointer_cast<Common::CargoShip> (ship), npcship));
     }
     else if(std::dynamic_pointer_cast<PlayerShip> (ship))
@@ -75,6 +76,10 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
                                                     ship->getLocation()->getCoordinates().y*coordsScale_,
                                                     userActionHandler_);
         playerShipUiList_.append(qMakePair(std::dynamic_pointer_cast<PlayerShip> (ship), playership));
+    }
+    else
+    {
+        throw UnknownShipException("Ship " + ship->getName() + " doesn't have a known type.");
     }
 }
 
@@ -87,7 +92,7 @@ void Student::DrawableObjectsManager::unregisterShip(std::shared_ptr<Common::Shi
             if(planetUiList_.at(i).first == ship)
             {
                 planetUiList_.removeAt(i);
-                break;
+                return;
             }
         }
     }
@@ -98,7 +103,7 @@ void Student::DrawableObjectsManager::unregisterShip(std::shared_ptr<Common::Shi
             if(cargoShipUiList_.at(i).first == ship)
             {
                 cargoShipUiList_.removeAt(i);
-                break;
+                return;
             }
         }
     }
@@ -109,10 +114,15 @@ void Student::DrawableObjectsManager::unregisterShip(std::shared_ptr<Common::Shi
             if(playerShipUiList_.at(i).first == ship)
             {
                 playerShipUiList_.removeAt(i);
-                break;
+                return;
             }
         }
     }
+    else
+    {
+        throw UnknownShipException("Ship " + ship->getName() + " doesn't have a known type.");
+    }
+    throw UnknownShipException("Ship " + ship->getName() + " isn't registered in UI.");
 }
 
 void Student::DrawableObjectsManager::changeShipUiPosition(QGraphicsPixmapItem *shipUi, int x, int y)
@@ -134,8 +144,10 @@ void Student::DrawableObjectsManager::drawShip(std::shared_ptr<Common::Ship> shi
             if(element.first == ship)
             {
                 scene_->drawPlanet(element.second);
+                return;
             }
         }
+        throw UnknownShipException("Planet " + ship->getName() + " isn't registered in UI.");
     }
     else if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
@@ -144,8 +156,10 @@ void Student::DrawableObjectsManager::drawShip(std::shared_ptr<Common::Ship> shi
             if(element.first == ship)
             {
                 scene_->drawNPCShip(element.second);
+                return;
             }
         }
+        throw UnknownShipException("CargoShip " + ship->getName() + " isn't registered in UI.");
     }
     else if(std::dynamic_pointer_cast<PlayerShip> (ship))
     {
@@ -155,8 +169,14 @@ void Student::DrawableObjectsManager::drawShip(std::shared_ptr<Common::Ship> shi
             {
                 scene_->drawPlayerShip(element.second);
                 element.second->setFocus();
+                return;
             }
         }
+        throw UnknownShipException("Player " + ship->getName() + " isn't registered in UI.");
+    }
+    else
+    {
+        throw UnknownShipException("Ship " + ship->getName() + " doesn't have known type and isn't registered in UI.");
     }
 }
 
@@ -172,7 +192,7 @@ std::shared_ptr<Student::Planet> Student::DrawableObjectsManager::getPlanetByUiI
     return nullptr;
 }
 
-std::shared_ptr<Common::CargoShip> Student::DrawableObjectsManager::getCargoShiptByUiItem(QGraphicsItem* item)
+std::shared_ptr<Common::CargoShip> Student::DrawableObjectsManager::getCargoShipByUiItem(QGraphicsItem* item)
 {
     for(auto element : cargoShipUiList_)
     {
@@ -197,7 +217,7 @@ PlayerShipUi* Student::DrawableObjectsManager::getPlayerShipUiByObject(std::shar
 }
 
 
-NPCShipUi* Student::DrawableObjectsManager::getCargoShipUiByObject(std::shared_ptr<Common::Ship> ship)
+NPCShipUi* Student::DrawableObjectsManager::getShipUiByObject(std::shared_ptr<Common::Ship> ship)
 {
     for(auto element : cargoShipUiList_)
     {
@@ -215,71 +235,100 @@ void Student::DrawableObjectsManager::setFocusOnPlayer(std::shared_ptr<PlayerShi
     {
         if(element.first == ship)
         {
-            scene_->setFocusItem(element.second);//->setFocus();
+            scene_->setFocusItem(element.second);
+            return;
         }
     }
+    throw UnknownShipException("PlayerShip " + ship->getName() + " isn't registered in UI.");
 }
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, Common::Point from, Common::Point to)
 {
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
-        NPCShipUi* uiShip = getCargoShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
-        uiShip->setPos(to.x*coordsScale_, to.y*coordsScale_);
-        if(!isInPlayerShipVisibilityRange(uiShip))
+        NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
+        if(uiShip != nullptr)
         {
-            scene_->eraseNPCShip(uiShip);
+            uiShip->setPos(to.x*coordsScale_, to.y*coordsScale_);
+            if(!isInPlayerShipVisibilityRange(uiShip))
+            {
+                scene_->eraseNPCShip(uiShip);
+            }
+        }
+        else
+        {
+            throw UnknownShipException("Ship " + ship->getName() + " isn't registered in UI.");
         }
     }
-
+    else
+    {
+        throw UnknownShipException("Ship " + ship->getName() + " doesn't have known type");
+    }
 }
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)
 {    
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
-        NPCShipUi* uiShip = getCargoShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
-
-        if(ship->getLocation() != nullptr)
+        NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
+        if(uiShip != nullptr)
         {
-            uiShip->setPos(ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
+            if(ship->getLocation() != nullptr)
+            {
+                uiShip->setPos(ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
 
-            if(!isInPlayerShipVisibilityRange(uiShip) && scene_->isNPCShipVisible(uiShip))
+                if(!isInPlayerShipVisibilityRange(uiShip) && scene_->isNPCShipVisible(uiShip))
+                {
+                    scene_->eraseNPCShip(uiShip);
+                }
+                else if (isInPlayerShipVisibilityRange(uiShip) && !scene_->isNPCShipVisible(uiShip))
+                {
+                    scene_->drawNPCShip(uiShip);
+                }
+            }
+            else
             {
                 scene_->eraseNPCShip(uiShip);
-            }
-            else if (isInPlayerShipVisibilityRange(uiShip) && !scene_->isNPCShipVisible(uiShip))
-            {
-                scene_->drawNPCShip(uiShip);
             }
         }
         else
         {
-            scene_->eraseNPCShip(uiShip);
+            throw UnknownShipException("Ship " + ship->getName() + " isn't registered in UI.");
         }
+
     }
     else if(std::dynamic_pointer_cast<PlayerShip> (ship))
     {
         PlayerShipUi* uiShip = getPlayerShipUiByObject(std::dynamic_pointer_cast<PlayerShip> (ship));
-        QRect rect = QRect(ship->getLocation()->getCoordinates().x*coordsScale_-starSystemSpawnRadius,
-                             ship->getLocation()->getCoordinates().y*coordsScale_-starSystemSpawnRadius,
-                             starSystemSpawnRadius*2, starSystemSpawnRadius*2);
-        scene_->setSceneRect(rect);
-
-        if(ship->getLocation() != nullptr)
+        if(uiShip != nullptr)
         {
-            setPosition(uiShip, ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
+            QRect rect = QRect(ship->getLocation()->getCoordinates().x*coordsScale_-starSystemSpawnRadius_,
+                                 ship->getLocation()->getCoordinates().y*coordsScale_-starSystemSpawnRadius_,
+                                 starSystemSpawnRadius_*2, starSystemSpawnRadius_*2);
+            scene_->setSceneRect(rect);
+
+            if(ship->getLocation() != nullptr)
+            {
+                setPosition(uiShip, ship->getLocation()->getCoordinates().x*coordsScale_, ship->getLocation()->getCoordinates().y*coordsScale_);
+            }
         }
+        else
+        {
+            throw UnknownShipException("Player ship " + ship->getName() + " isn't registered in UI.");
+        }
+    }
+    else
+    {
+        throw UnknownShipException("Player ship " + ship->getName() + " doesn't have known type");
     }
 }
 
 
 bool Student::DrawableObjectsManager::isInPlayerShipVisibilityRange(NPCShipUi* ship)
 {
-    //ToDo: set range as variable
     //ToDo: select which playership -- playerShipUiList_.at(0) is not correct solution (but in current state enough)
     return Common::distance(ship->pos().x(), ship->pos().y(), playerShipUiList_.at(0).second->pos().x(),
-                            playerShipUiList_.at(0).second->pos().y()) > 1000;
+                            playerShipUiList_.at(0).second->pos().y()) > visibilityRange_;
 }
 
 Common::IGalaxy::ShipVector Student::DrawableObjectsManager::getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships)
@@ -297,17 +346,19 @@ Common::IGalaxy::ShipVector Student::DrawableObjectsManager::getPlanetsByStarSys
 
 void Student::DrawableObjectsManager::shipIsAbandoned(std::shared_ptr<Common::Ship> ship)
 {
-    getCargoShipUiByObject(ship)->changePixmapAndRotation(shipAbandonedIcon_, 0);
-}
-
-void Student::DrawableObjectsManager::pressedSpaceSlot()
-{
-    emit pressedSpaceSignal();
+    NPCShipUi* shipUi = getShipUiByObject(ship);
+    if(shipUi != nullptr)
+    {
+        shipUi->changePixmapAndRotation(shipAbandonedIcon_, 0);
+    }
+    else
+    {
+        throw UnknownShipException("Ship " + ship->getName() + "  isn't registered in UI.");
+    }
 }
 
 void Student::DrawableObjectsManager::setPosition(QGraphicsPixmapItem *item, int x, int y)
 {
-
     if(y < scene_->sceneRect().top()+scene_->sceneRect().height()-item->pixmap().height() && x > scene_->sceneRect().left() &&
             y > scene_->sceneRect().top() && x < scene_->sceneRect().left()+scene_->width()-item->pixmap().width())
     {

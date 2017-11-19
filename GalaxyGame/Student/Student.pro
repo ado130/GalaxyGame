@@ -38,7 +38,8 @@ SOURCES += \
     questiondlg.cc \
     settings.cc \
     toplistwindow.cc \
-    tradeaction.cc
+    tradeaction.cc \
+    unknownshipexception.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -65,7 +66,8 @@ HEADERS  += \
     questiondlg.hh \
     settings.hh \
     toplistwindow.hh \
-    tradeaction.hh
+    tradeaction.hh \
+    unknownshipexception.hh
 	
 FORMS += \
     mainwindow.ui \
