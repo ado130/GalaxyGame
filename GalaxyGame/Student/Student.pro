@@ -38,7 +38,8 @@ SOURCES += \
     question.cc \
     questiondlg.cc \
     settings.cc \
-    toplistwindow.cc
+    toplistwindow.cc \
+    tradeaction.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -65,7 +66,8 @@ HEADERS  += \
     question.hh \
     questiondlg.hh \
     settings.hh \
-    toplistwindow.hh
+    toplistwindow.hh \
+    tradeaction.hh
 	
 FORMS += \
     mainwindow.ui \

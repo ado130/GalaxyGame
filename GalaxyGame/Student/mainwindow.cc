@@ -9,6 +9,7 @@
 #include "playership.hh"
 #include "repairaction.hh"
 #include "eventhandler.hh"
+#include "tradeaction.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -180,43 +181,18 @@ void MainWindow::pressedSpace()
                                              tr("Trade type:"), items, 0, false, &ok);
         if (ok && !item.isEmpty())
         {
-            if(item.toLower() == "buy")
+            TradeAction trade = TradeAction(player_, currentPlanet_, item.toLower().toStdString(),
+                                            currentStarSystem_, question_, settings_);
+            if(trade.canDo())
             {
-                if(player_->getInventory().size() < MAX_PLAYER_INVENTORY)
-                {
-                    for(auto k : player_->getInventory())
-                    {
-                        if(currentPlanet_->getGoods().getName() == k.getName() && currentPlanet_->getGoods().getPrice() == k.getPrice())
-                        {
-                            return;
-                        }
-                    }
-                    if(currentPlanet_->getGoods().getPrice() <= player_->getStatistics()->getCreditBalance())
-                    {
-                        player_->addGoodsToInventory(currentPlanet_->getGoods());
-                        player_->getStatistics()->reduceCredits(currentPlanet_->getGoods().getPrice());
-                    }
-                    else
-                    {
-                        QMessageBox msgBox;
-                        msgBox.setText("You don't have enough credits!");
-                        msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
-                        msgBox.exec();
-                    }
-                }
+                trade.execute();
             }
-            else if(item.toLower() == "sell")
+            else
             {
-                for(auto k : player_->getInventory())
-                {
-                    bool correct = question_->checkQuestion(currentStarSystem_->getName(), currentPlanet_->getName(), k.getName());
-                    if(correct)
-                    {
-                        player_->removeGoodsFromInventory(k.getName());
-                        player_->getStatistics()->addCredits(k.getPrice() + (k.getPrice()*settings_->getCreditProfitFromSale()));
-                        return;
-                    }
-                }
+                QMessageBox msgBox;
+                msgBox.setText("Trade action cannot be done!");
+                msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+                msgBox.exec();
             }
         }
     }
