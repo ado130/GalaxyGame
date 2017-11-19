@@ -2,7 +2,7 @@
 #include "utility.hh"
 
 #include <QDebug>
-#include <cmath>
+#include <math.h>
 #include <QGraphicsScene>
 #include <QTimer>
 

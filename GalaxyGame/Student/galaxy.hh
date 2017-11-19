@@ -2,8 +2,6 @@
 #define GALAXY_HH
 
 #include "igalaxy.hh"
-//#include "ship.hh"
-//#include "ieventhandler.hh"
 
 namespace Student {
 
@@ -30,7 +28,6 @@ public:
     Common::StarSystem::StarSystemVector getStarSystemVector() const {return starSystemsInGalaxy_;}
 
     void removeShips() { shipsInGalaxy_.clear(); }
-    Common::IGalaxy::ShipVector getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships);
 private:
     ShipVector shipsInGalaxy_;
     Common::StarSystem::StarSystemVector starSystemsInGalaxy_;

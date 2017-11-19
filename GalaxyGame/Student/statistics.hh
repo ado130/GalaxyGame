@@ -20,7 +20,6 @@ public:
         unsigned lostShips;
         unsigned points;
         int credits;
-        unsigned destroyedShips;
         unsigned completedQuest;
     };
 
@@ -33,9 +32,6 @@ public:
 
      void addLostShip();
      unsigned getLostShips() const;
-
-     void addDestroyedShip();
-     unsigned getDestroyedShips() const;
 
      void addCompletedQuest();
      unsigned getCompletedQuests() const;
@@ -57,7 +53,6 @@ private:
      unsigned lostShips_ = 0;
      unsigned points_ = 0;
      int credits_ = 0;
-     unsigned destroyedShips_ = 0;
      unsigned completedQuest_ = 0;
 
      int MAX_LOAN_ALLOWANCE;

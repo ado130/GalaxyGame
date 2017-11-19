@@ -66,8 +66,6 @@ private:
     std::shared_ptr<Student::Question> question_;
     std::shared_ptr<Student::Settings> settings_;
 
-    QPixmap pixAbandoned_;
-
     QTimer* refreshTimer_ = nullptr;
     QTimer* collisionTimer_ = nullptr;
     QTimer* gameTimer_ = nullptr;

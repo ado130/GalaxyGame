@@ -26,5 +26,4 @@ void StatisticsWindow::fillStatistics(Student::Statistics* stats)
     ui->lostShipsLbl->setText(QString::number(stats->getLostShips()));
     ui->savedShipsLbl->setText(QString::number(stats->getSavedShips()));
     ui->completedQuestsLbl->setText(QString::number(stats->getCompletedQuests()));
-    ui->destroyedShipsLbl->setText(QString::number(stats->getDestroyedShips()));
 }

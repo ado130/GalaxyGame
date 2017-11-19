@@ -18,6 +18,8 @@ Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene
 
     QPixmap playerBigIcon = QPixmap(":/images/images/playerShip.png");
     playerShipIcon_ = playerBigIcon.scaledToWidth(playerBigIcon.width()/10);
+
+    shipAbandonedIcon_ = QPixmap(":/images/images/dead.png");
 }
 
 Student::StarSystemScene* Student::DrawableObjectsManager::getScene()
@@ -291,6 +293,11 @@ Common::IGalaxy::ShipVector Student::DrawableObjectsManager::getPlanetsByStarSys
         }
     }
     return planets;
+}
+
+void Student::DrawableObjectsManager::shipIsAbandoned(std::shared_ptr<Common::Ship> ship)
+{
+    getCargoShipUiByObject(ship)->changePixmapAndRotation(shipAbandonedIcon_, 0);
 }
 
 void Student::DrawableObjectsManager::pressedSpaceSlot()

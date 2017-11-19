@@ -38,6 +38,7 @@ public:
     NPCShipUi* getCargoShipUiByObject(std::shared_ptr<Common::Ship> ship);
     void setFocusOnPlayer(std::shared_ptr<PlayerShip> ship);
     Common::IGalaxy::ShipVector getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships);
+    void shipIsAbandoned(std::shared_ptr<Common::Ship> ship);
 
 
 public Q_SLOTS:
@@ -59,6 +60,7 @@ private:
 
     QPixmap playerShipIcon_;
     QPixmap cargoShipIcon_;
+    QPixmap shipAbandonedIcon_;
 
     bool isInPlayerShipVisibilityRange(NPCShipUi* ship);
     void setPosition(QGraphicsPixmapItem *item, int x, int y);

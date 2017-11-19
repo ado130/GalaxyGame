@@ -8,16 +8,31 @@ Student::Question::Question(std::shared_ptr<Student::Galaxy> galaxy,
 
 }
 
+Common::IGalaxy::ShipVector Student::Question::getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships)
+{
+    Common::IGalaxy::ShipVector planets;
+    planets.clear();
+    for(auto k : ships)
+    {
+        if( std::dynamic_pointer_cast<Student::Planet>(k))
+        {
+            planets.push_back(k);
+        }
+    }
+
+    return planets;
+}
+
 void Student::Question::generateQuestions()
 {
     for(unsigned i = 0; i<MAX_QUESTIONS; ++i)
     {
         std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getRandomSystem();
-        Common::IGalaxy::ShipVector planetsInStarSystem = galaxy_->getPlanetsByStarSystem(galaxy_->getShipsInStarSystem(starSystem->getName()));
+        Common::IGalaxy::ShipVector planetsInStarSystem = getPlanetsByStarSystem(galaxy_->getShipsInStarSystem(starSystem->getName()));
         while(planetsInStarSystem.size() == 0)  // in case star system does not contain any planets
         {
             starSystem = galaxy_->getRandomSystem();
-            planetsInStarSystem = galaxy_->getPlanetsByStarSystem(galaxy_->getShipsInStarSystem(starSystem->getName()));
+            planetsInStarSystem = getPlanetsByStarSystem(galaxy_->getShipsInStarSystem(starSystem->getName()));
         }
         int rand = Common::randomMinMax(0, planetsInStarSystem.size()-1);
         std::shared_ptr<Common::Ship> planet = planetsInStarSystem.at(rand);

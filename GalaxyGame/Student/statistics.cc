@@ -39,22 +39,6 @@ unsigned Student::Statistics::getLostShips() const
     return lostShips_;
 }
 
-
-void Student::Statistics::addDestroyedShip()
-{
-    destroyedShips_++;
-
-    if(handler_ == nullptr) return;
-    handler_->statisticsUpdated();
-}
-
-
-unsigned Student::Statistics::getDestroyedShips() const
-{
-    return this->destroyedShips_;
-}
-
-
 void Student::Statistics::addCompletedQuest()
 {
     completedQuest_++;
@@ -141,7 +125,6 @@ Student::Statistics::playerStat Student::Statistics::getPlayerStat()
     Student::Statistics::playerStat stat;
     stat.completedQuest = completedQuest_;
     stat.credits = credits_;
-    stat.destroyedShips = destroyedShips_;
     stat.lostShips = lostShips_;
     stat.points = points_;
     stat.savedShips = savedShips_;

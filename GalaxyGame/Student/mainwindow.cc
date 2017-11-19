@@ -42,8 +42,6 @@ MainWindow::MainWindow(QWidget *parent,
     settings_ = std::make_shared<Student::Settings>();
     topListWindow_ = new TopListWindow();
 
-    pixAbandoned_ = QPixmap(":/images/images/dead.png");
-
     QObject* eventHandlerObj = dynamic_cast<QObject*>(handler.get());
     QObject* userEventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
     QObject* drawManagerObj = dynamic_cast<QObject*>(drawManager_.get());
@@ -425,7 +423,7 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
 {
     bool isStarSystemFreeOfDistress = true;
     //set grave icon
-    drawManager_->getCargoShipUiByObject(ship)->changePixmapAndRotation(pixAbandoned_, 0);
+    drawManager_->shipIsAbandoned(ship);
 
     //remove ship from distress list
     for(int i = 0; i < shipsInDistress_.size(); i++)

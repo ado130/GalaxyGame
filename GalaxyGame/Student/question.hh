@@ -21,17 +21,18 @@ public:
              std::shared_ptr<ItemsInGalaxy> itemsInGalaxy,
              QObject *parent = 0);
 
-     void generateQuestions();
-     QList<questions_t> activeQuestions() const;
-     QList<questions_t> completedQuestions() const;
+    Common::IGalaxy::ShipVector getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships);
+    void generateQuestions();
+    QList<questions_t> activeQuestions() const;
+    QList<questions_t> completedQuestions() const;
 
-     bool checkQuestion(std::string starSystem, std::string planet, std::string goods);
+    bool checkQuestion(std::string starSystem, std::string planet, std::string goods);
 private:
-     std::shared_ptr<Student::Galaxy> galaxy_;
-     std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
-     QList<questions_t> questionList_;
-     QList<questions_t> activeQuestions_;
-     QList<questions_t> completedQuestions_;
+    std::shared_ptr<Student::Galaxy> galaxy_;
+    std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
+    QList<questions_t> questionList_;
+    QList<questions_t> activeQuestions_;
+    QList<questions_t> completedQuestions_;
 
 Q_SIGNALS:
     void allQuestionsDone();

@@ -21,7 +21,6 @@ SOURCES += \
 	galaxy.cc \
 	eventhandler.cc \
         statistics.cc \
-    bullet.cc \
     statisticswindow.cc \
     mapwindow.cc \
     starsystemui.cc \
@@ -46,7 +45,6 @@ HEADERS  += \
     eventhandler.hh \
     statistics.hh \
 	mainwindow.hh \
-    bullet.hh \
     statisticswindow.hh \
     mapwindow.hh \
     starsystemui.hh \

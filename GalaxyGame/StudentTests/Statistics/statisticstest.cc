@@ -13,7 +13,6 @@ public:
 private Q_SLOTS:
     void addingSavedShip();
     void addingLostShip();
-    void addingDestroyedShip();
     void addingCompletedQuest();
     void changeMaxLoanAllowance();
     void changeAmountOfPoints();
@@ -43,15 +42,6 @@ void StatisticsTest::addingLostShip()
     QVERIFY2(stats.getLostShips() == 1, "Number of lost ships doesn't match statistics");
     stats.addLostShip();
     QVERIFY2(stats.getLostShips() == 2, "Number of lost ships doesn't match statistics");
-}
-
-void StatisticsTest::addingDestroyedShip()
-{
-    Student::Statistics stats = Student::Statistics();
-    stats.addDestroyedShip();
-    QVERIFY2(stats.getDestroyedShips() == 1, "Number of destroyed ships doesn't match statistics");
-    stats.addDestroyedShip();
-    QVERIFY2(stats.getDestroyedShips() == 2, "Number of destroyed ships doesn't match statistics");
 }
 
 void StatisticsTest::addingCompletedQuest()
