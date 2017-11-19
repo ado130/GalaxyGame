@@ -89,6 +89,8 @@ private:
     void saveSettings();
     void createPlayer();
     bool isNameCorrect(QString name);
+    void showDialog(std::string msg, bool quitProgram);
+    void showErrorDialog(std::string msg, bool quitProgram);
 private Q_SLOTS:
     void on_actionNew_Game_triggered();
     void on_actionExit_triggered();

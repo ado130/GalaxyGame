@@ -10,6 +10,7 @@
 #include "repairaction.hh"
 #include "eventhandler.hh"
 #include "tradeaction.hh"
+#include "unknownshipexception.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -193,10 +194,7 @@ void MainWindow::pressedSpace()
             }
             else
             {
-                QMessageBox msgBox;
-                msgBox.setText("Trade action cannot be done!");
-                msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
-                msgBox.exec();
+                showDialog("Trade action cannot be done!", false);
             }
         }
     }
@@ -246,7 +244,14 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
 
     for(auto ship : galaxy_->getShipsInStarSystem(starSystem->getName()))
     {
-        drawManager_->drawShip(ship);
+        try
+        {
+            drawManager_->drawShip(ship);
+        }
+        catch (UnknownShipException ex)
+        {
+            showErrorDialog(ex.msg(), true);
+        }
     }
 
     ui->lbSSEnemies->setText(QString::number(drawManager_->getNumberOfShips()));
@@ -255,7 +260,14 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     ui->lbSSName->setText(starSystem->getName().data());
     ui->lbSSEconomy->setText(economy[starSystem->getEconomy()]);
     ui->lbSSPopulation->setText(QString::number(starSystem->getPopulation()));
-    drawManager_->setFocusOnPlayer(player_);
+    try
+    {
+        drawManager_->setFocusOnPlayer(player_);
+    }
+    catch(UnknownShipException ex)
+    {
+        showErrorDialog(ex.msg(), true);
+    }
     if(map_ != nullptr)
     {
         gameTimer_->start();
@@ -265,7 +277,14 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
 void MainWindow::refreshUI()
 {
     ui->graphicsView->centerOn(drawManager_->getPlayerShipUiByObject(player_));
-    drawManager_->setFocusOnPlayer(player_);
+    try
+    {
+        drawManager_->setFocusOnPlayer(player_);
+    }
+    catch(UnknownShipException ex)
+    {
+        showErrorDialog(ex.msg(), true);
+    }
     ui->ptPlayerInventory->clear();
     QString inventory = "";
     for(auto k : player_->getInventory())
@@ -429,8 +448,14 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
 {
     bool isStarSystemFreeOfDistress = true;
     //set grave icon
-    drawManager_->shipIsAbandoned(ship);
-
+    try
+    {
+        drawManager_->shipIsAbandoned(ship);
+    }
+    catch(UnknownShipException ex)
+    {
+        showErrorDialog(ex.msg(), true);
+    }
     //remove ship from distress list
     for(int i = 0; i < shipsInDistress_.size(); i++)
     {
@@ -458,11 +483,7 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
 
 void MainWindow::exceptionInShipExecution(std::shared_ptr<Common::Ship> ship, const std::string &msg)
 {
-    QMessageBox msgBox;
-    std::string text = "Problem with ship " + ship->getName() + ": " + msg;
-    msgBox.setText(QString::fromStdString(text));
-    msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
-    msgBox.exec();
+    showDialog("Problem with ship " + ship->getName() + ": " + msg, true);
 }
 
 void MainWindow::on_actionMy_statistics_triggered()
@@ -486,10 +507,7 @@ void MainWindow::on_actionMy_statistics_triggered()
     }
     else
     {
-        QMessageBox msgBox;
-        msgBox.setText("No statistics at the moment, game haven't started yet!");
-        msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
-        msgBox.exec();
+        showDialog("No statistics at the moment, game haven't started yet!", false);
     }
 }
 
@@ -592,10 +610,7 @@ void MainWindow::on_pbQuestions_clicked()
 void MainWindow::allQuestionsDone()
 {
     int playingTime = playingTime_->elapsed();
-    QMessageBox msgBox;
-    msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
-    msgBox.setText("Congratulation! You finished all questions. Your time is " + QString::number(playingTime/1000) + "s");
-    msgBox.exec();
+    showDialog("Congratulation! You finished all questions. Your time is " + std::to_string(playingTime/1000) + "s", false);
 }
 
 void MainWindow::questionCompleted()
@@ -613,6 +628,37 @@ bool MainWindow::isNameCorrect(QString name)
         return true;
     }
     return false;
+}
+
+void MainWindow::showDialog(std::string msg, bool quitProgram)
+{
+    QMessageBox msgBox;
+    msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+    if(quitProgram)
+    {
+        msgBox.setText(QString::fromStdString(msg));
+    }
+    else
+    {
+        msgBox.setText(QString::fromStdString(msg));
+    }
+    msgBox.exec();
+    if(quitProgram)
+    {
+        exit(1);
+    }
+}
+
+void MainWindow::showErrorDialog(std::string msg, bool quitProgram)
+{
+    if(quitProgram)
+    {
+        showDialog("Error occured! Program has to be terminated. Reason: " + msg, quitProgram);
+    }
+    else
+    {
+        showDialog("Error occured! Reason: " + msg, quitProgram);
+    }
 }
 
 
