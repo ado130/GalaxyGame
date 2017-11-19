@@ -37,7 +37,7 @@ void Student::EventHandler::shipMoved(std::shared_ptr<Common::Ship> ship, Common
 
 void Student::EventHandler::exceptionInExecution(std::shared_ptr<Common::Ship> ship, const std::string &msg)
 {
-
+    emit exceptionInShipExecution(ship, msg);
 }
 
 void Student::EventHandler::distressOn(std::shared_ptr<Common::Ship> ship)

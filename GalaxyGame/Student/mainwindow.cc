@@ -70,6 +70,12 @@ MainWindow::MainWindow(QWidget *parent,
     connect(eventHandlerObj, SIGNAL(shipWasAbandoned(std::shared_ptr<Common::Ship>)),
             this, SLOT(shipAbandoned(std::shared_ptr<Common::Ship>)));
 
+    connect(eventHandlerObj, SIGNAL(exceptionInShipExecution(std::shared_ptr<Common::Ship>, std::string const&)),
+            this, SLOT(exceptionInShipExecution(std::shared_ptr<Common::Ship>, std::string const&)));
+
+
+
+
     Common::addNewShipType("Planet", [=] (std::shared_ptr<Common::StarSystem> initialLocation,
                                                         std::shared_ptr<Common::IEventHandler> events
                                                         ) -> std::shared_ptr<Common::Ship>  {
@@ -448,6 +454,15 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
     }
     //update statistics
     player_->getStatistics()->addLostShip();
+}
+
+void MainWindow::exceptionInShipExecution(std::shared_ptr<Common::Ship> ship, const std::string &msg)
+{
+    QMessageBox msgBox;
+    std::string text = "Problem with ship " + ship->getName() + ": " + msg;
+    msgBox.setText(QString::fromStdString(text));
+    msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+    msgBox.exec();
 }
 
 void MainWindow::on_actionMy_statistics_triggered()

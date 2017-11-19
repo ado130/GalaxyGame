@@ -52,6 +52,7 @@ public Q_SLOTS:
     void shipCallingForHelp(std::shared_ptr<Common::Ship> ship);
     void shipSavedFromDistress(std::shared_ptr<Common::Ship> ship);
     void shipAbandoned(std::shared_ptr<Common::Ship> ship);
+    void exceptionInShipExecution(std::shared_ptr<Common::Ship> ship, std::string const& msg);
 
 private:
     Ui::MainWindow *ui;

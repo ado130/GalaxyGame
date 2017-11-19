@@ -37,6 +37,7 @@ Q_SIGNALS:
     void shipWasSaved(std::shared_ptr<Common::Ship> ship);
     void shipWasAbandoned(std::shared_ptr<Common::Ship> ship);
     void statisticsNeedUpdate(bool update);
+    void exceptionInShipExecution(std::shared_ptr<Common::Ship> ship, std::string const& msg);
 
 
 };
