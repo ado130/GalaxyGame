@@ -15,7 +15,33 @@ ItemsInGalaxy::ItemsInGalaxy()
 
 void ItemsInGalaxy::initSimpleTradeGoods()
 {
-    QJsonArray jsonArr = loadFromFile("simpleTradeGoods.json");
+    QJsonArray jsonArr;
+    try
+    {
+        jsonArr = loadFromFile("simpleTradeGoods.json");
+    }
+    catch(...)
+    {
+        auto item1 = QJsonObject(
+        {
+        qMakePair(QString("name"), QJsonValue("Oil")),
+        qMakePair(QString("price"), QJsonValue(7))
+        });
+        auto item2 = QJsonObject(
+        {
+        qMakePair(QString("name"), QJsonValue("Wood")),
+        qMakePair(QString("price"), QJsonValue(3))
+        });
+        auto item3 = QJsonObject(
+        {
+        qMakePair(QString("name"), QJsonValue("Diamonds")),
+        qMakePair(QString("price"), QJsonValue(10))
+        });
+        jsonArr.push_back(QJsonValue(item1));
+        jsonArr.push_back(QJsonValue(item2));
+        jsonArr.push_back(QJsonValue(item3));
+    }
+
     for(auto object : jsonArr)
     {
         simpleTradeGoods_.push_back(jsonToSimpleTradeGoods(object.toObject()));

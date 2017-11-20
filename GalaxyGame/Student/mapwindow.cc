@@ -1,6 +1,7 @@
 #include "mapwindow.hh"
 #include "ui_mapwindow.h"
 #include "planet.hh"
+#include "unknownstarsystemexception.hh"
 
 #include <QDebug>
 #include <QGraphicsSceneContextMenuEvent>
@@ -39,36 +40,46 @@ MapWindow::~MapWindow()
 
 void MapWindow::markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> starSystem)
 {
-    for(auto element : starSystemList_){
-        if(element.first == starSystem){
+    for(auto element : starSystemList_)
+    {
+        if(element.first == starSystem)
+        {
             QGraphicsPixmapItem *item = new QGraphicsPixmapItem();
             distressedStarSystemItems_.push_back(item);
             addMarkSign(item, pixDistressed_, element.second->x()+element.second->boundingRect().right(), element.second->y());
-            break;
+            return;
         }
     }
+    throw UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
 }
 
 void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> starSystem)
 {
-    for(auto item : distressedStarSystemItems_){
-        for(auto element : starSystemList_){
-            if(element.first == starSystem){
+    for(auto item : distressedStarSystemItems_)
+    {
+        for(auto element : starSystemList_)
+        {
+            if(element.first == starSystem)
+            {
                 if(item->x() == element.second->x()+element.second->boundingRect().right() &&
                         item->y() == element.second->y()){
                     scene_->removeItem(item);
-                    break;
+                    return;
                 }
             }
         }
     }
+    throw UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
 }
 
-void MapWindow::addMarkSign(QGraphicsPixmapItem *starSystemUi, QPixmap pixmap, int x, int y)
+void MapWindow::addMarkSign(QGraphicsPixmapItem *item, QPixmap pixmap, int x, int y)
 {
-    starSystemUi->setPixmap(pixmap);
-    starSystemUi->setPos(x, y);
-    scene_->addItem(starSystemUi);
+    if(item != nullptr)
+    {
+        item->setPixmap(pixmap);
+        item->setPos(x, y);
+        scene_->addItem(item);
+    }
 }
 
 void MapWindow::showStarSystems(Common::StarSystem::StarSystemVector starSystem)
@@ -103,8 +114,10 @@ void MapWindow::travelToStarSystem(unsigned idStarUi)
         if(k.first->getId() == idStarUi)
         {
             playerLocation_->setPos(k.second->x(), k.second->y()-k.second->boundingRect().height()/2);
+            return;
         }
     }
+    throw UnknownStarSystemException("Star System with id " + std::to_string(idStarUi) + " was not found.");
 }
 
 void MapWindow::showGoodsInfo(unsigned idStarUi)

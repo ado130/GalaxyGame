@@ -11,6 +11,7 @@
 #include "eventhandler.hh"
 #include "tradeaction.hh"
 #include "unknownshipexception.hh"
+#include "unknownstarsystemexception.hh"
 
 #include <QDebug>
 #include <QTextEdit>
@@ -406,7 +407,14 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
 
     if(map_ != nullptr)
     {
-        map_->markStarSystemAsDistressed(ship->getLocation());
+        try
+        {
+            map_->markStarSystemAsDistressed(ship->getLocation());
+        }
+        catch(UnknownStarSystemException ex)
+        {
+            showErrorDialog(ex.msg(), true);
+        }
     }
 }
 
@@ -436,7 +444,14 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
 
     if(isStarSystemFullySaved && map_ != nullptr)
     {
-        map_->unmarkStarSystemDistress(ship->getLocation());
+        try
+        {
+            map_->unmarkStarSystemDistress(ship->getLocation());
+        }
+        catch(UnknownStarSystemException ex)
+        {
+            showErrorDialog(ex.msg(), true);
+        }
     }
     //update statistics
     player_->getStatistics()->addPoints(settings_->getPointsFromSaving());
@@ -475,7 +490,14 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
 
     if(isStarSystemFreeOfDistress && map_ != nullptr)
     {
-        map_->unmarkStarSystemDistress(ship->getLocation());
+        try
+        {
+            map_->unmarkStarSystemDistress(ship->getLocation());
+        }
+        catch(UnknownStarSystemException ex)
+        {
+            showErrorDialog(ex.msg(), true);
+        }
     }
     //update statistics
     player_->getStatistics()->addLostShip();

@@ -39,7 +39,8 @@ SOURCES += \
     settings.cc \
     toplistwindow.cc \
     tradeaction.cc \
-    unknownshipexception.cc
+    unknownshipexception.cc \
+    unknownstarsystemexception.cc
 
 HEADERS  += \
     galaxy.hh \
@@ -67,7 +68,8 @@ HEADERS  += \
     settings.hh \
     toplistwindow.hh \
     tradeaction.hh \
-    unknownshipexception.hh
+    unknownshipexception.hh \
+    unknownstarsystemexception.hh
 	
 FORMS += \
     mainwindow.ui \

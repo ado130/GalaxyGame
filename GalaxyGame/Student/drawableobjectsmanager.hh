@@ -12,8 +12,13 @@
 #include <QObject>
 #include <QList>
 
+//! QList of QPairs used to store CargoShip base objects and their NPCShipUi UI representations
 typedef QList< QPair<std::shared_ptr<Common::CargoShip>, NPCShipUi*> > cargoShipUiPair;
+
+//! QList of QPairs used to store Planet base objects and their PlanetUi UI representations
 typedef QList< QPair<std::shared_ptr<Student::Planet>, Student::PlanetUi*> > planetUiPair;
+
+//! QList of QPairs used to store PlayerShip base objects and their PlayerShipUi UI representations
 typedef QList< QPair<std::shared_ptr<PlayerShip>, PlayerShipUi*> > playerShipUiPair;
 
 namespace Student {
@@ -29,7 +34,7 @@ class DrawableObjectsManager : public QObject
 public:
     /**
      * @brief Constructor.
-     * @param scene Scene on wich are objects drawn
+     * @param scene Scene on which objects are drawn
      * @param userActionHandler Handler which is used to get actions from user and forward them further
      * @param parent parent QObject
      */
