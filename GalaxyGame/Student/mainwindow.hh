@@ -29,59 +29,163 @@ class Planet;
 namespace Ui {
 class MainWindow;
 }
-
+/**
+ * @brief The MainWindow class is responsible for connecting actions between important
+ * game objects (Galaxy, GameRunner, DrawableObjectsManager, Handler), is able to catch
+ * and handle incoming signals indicating change in game and invoke reactions in UI.
+ *
+ * Serves as Main view for a game
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
+    /**
+     * @brief MainWindow
+     * @param parent QWidget parent
+     * @param handler EventHandler used for handling new game events and changes
+     * @param galaxy
+     * @param gameRunner
+     */
     explicit MainWindow(
             QWidget *parent = 0,
             std::shared_ptr<Common::IEventHandler> handler = 0,
             std::shared_ptr<Student::Galaxy> galaxy = 0,
             std::shared_ptr<Common::IGameRunner> gameRunner = 0);
+    /**
+     * @brief Destructor
+     */
     ~MainWindow();
 
 public Q_SLOTS:
+    /**
+     * @brief pressedSpace
+     * @note handles incoming pressed space signal (user wants to trade or repair ship)
+     * @post Exception guarantee: nothrow
+     */
     void pressedSpace();
-//    void shipMovement(std::shared_ptr<Common::Ship> ship, Common::Point from, Common::Point to);
+
+    /**
+     * @brief travelToStarSystem
+     * @param starSystemId
+     * @exception throws UnknownStarSystemException if StarSystem with starSystemId exists
+     * @post player_ object is realocated from old StarSystem to new one with starSystemId id
+     * @post Exception guarantee: basic
+     */
     void travelToStarSystem(unsigned starSystemId);
+
+    /**
+     * @brief planetsInStarSystemRequest
+     * @param id StarSystem id
+     * @exception throws Common::ObjectNotFoundException if StarSystem cannot be found
+     * @post Exception guarantee: strong
+     * @post map is updated with new planets
+     */
     void planetsInStarSystemRequest(unsigned id);
+
+    /**
+     * @brief allQuestionsDone
+     * @post invokes Dialog with info about time needed to complete questions
+     * @post Exception guarantee: nothrow
+     */
     void allQuestionsDone();
+
+    /**
+     * @brief questionCompleted
+     * @post player_'s Statistics are updated
+     * @post Exception guarantee: nothrow
+     */
     void questionCompleted();
+
+    /**
+     * @brief shipCallingForHelp
+     * @param ship ship which calls for help
+     * @exception throws UnknownShipException if ship cannot be found in Ui
+     * @post ship cannot move, it's location StarSystem is marked as distressed
+     * @post Exception guarantee: basic
+     */
     void shipCallingForHelp(std::shared_ptr<Common::Ship> ship);
+
+    /**
+     * @brief shipSavedFromDistress
+     * @param ship ship which was saved
+     * @exception throws UnknownShipException if ship cannot be found in Ui
+     * @post ship can move, it's location StarSystem is unmarked as distressed if there
+     * are no other distresses ships in it
+     * @post Exception guarantee: basic
+     */
     void shipSavedFromDistress(std::shared_ptr<Common::Ship> ship);
+
+    /**
+     * @brief shipAbandoned
+     * @param ship ship wich was abandoned
+     * @post ship is marked as abandoned, cannot move anymore, StarSystem UI unmarked as distressed if there
+     * are no other distresses ships in it
+     * @post Exception guarantee: nothrow
+     */
     void shipAbandoned(std::shared_ptr<Common::Ship> ship);
+
+    /**
+     * @brief exceptionInShipExecution
+     * @param ship
+     * @param msg
+     * @post Common::exceptionInShipExecution happens and program is forced to quit
+     */
     void exceptionInShipExecution(std::shared_ptr<Common::Ship> ship, std::string const& msg);
 
 private:
+    //! MainWindows's ui
     Ui::MainWindow *ui;
 
+    //! EventHandler used for handling new game events and changes
     std::shared_ptr<Common::IEventHandler> handler_;
+    //! Galaxy
     std::shared_ptr<Student::Galaxy> galaxy_;
+    //! gameRunner used to control game flow
     std::shared_ptr<Common::IGameRunner> gameRunner_;
+    //! handler used for handling events coming from user actions
     std::shared_ptr<Student::UserActionHandler> userActionHandler_;
+    //! drawManager used to handle objects which are to be drawn on StarSystem view scene
     std::shared_ptr<Student::DrawableObjectsManager> drawManager_;
+    //! all items existing in galaxy
     std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
+    //! ship controlled by user
     std::shared_ptr<PlayerShip> player_;
+    //! object responsible for Question checking / completing
     std::shared_ptr<Student::Question> question_;
+    //! current game settings
     std::shared_ptr<Student::Settings> settings_;
 
+    //! timer responsible for refreshing UI
     QTimer* refreshTimer_ = nullptr;
+    //! timer responsible for checking player collision with other objects
     QTimer* collisionTimer_ = nullptr;
+    //! timer responsible for invoking game events
     QTimer* gameTimer_ = nullptr;
+    //! playing time counter
     QTime* playingTime_ = nullptr;
+    //! map showing all starsystems, is used for travelling
     MapWindow* map_ = nullptr;
+    //! statistics window showing current player's Statistics
     StatisticsWindow* statsWindow_ = nullptr;
+    //! top list window showing previous player's score
     TopListWindow* topListWindow_ = nullptr;
+    //! dialog showing current Questions
     QuestionDlg* questionDlg_ = nullptr;
-    QMap<QString, QVariant> playerScore_;
+    //! indicates whether is player able to trade with planet
     bool isPlayerTrading_ = false;
+    //! current Planet with whom is player_ trading
     std::shared_ptr<Student::Planet> currentPlanet_;
+    //! StarSystem location of player_
     std::shared_ptr<Common::StarSystem> currentStarSystem_;
+    //! vector keeping track of all ships in distress
     std::vector<std::shared_ptr<Common::Ship>> shipsInDistress_;
+    //! indicates whether is player able to save ship
     bool isNPCShipNear_ = false;
+    //! current NPC ship which is player_ saving
     std::shared_ptr<Common::Ship> currentNPCShip_;
+    //! user's choice of the name
     QString playerName_;
 
     void startGame();

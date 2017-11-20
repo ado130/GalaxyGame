@@ -235,7 +235,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
 //    qDebug() << "can start after: " << player_->getEngine()->canStart();
 
     if(starSystem == nullptr) {
-        throw Common::ObjectNotFoundException("Star system does not exist in the galaxy.");
+        throw UnknownStarSystemException("Star system does not exist in the galaxy.");
     }
 
     currentStarSystem_ = starSystem;
@@ -409,7 +409,15 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
     //add ship to distress list
     shipsInDistress_.push_back(ship);
     //Stop ship in ui
-    drawManager_->getShipUiByObject(ship)->canMove(false);
+    NPCShipUi* shipUi = drawManager_->getShipUiByObject(ship);
+    if(shipUi != nullptr)
+    {
+        shipUi->canMove(false);
+    }
+    else
+    {
+        throw UnknownShipException("NPC ship " + ship->getName() + " was not found in UI");
+    }
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
 
@@ -446,7 +454,15 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
         }
     }
     //Ship in ui can move again
-    drawManager_->getShipUiByObject(ship)->canMove(true);
+    NPCShipUi* shipUi  = drawManager_->getShipUiByObject(ship);
+    if(shipUi != nullptr)
+    {
+        shipUi->canMove(true);
+    }
+    else
+    {
+        throw UnknownShipException("NPC ship " + ship->getName() + " was not found in UI");
+    }
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
 

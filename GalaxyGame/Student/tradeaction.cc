@@ -60,7 +60,6 @@ bool TradeAction::execute()
                 player_->removeGoodsFromInventory(k.getName());
                 player_->getStatistics()->addCredits(k.getPrice() + (k.getPrice()*settings_->getCreditProfitFromSale()));
                 return true;
-
             }
         }
     }

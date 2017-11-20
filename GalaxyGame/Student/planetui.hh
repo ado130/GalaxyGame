@@ -6,14 +6,19 @@
 #include <QGraphicsPixmapItem>
 
 namespace Student {
+/**
+ * @brief Class representing PlanetS in UI
+ */
 class PlanetUi : public QGraphicsPixmapItem
 {
 public:
+    /**
+     * @brief Constructor.
+     * @param pixmap Pixmap appearance of PlanetUi
+     * @param posX initial x coordinate
+     * @param posY initial y coordinate
+     */
     PlanetUi(QPixmap pixmap, int posX, int posY);
-
-private:
-    //Coordinates in drawable scene (not StarSystem location)
-//    Common::Point coordinates_ = Common::Point(0,0);
 };
 }
 

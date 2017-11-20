@@ -3,25 +3,13 @@
 #include "typeinfo"
 #include "string"
 #include "planetui.hh"
+#include "unknownshipexception.hh"
 
 #include <QDebug>
 
 Student::StarSystemScene::StarSystemScene(QWidget *parent)
 {
     setBackgroundBrush( Qt::lightGray );
-}
-
-
-Student::PlanetUi *Student::StarSystemScene::gePlanetUiByItem(QGraphicsItem* item)
-{
-    for(auto planet : planetList_)
-    {
-        if(planet == item)
-        {
-            return planet;
-        }
-    }
-    return nullptr;
 }
 
 void Student::StarSystemScene::drawPlayerShip(PlayerShipUi *ship)
@@ -37,7 +25,9 @@ void Student::StarSystemScene::erasePlayerShip(PlayerShipUi *ship)
     {
         playerShipList_.erase(iter);
         removeItem(ship);
+        return;
     }
+    throw UnknownShipException("UI Player ship was not found.");
 }
 
 void Student::StarSystemScene::eraseAllPlayerShips()
@@ -63,7 +53,9 @@ void Student::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
     {
         shipList_.erase(iter);
         removeItem(ship);
+        return;
     }
+    throw UnknownShipException("UI Player ship was not found.");
 }
 
 void Student::StarSystemScene::eraseAllNPCShips()
@@ -95,7 +87,9 @@ void Student::StarSystemScene::erasePlanet(Student::PlanetUi *planet)
     {
         planetList_.erase(iter);
         removeItem(planet);
+        return;
     }
+    throw UnknownShipException("UI Player ship was not found.");
 }
 
 void Student::StarSystemScene::eraseAllPlanets()

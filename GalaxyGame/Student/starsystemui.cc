@@ -12,11 +12,6 @@ Student::StarSystemUi::StarSystemUi(QPixmap pixmap, std::shared_ptr<Student::Use
     setPos(position.x, position.y);
 }
 
-void Student::StarSystemUi::changeApperanceDistressed()
-{
-
-}
-
 void Student::StarSystemUi::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
