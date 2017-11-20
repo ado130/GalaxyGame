@@ -371,7 +371,11 @@ void MainWindow::on_actionAbout_triggered()
     help->resize(384, 256);
     help->append(tr("<h1>About</h1>Welcome to Semicolon Spaceship game."
                  "<br/>Lucia Kuchárová & Andrej Vlasatý"
-                 "<br/> Hope you like it."));
+                 "<br/><br/>Player, as a hero of whole Galaxy, is supposed to save ships, which are in some kind of trouble, "
+                 "by repairing their engines. Player travels among Star Systems and searches for broken ships. "
+                 "In addition, player can trade with planets in every Star System and fulfill Questions, "
+                 "which are requests from certain planets to obtain certain goods."
+                 "<br/><br/>Hope you like it."));
     help->show();
 }
 
@@ -382,8 +386,12 @@ void MainWindow::on_actionHelp_triggered()
     help->setWindowFlags(Qt::Window); //or Qt::Tool, Qt::Dialog if you like
     help->setReadOnly(true);
     help->resize(384, 256);
-    help->append(tr("<h1>Help</h1>Use arrow keys to move."
+    help->append(tr("<h1>Help</h1>Use key arrows to move."
                  "<br/>Fly over the planet and press space to trade with the planet."
+                 "<br/>Ship is being repaired by hitting space."
+                 "<br/><br/>Player can move in Star System view using up, down, left and right arrow keys. "
+                 "When player ship reaches planet or ship, clicking on spacebar key starts interaction between them. "
+                 "Any other interaction with game is done by mouse clicks."
                  "<br/>Hope you like it."));
     help->show();
 }

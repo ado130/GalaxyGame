@@ -37,6 +37,7 @@ private:
     std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
     std::shared_ptr<SimpleTradeGoods> simpleTradeGoods_;
     std::shared_ptr<Student::EventHandler> event_;
+    SimpleTradeGoods goods_;
 };
 
 QuestionTestTest::QuestionTestTest()
@@ -80,13 +81,11 @@ void QuestionTestTest::testGenerateQuestions()
     galaxy_->addStarSystem(starSystem4);
     galaxy_->addStarSystem(starSystem5);
 
-    SimpleTradeGoods goods;
-
-    auto ship1 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sol"), event_, goods);
-    auto ship2 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sirius"), event_, goods);
-    auto ship3 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Polar"), event_, goods);
-    auto ship4 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Mira"), event_, goods);
-    auto ship5 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Alpha Centauri"), event_, goods);
+    auto ship1 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sol"), event_, goods_);
+    auto ship2 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sirius"), event_, goods_);
+    auto ship3 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Polar"), event_, goods_);
+    auto ship4 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Mira"), event_, goods_);
+    auto ship5 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Alpha Centauri"), event_, goods_);
     galaxy_->addShip(ship1);
     galaxy_->addShip(ship2);
     galaxy_->addShip(ship3);
@@ -111,13 +110,11 @@ void QuestionTestTest::testCompleteOneQuestion()
     galaxy_->addStarSystem(starSystem4);
     galaxy_->addStarSystem(starSystem5);
 
-    SimpleTradeGoods goods;
-
-    auto ship1 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sol"), event_, goods);
-    auto ship2 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sirius"), event_, goods);
-    auto ship3 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Polar"), event_, goods);
-    auto ship4 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Mira"), event_, goods);
-    auto ship5 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Alpha Centauri"), event_, goods);
+    auto ship1 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sol"), event_, goods_);
+    auto ship2 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sirius"), event_, goods_);
+    auto ship3 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Polar"), event_, goods_);
+    auto ship4 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Mira"), event_, goods_);
+    auto ship5 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Alpha Centauri"), event_, goods_);
     galaxy_->addShip(ship1);
     galaxy_->addShip(ship2);
     galaxy_->addShip(ship3);
@@ -150,13 +147,11 @@ void QuestionTestTest::testAllQuestions()
     galaxy_->addStarSystem(starSystem4);
     galaxy_->addStarSystem(starSystem5);
 
-    SimpleTradeGoods goods;
-
-    auto ship1 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sol"), event_, goods);
-    auto ship2 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sirius"), event_, goods);
-    auto ship3 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Polar"), event_, goods);
-    auto ship4 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Mira"), event_, goods);
-    auto ship5 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Alpha Centauri"), event_, goods);
+    auto ship1 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sol"), event_, goods_);
+    auto ship2 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Sirius"), event_, goods_);
+    auto ship3 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Polar"), event_, goods_);
+    auto ship4 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Mira"), event_, goods_);
+    auto ship5 = std::make_shared<Student::Planet> (std::make_shared<PlanetCoreDrive>(galaxy_), galaxy_->getStarSystemByName("Alpha Centauri"), event_, goods_);
     galaxy_->addShip(ship1);
     galaxy_->addShip(ship2);
     galaxy_->addShip(ship3);
