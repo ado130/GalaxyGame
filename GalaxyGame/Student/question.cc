@@ -1,5 +1,7 @@
 #include "question.hh"
 
+#include <QDebug>
+
 Student::Question::Question(std::shared_ptr<Student::Galaxy> galaxy,
                             std::shared_ptr<ItemsInGalaxy> itemsInGalaxy,
                             QObject *parent) :
@@ -34,6 +36,7 @@ void Student::Question::generateQuestions()
             starSystem = galaxy_->getRandomSystem();
             planetsInStarSystem = getPlanetsByStarSystem(galaxy_->getShipsInStarSystem(starSystem->getName()));
         }
+
         int rand = Common::randomMinMax(0, planetsInStarSystem.size()-1);
         std::shared_ptr<Common::Ship> planet = planetsInStarSystem.at(rand);
         std::string goods = itemsInGalaxy_->getRandomTradeGoods().getName();
@@ -45,12 +48,12 @@ void Student::Question::generateQuestions()
     activeQuestions_ = questionList_;
 }
 
-QList<questions_t> Student::Question::completedQuestions() const
+QList<questions_t> Student::Question::getCompletedQuestions() const
 {
     return completedQuestions_;
 }
 
-QList<questions_t> Student::Question::activeQuestions() const
+QList<questions_t> Student::Question::getActiveQuestions() const
 {
     return activeQuestions_;
 }

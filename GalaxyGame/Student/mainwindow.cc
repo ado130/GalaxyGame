@@ -601,7 +601,7 @@ void MainWindow::on_actionReset_top_list_triggered()
 
 void MainWindow::on_pbQuestions_clicked()
 {
-    questionDlg_ = new QuestionDlg(question_->activeQuestions(), question_->completedQuestions(), this);
+    questionDlg_ = new QuestionDlg(question_->getActiveQuestions(), question_->getCompletedQuestions(), this);
     questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
     questionDlg_->setModal(true);
     questionDlg_->exec();

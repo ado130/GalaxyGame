@@ -23,8 +23,8 @@ public:
 
     Common::IGalaxy::ShipVector getPlanetsByStarSystem(Common::IGalaxy::ShipVector ships);
     void generateQuestions();
-    QList<questions_t> activeQuestions() const;
-    QList<questions_t> completedQuestions() const;
+    QList<questions_t> getActiveQuestions() const;
+    QList<questions_t> getCompletedQuestions() const;
 
     bool checkQuestion(std::string starSystem, std::string planet, std::string goods);
 private:

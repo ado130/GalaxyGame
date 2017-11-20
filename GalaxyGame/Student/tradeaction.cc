@@ -31,7 +31,7 @@ bool TradeAction::canDo() const
     {
         for(auto k : player_->getInventory())
         {
-            for(auto quest : question_->activeQuestions())
+            for(auto quest : question_->getActiveQuestions())
             {
                 if(quest.first == k.getName() && quest.second.first == currentStarSystem_->getName() && quest.second.second == currentPlanet_->getName())
                 {

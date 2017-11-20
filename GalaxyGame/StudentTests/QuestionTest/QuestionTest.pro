@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-11-18T18:57:19
+# Project created by QtCreator 2017-11-20T20:53:47
 #
 #-------------------------------------------------
 
@@ -8,24 +8,27 @@ QT       += testlib
 
 QT       -= gui
 
-TARGET = questiontest
+TARGET = questiontesttest
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG += c++14
 TEMPLATE = app
 
 
-SOURCES += questiontest.cc \
-            ../../Student/question.cc \
-            ../../Student/itemsingalaxy.cc \
-    ../../Student/galaxy.cc \
+SOURCES += questiontesttest.cpp \
+           ../../Student/question.cc \
+           ../../Student/galaxy.cc \
+           ../../Student/planet.cc \
+           ../../Student/itemsingalaxy.cc \
+           ../../Student/eventhandler.cc \
+           ../../Student/planetcoredrive.cc \
     ../../Course/ship.cc \
     ../../Course/starsystem.cc \
     ../../Course/stateexception.cc \
     ../../Course/gameexception.cc \
+    ../../Course/ioexception.cc \
+    ../../Course/formatexception.cc \
     ../../Course/objectnotfoundexception.cc \
-    ../../Course/formatexception.hh \
-    ../../Course/ioexception.hh \
     ../../Course/utility.cc \
     ../../Course/warpdrive.cc \
     ../../Course/shipengine.cc \
@@ -38,14 +41,43 @@ SOURCES += questiontest.cc \
     ../../Course/wormholedrive.cc \
     ../../Course/moveaction.cc
 
+
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS +=  ../../Student/question.hh \
             ../../Student/galaxy.hh \
-            ../../Student/itemsingalaxy.hh
+            ../../Student/planet.hh \
+            ../../Student/itemsingalaxy.hh \
+            ../../Student/eventhandler.hh \
+            ../../Student/planetcoredrive.hh
 
-INCLUDEPATH += $$PWD/../../Course
-DEPENDPATH += $$PWD/../../Course
+INCLUDEPATH += ../../Student ../../Course/
+DEPENDPATH += ../../Student
 
-INCLUDEPATH += $$PWD/../../Student
-DEPENDPATH += $$PWD/../../Student
+
+CONFIG(release, debug|release) {
+   DESTDIR = release
+}
+
+CONFIG(debug, debug|release) {
+   DESTDIR = debug
+}
+
+win32 {
+ #   copyfiles.commands += @echo NOW COPYING ADDITIONAL FILE(S) for Windows &
+    copyfiles.commands += xcopy ..\\..\\..\\GalaxyGame\\Assets Assets /i /s /e /y
+}
+unix:!macx {
+    copyfiles.commands += @echo \"NOW COPYING ADDITIONAL FILE(S) for Linux\" &&
+    copyfiles.commands += cp -r ../../../GalaxyGame/Assets $$DESTDIR
+}
+macx {
+    copyfiles.commands += @echo \"NOW COPYING ADDITIONAL FILE(S) for MacOS\" &&
+    copyfiles.commands += mkdir -p $$DESTDIR/GalaxyGame.app/Contents/MacOS &&
+    copyfiles.commands += cp -r ../../../GalaxyGame/Assets $$DESTDIR &&
+    copyfiles.commands += cp -r ../../../GalaxyGame/Assets $$DESTDIR/GalaxyGame.app/Contents/MacOS/
+}
+
+QMAKE_EXTRA_TARGETS += copyfiles
+POST_TARGETDEPS += copyfiles

@@ -5,6 +5,7 @@
 
 #include <QFile>
 #include <QJsonDocument>
+#include <QDebug>
 
 QString const ASSET_FOLDER("Assets/");
 
