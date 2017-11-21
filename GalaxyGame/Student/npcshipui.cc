@@ -1,6 +1,7 @@
 #include "npcshipui.hh"
 
 #include <QDebug>
+#include <cassert>
 
 #define NPCSHIPSPEED_MOVEMENT 0.1
 
@@ -14,13 +15,13 @@ NPCShipUi::NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
     setPos(posX, posY);
     canMove_ = true;
 
-    keyMovement = new QTimer(this);
-    connect(keyMovement, SIGNAL(timeout()), this, SLOT(moveForward()));
-    keyMovement->start(50);
+    keyMovement_ = new QTimer(this);
+    connect(keyMovement_, SIGNAL(timeout()), this, SLOT(moveForward()));
+    keyMovement_->start(50);
 
-    randomKeyPress = new QTimer(this);
-    connect(randomKeyPress, SIGNAL(timeout()), this, SLOT(randomChangeOfDirection()));
-    randomKeyPress->start(Common::randomMinMax(1000, 100000));
+    randomKeyPress_ = new QTimer(this);
+    connect(randomKeyPress_, SIGNAL(timeout()), this, SLOT(randomChangeOfDirection()));
+    randomKeyPress_->start(Common::randomMinMax(1000, 100000));
 
     randomChangeOfDirection();
 
@@ -34,15 +35,18 @@ void NPCShipUi::changePixmapAndRotation(QPixmap pixmap, int rotation)
 
 void NPCShipUi::canMove(bool canMove)
 {
+    assert(keyMovement_);
+    assert(randomKeyPress_);
+
     if(canMove_ && !canMove)
     {
-        keyMovement->stop();
-        randomKeyPress->stop();
+        keyMovement_->stop();
+        randomKeyPress_->stop();
     }
     else if(!canMove_ && canMove)
     {
-        keyMovement->start();
-        randomKeyPress->start();
+        keyMovement_->start();
+        randomKeyPress_->start();
     }
     canMove_ = canMove;
 }

@@ -1,5 +1,7 @@
 #include "tradeaction.hh"
 
+#include <cassert>
+
 TradeAction::TradeAction(std::shared_ptr<PlayerShip> player, std::shared_ptr<Student::Planet> currentPlanet,
                          std::string action, std::shared_ptr<Common::StarSystem> currentStarSystem,
                          std::shared_ptr<Student::Question> question, std::shared_ptr<Student::Settings> settings):
@@ -11,6 +13,11 @@ TradeAction::TradeAction(std::shared_ptr<PlayerShip> player, std::shared_ptr<Stu
 
 bool TradeAction::canDo() const
 {
+    assert(player_);
+    assert(currentPlanet_);
+    assert(question_);
+    assert(currentStarSystem_);
+
     if(action_ == "buy")
     {
         if(player_->getInventory().size() >= MAX_PLAYER_INVENTORY &&
@@ -45,6 +52,12 @@ bool TradeAction::canDo() const
 
 bool TradeAction::execute()
 {
+    assert(player_);
+    assert(currentPlanet_);
+    assert(question_);
+    assert(currentStarSystem_);
+    assert(settings_);
+
     if(action_ == "buy")
     {
         player_->addGoodsToInventory(currentPlanet_->getGoods());

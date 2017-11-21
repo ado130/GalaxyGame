@@ -35,6 +35,8 @@ public:
     /**
      * @brief canMove
      * @param canMove bool value indicating whether ship can move
+     * @pre keyMovement_ object is associated with this object
+     * @pre randomKeyPress_ object is associated with this object
      * @post Exception guarantee: nothrow
      */
     void canMove(bool canMove);
@@ -91,10 +93,10 @@ private:
     void goDown(qreal width, qreal height);
 
     //! keyMovement simulates forward key press (Up key) so that ship is still moving
-    QTimer *keyMovement = nullptr;
+    QTimer *keyMovement_ = nullptr;
 
     //! randomKeyPress randomly chooses left, right or none key press to change direction of ship
-    QTimer *randomKeyPress = nullptr;
+    QTimer *randomKeyPress_ = nullptr;
 
     //! canMove_ indicates whether ship can move or not
     bool canMove_;

@@ -5,6 +5,7 @@
 #include <math.h>
 #include <QGraphicsScene>
 #include <QTimer>
+#include <cassert>
 
 #define PLAYERSPEED_MOVEMENT 0.3
 
@@ -53,6 +54,8 @@ void PlayerShipUi::goRight()
 
 void PlayerShipUi::goUp(qreal width, qreal height)
 {
+    assert(handler_);
+
     qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
     qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
     handler_->pressedPlayerMovementKey(this, x()+diffX, y()+diffY);
@@ -60,6 +63,8 @@ void PlayerShipUi::goUp(qreal width, qreal height)
 
 void PlayerShipUi::goDown(qreal width, qreal height)
 {
+    assert(handler_);
+
     qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
     qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * PLAYERSPEED_MOVEMENT;
     handler_->pressedPlayerMovementKey(this, x()-diffX, y()-diffY);
@@ -78,6 +83,8 @@ void PlayerShipUi::updateMovement()
 
 void PlayerShipUi::moveAccordingToPressedKey(int key)
 {
+    assert(handler_);
+
     qreal width = scale()*boundingRect().size().width()/2;
     qreal height = scale()*boundingRect().size().height()/2;
     if(key == Qt::Key_Left)

@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QMenu>
+#include <cassert>
 
 MapWindow::MapWindow(std::shared_ptr<Student::UserActionHandler> handler,
                      Common::StarSystem::StarSystemVector starSystem,
@@ -40,6 +41,8 @@ MapWindow::~MapWindow()
 
 void MapWindow::markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> starSystem)
 {
+    assert(pixDistressed_);
+
     for(auto element : starSystemList_)
     {
         if(element.first == starSystem)
@@ -55,6 +58,8 @@ void MapWindow::markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> s
 
 void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> starSystem)
 {
+    assert(scene_);
+
     for(auto item : distressedStarSystemItems_)
     {
         for(auto element : starSystemList_)
@@ -74,6 +79,8 @@ void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> sta
 
 void MapWindow::addMarkSign(QGraphicsPixmapItem *item, QPixmap pixmap, int x, int y)
 {
+    assert(scene_);
+
     if(item != nullptr)
     {
         item->setPixmap(pixmap);
@@ -84,6 +91,9 @@ void MapWindow::addMarkSign(QGraphicsPixmapItem *item, QPixmap pixmap, int x, in
 
 void MapWindow::showStarSystems(Common::StarSystem::StarSystemVector starSystem)
 {
+    assert(handler_);
+    assert(ui);
+
     QPixmap pix = QPixmap(":/images/images/deathStar.png");
     QPixmap smallerPix = pix.scaledToWidth(pix.width()/4);
 
@@ -109,6 +119,8 @@ void MapWindow::showStarSystems(Common::StarSystem::StarSystemVector starSystem)
 
 void MapWindow::travelToStarSystem(unsigned idStarUi)
 {
+    assert(playerLocation_);
+
     for(auto k : starSystemList_)
     {
         if(k.first->getId() == idStarUi)
@@ -122,6 +134,8 @@ void MapWindow::travelToStarSystem(unsigned idStarUi)
 
 void MapWindow::showGoodsInfo(unsigned idStarUi)
 {
+    assert(ui);
+
     std::shared_ptr<Common::StarSystem> starSystem = nullptr;
     for(auto k : starSystemList_)
     {

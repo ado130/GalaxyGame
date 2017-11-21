@@ -84,6 +84,7 @@ public:
      * @copydoc Common::Ship.getAction();
      * @return current action
      * @note Planet doesn't have any actions at the moment.
+     * @pre currentAction_ object is asociated with this object
      * @post Exception guarantee: nothrow
      */
     std::shared_ptr<Common::IAction> getAction() const;

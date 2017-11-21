@@ -22,7 +22,7 @@
 #include <QtConcurrent>
 #include <QFuture>
 #include <QMessageBox>
-
+#include <cassert>
 
 
 MainWindow::MainWindow(QWidget *parent,
@@ -104,6 +104,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::startGame()
 {
+    assert(drawManager_);
+    assert(galaxy_);
+    assert(gameRunner_);
+    assert(question_);
+
     ui->pbNewGame->setEnabled(false);
 
     QString nickName;
@@ -134,9 +139,6 @@ void MainWindow::startGame()
 
     question_->generateQuestions();
 
-    // Start location is player's location
-    travelToStarSystem(player_->getLocation()->getId());
-
     // Set timers
     refreshTimer_ = new QTimer();
     connect(refreshTimer_, &QTimer::timeout, this, &MainWindow::refreshUI);
@@ -150,8 +152,10 @@ void MainWindow::startGame()
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
     gameTimer_->start(10000);
 
-    ui->lbCntStarSystems->setText(QString::number(galaxy_->getStarSystemVector().size()));
+    // Start location is player's location
+    travelToStarSystem(player_->getLocation()->getId());
 
+    ui->lbCntStarSystems->setText(QString::number(galaxy_->getStarSystemVector().size()));
 
     ui->pbShowMap->setEnabled(true);
     ui->pbQuestions->setEnabled(true);
@@ -166,6 +170,10 @@ void MainWindow::startGame()
 
 void MainWindow::createPlayer()
 {
+    assert(galaxy_);
+    assert(settings_);
+    assert(handler_);
+
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
     std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();
     Student::Statistics *stats = new Student::Statistics(settings_->getMaxCreditAllowance(), std::dynamic_pointer_cast<Student::EventHandler>(handler_));
@@ -177,6 +185,12 @@ void MainWindow::createPlayer()
 
 void MainWindow::pressedSpace()
 {
+    assert(player_);
+    assert(currentPlanet_);
+    assert(currentStarSystem_);
+    assert(question_);
+    assert(settings_);
+
     if(isPlayerTrading_ && !isNPCShipNear_)
     {
         QStringList items;
@@ -209,10 +223,10 @@ void MainWindow::pressedSpace()
 
 void MainWindow::travelToStarSystem(unsigned starSystemId)
 {
-
-//    qDebug() << "location before: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
-//    qDebug() << "health before: " << player_->getEngine()->getHealth();
-//    qDebug() << "can start before: " << player_->getEngine()->canStart();
+    assert(player_);
+    assert(drawManager_);
+    assert(galaxy_);
+    assert(gameTimer_);
 
     if(map_ != nullptr)
     {
@@ -229,10 +243,6 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     drawManager_->clearScene();
 
     std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(starSystemId);
-
-//    qDebug() << "location after: " << player_->getLocation()->getCoordinates().x << "," << player_->getLocation()->getCoordinates().y;
-//    qDebug() << "health after: " << player_->getEngine()->getHealth();
-//    qDebug() << "can start after: " << player_->getEngine()->canStart();
 
     if(starSystem == nullptr) {
         throw UnknownStarSystemException("Star system does not exist in the galaxy.");
@@ -277,6 +287,9 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
 
 void MainWindow::refreshUI()
 {
+    assert(drawManager_);
+    assert(player_);
+
     ui->graphicsView->centerOn(drawManager_->getPlayerShipUiByObject(player_));
     try
     {
@@ -304,12 +317,17 @@ void MainWindow::refreshUI()
 
 void MainWindow::gameEvent()
 {
+    assert(gameRunner_);
+
     gameRunner_->createActions();
     gameRunner_->doActions();
 }
 
 void MainWindow::checkCollision()
 {
+    assert(drawManager_);
+    assert(player_);
+
     QList<QGraphicsItem *> colliding_Items = drawManager_->getScene()->collidingItems(drawManager_->getPlayerShipUiByObject(player_));
     for(int i = 0, n = colliding_Items.size(); i<n; ++i)
     {
@@ -339,11 +357,15 @@ void MainWindow::checkCollision()
 
 void MainWindow::loadSettings()
 {
+    assert(topListWindow_);
+
     topListWindow_->loadSettings();
 }
 
 void MainWindow::saveSettings()
 {
+    assert(topListWindow_);
+
     topListWindow_->saveSettings(playerName_, player_->getStatistics()->getPlayerStat());
 }
 
@@ -398,6 +420,10 @@ void MainWindow::on_actionHelp_triggered()
 
 void MainWindow::planetsInStarSystemRequest(unsigned id)
 {
+    assert(galaxy_);
+    assert(drawManager_);
+    assert(map_);
+
     std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(id);
     Common::IGalaxy::ShipVector ships = galaxy_->getShipsInStarSystem(starSystem->getName());
     Common::IGalaxy::ShipVector planets = drawManager_->getPlanetsByStarSystem(ships);
@@ -406,6 +432,8 @@ void MainWindow::planetsInStarSystemRequest(unsigned id)
 
 void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
 {
+    assert(drawManager_);
+
     //add ship to distress list
     shipsInDistress_.push_back(ship);
     //Stop ship in ui
@@ -436,6 +464,9 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
 
 void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
 {
+    assert(drawManager_);
+    assert(player_);
+
     qDebug() << "Ship moving again!";
     bool isStarSystemFullySaved = true;
 
@@ -485,6 +516,10 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
 
 void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
 {
+    assert(drawManager_);
+    assert(map_);
+    assert(player_);
+
     bool isStarSystemFreeOfDistress = true;
     //set grave icon
     try
@@ -533,7 +568,7 @@ void MainWindow::exceptionInShipExecution(std::shared_ptr<Common::Ship> ship, co
 }
 
 void MainWindow::on_actionMy_statistics_triggered()
-{
+{    
     //Check if player is initialized
     if(player_ != nullptr)
     {
@@ -559,6 +594,10 @@ void MainWindow::on_actionMy_statistics_triggered()
 
 void MainWindow::on_pbShowMap_clicked()
 {
+    assert(userActionHandler_);
+    assert(galaxy_);
+    assert(player_);
+
     if(map_ == nullptr)
     {
         QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
@@ -580,6 +619,12 @@ void MainWindow::on_pbShowMap_clicked()
 
 void MainWindow::on_pbEndGame_clicked()
 {
+    assert(drawManager_);
+    assert(galaxy_);
+    assert(refreshTimer_);
+    assert(collisionTimer_);
+    assert(gameTimer_);
+
     refreshTimer_->stop();
     collisionTimer_->stop();
     gameTimer_->stop();
@@ -609,12 +654,16 @@ void MainWindow::on_pbEndGame_clicked()
 
 void MainWindow::on_actionTop_list_triggered()
 {
+    assert(topListWindow_);
+
     topListWindow_->setModal(true);
     topListWindow_->show();
 }
 
 void MainWindow::on_actionDefault_Settings_triggered()
 {
+    assert(settings_);
+
     QMessageBox msgBox;
     msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
     msgBox.setText("Do you want to set default settings?");
@@ -631,6 +680,8 @@ void MainWindow::on_actionDefault_Settings_triggered()
 
 void MainWindow::on_actionReset_top_list_triggered()
 {
+    assert(topListWindow_);
+
     QMessageBox msgBox;
     msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
     msgBox.setText("Do you want to reset top list?");
@@ -647,6 +698,8 @@ void MainWindow::on_actionReset_top_list_triggered()
 
 void MainWindow::on_pbQuestions_clicked()
 {
+    assert(question_);
+
     questionDlg_ = new QuestionDlg(question_->getActiveQuestions(), question_->getCompletedQuestions(), this);
     questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
     questionDlg_->setModal(true);
@@ -655,12 +708,17 @@ void MainWindow::on_pbQuestions_clicked()
 
 void MainWindow::allQuestionsDone()
 {
+    assert(playingTime_);
+
     int playingTime = playingTime_->elapsed();
     showDialog("Congratulation! You finished all questions. Your time is " + std::to_string(playingTime/1000) + "s", false);
 }
 
 void MainWindow::questionCompleted()
 {
+    assert(player_);
+    assert(settings_);
+
     player_->getStatistics()->addCompletedQuest();
     player_->getStatistics()->addPoints(settings_->getPointsFromQuestion());
 }

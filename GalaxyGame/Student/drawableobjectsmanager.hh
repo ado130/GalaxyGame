@@ -42,6 +42,7 @@ public:
 
     /**
      * @brief Returns scene of Star System view
+     * @pre StarSystemScene scene_ has been associated with this object
      */
     Student::StarSystemScene* getScene();
 
@@ -63,12 +64,14 @@ public:
      * @brief getCollidingItems
      * @param player Current playership
      * @return QList of all QGraphicsItems* colliding with player
+     * @pre StarSystemScene scene_ has been associated with this object
      * @post Exception guarantee: nothrow
      */
     QList<QGraphicsItem *> getCollidingItems(PlayerShipUi *player);
 
     /**
      * @brief clearScene erases everything from Star System view
+     * @pre StarSystemScene scene_ has been associated with this object
      * @post Exception guarantee: nothrow
      */
     void clearScene();
@@ -77,6 +80,7 @@ public:
      * @brief drawShip adds Ship object to scene
      * @param ship Ship to be added to scene
      * @exception throws UnknownShipException if ship cannot be found in registered ships lists
+     * @pre StarSystemScene scene_ has been associated with this object
      * @post Exception guarantee: strong
      */
     void drawShip(std::shared_ptr<Common::Ship> ship);
@@ -184,6 +188,7 @@ public Q_SLOTS:
      * @param ship base ship object
      * @param oldLocation original Star System which from ship left
      * @exception throws UnknownShipException if type of ship isn't recognized or isn't found in registered ships list
+     * @pre StarSystemScene scene_ has been associated with this object
      * @post UI representation of ship coordinates are changed according to current ship position
      * @post Exception guarantee: strong
      */
@@ -241,6 +246,7 @@ private:
      * shorter than visibilityRange_
      * @param ship NPCShipUi object
      * @return false if ship distance from playerShip is longer than visibilityRange_, else true
+     * @pre "playerShipUiList.size() > 0" at least one player is in the game
      * @post Exception guarantee: nothrow
      */
     bool isInPlayerShipVisibilityRange(NPCShipUi* ship);
@@ -250,6 +256,7 @@ private:
      * @param shipUi QGraphicsPixmapItem which is to be moved
      * @param x x coordinate of destination
      * @param y y coordinate of destination
+     * @pre StarSystemScene scene_ has been associated with this object
      * @post shipUi's position is changed according to x and y coordinates
      * @post Exception guarantee: nothrow
      */

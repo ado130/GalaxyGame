@@ -55,7 +55,7 @@ void Student::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
         removeItem(ship);
         return;
     }
-    throw UnknownShipException("UI Player ship was not found.");
+    throw UnknownShipException("NPC ship was not found.");
 }
 
 void Student::StarSystemScene::eraseAllNPCShips()
@@ -89,7 +89,7 @@ void Student::StarSystemScene::erasePlanet(Student::PlanetUi *planet)
         removeItem(planet);
         return;
     }
-    throw UnknownShipException("UI Player ship was not found.");
+    throw UnknownShipException("Planet was not found.");
 }
 
 void Student::StarSystemScene::eraseAllPlanets()

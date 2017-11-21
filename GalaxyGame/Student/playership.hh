@@ -29,6 +29,7 @@ public:
     /**
      * @brief getStatistics
      * @return player's Statistics
+     * @pre Statistics statistics_ object is asociated with this object
      * @post Exception guarantee: nothrow
      */
     Student::Statistics* getStatistics();

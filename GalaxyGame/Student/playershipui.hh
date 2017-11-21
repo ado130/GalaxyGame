@@ -69,12 +69,14 @@ private:
     /**
      * @brief goUp calculates ship position for "moving forward" and informs handler_ about movement change
      * @post handler_ is informed about movement change
+     * @pre handler_ is asociated with this object
      * @post Exception guarantee: nothrow
      */
     void goUp(qreal width, qreal height);
 
     /**
      * @brief goDown calculates ship position for "moving backwards" and informs handler_ about movement change
+     * @pre handler_ is asociated with this object
      * @post handler_ is informed about movement change
      * @post Exception guarantee: nothrow
      */
@@ -83,6 +85,7 @@ private:
     /**
      * @brief moveAccordingToPressedKey invokes actions to attain desired movement according to pressed key
      * @param key Pressed key
+     * @pre handler_ is asociated with this object
      * @post Exception guarantee: nothrow
      */
     void moveAccordingToPressedKey(int key);

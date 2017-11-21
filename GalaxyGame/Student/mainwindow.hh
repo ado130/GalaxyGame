@@ -62,6 +62,11 @@ public Q_SLOTS:
     /**
      * @brief pressedSpace
      * @note handles incoming pressed space signal (user wants to trade or repair ship)
+     * @pre PlayerShip player_ has been associated with this object
+     * @pre Planet currentPlanet_ which whom can be interacted has been associated with this object
+     * @pre StarSystem currentStarSystem where is player located has been associated with this object
+     * @pre Question question_ object managing questions in game has been associated with this object
+     * @pre Settings setting_ current game settings has been associated with this object
      * @post Exception guarantee: nothrow
      */
     void pressedSpace();
@@ -70,6 +75,10 @@ public Q_SLOTS:
      * @brief travelToStarSystem
      * @param starSystemId
      * @exception throws UnknownStarSystemException if StarSystem with starSystemId exists
+     * @pre PlayerShip player_ has been associated with this object
+     * @pre DrawableObjectsManager drawManager_ has been associated with this object
+     * @pre Galaxy galaxy_ has been associated with this object
+     * @pre gameTimer_ has been associated with this object
      * @post player_ object is realocated from old StarSystem to new one with starSystemId id
      * @post Exception guarantee: basic
      */
@@ -79,6 +88,9 @@ public Q_SLOTS:
      * @brief planetsInStarSystemRequest
      * @param id StarSystem id
      * @exception throws Common::ObjectNotFoundException if StarSystem cannot be found
+     * @pre DrawableObjectsManager drawManager_ has been associated with this object
+     * @pre Galaxy galaxy_ has been associated with this object
+     * @pre MapWindow map_ has been associated with this object
      * @post Exception guarantee: strong
      * @post map is updated with new planets
      */
@@ -86,6 +98,7 @@ public Q_SLOTS:
 
     /**
      * @brief allQuestionsDone
+     * @pre QTime playingTime_ has been associated with this object
      * @post invokes Dialog with info about time needed to complete questions
      * @post Exception guarantee: nothrow
      */
@@ -93,6 +106,8 @@ public Q_SLOTS:
 
     /**
      * @brief questionCompleted
+     * @pre PlayerShip player_ has been associated with this object
+     * @pre Settings settings_ has been associated with this object
      * @post player_'s Statistics are updated
      * @post Exception guarantee: nothrow
      */
@@ -102,6 +117,7 @@ public Q_SLOTS:
      * @brief shipCallingForHelp
      * @param ship ship which calls for help
      * @exception throws UnknownShipException if ship cannot be found in Ui
+     * @pre DrawableObjectsManager drawManager_ has been associated with this object
      * @post ship cannot move, it's location StarSystem is marked as distressed
      * @post Exception guarantee: basic
      */
@@ -111,6 +127,8 @@ public Q_SLOTS:
      * @brief shipSavedFromDistress
      * @param ship ship which was saved
      * @exception throws UnknownShipException if ship cannot be found in Ui
+     * @pre DrawableObjectsManager drawManager_ has been associated with this object
+     * @pre PlayerShip player_ has been associated with this object
      * @post ship can move, it's location StarSystem is unmarked as distressed if there
      * are no other distresses ships in it
      * @post Exception guarantee: basic
@@ -120,6 +138,9 @@ public Q_SLOTS:
     /**
      * @brief shipAbandoned
      * @param ship ship wich was abandoned
+     * @pre DrawableObjectsManager drawManager_ has been associated with this object
+     * @pre PlayerShip player_ has been associated with this object
+     * @pre MapWindow map_ has been associated with this object
      * @post ship is marked as abandoned, cannot move anymore, StarSystem UI unmarked as distressed if there
      * are no other distresses ships in it
      * @post Exception guarantee: nothrow

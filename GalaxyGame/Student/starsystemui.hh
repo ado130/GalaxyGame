@@ -28,6 +28,7 @@ protected:
     /**
      * @brief mousePressEvent
      * @param event QKeyEvent *event
+     * @pre handler_ object is asociated with this object
      * @post handler_ is informed about action and show star system info
      * @post Exception guarantee: nothrow
      */
@@ -36,6 +37,7 @@ protected:
     /**
      * @brief mousePressEvent
      * @param event QKeyEvent *event
+     * @pre handler_ object is asociated with this object
      * @post handler_ is informed about action and initialize player travel
      * @post Exception guarantee: nothrow
      */

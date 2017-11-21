@@ -7,6 +7,7 @@
 #include <qdebug.h>
 #include <QPainter>
 #include <QBrush>
+#include <cassert>
 
 //ToDo: create "IDrawableObject" do that there is no need for all the if-elses
 Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene *scene,
@@ -25,6 +26,8 @@ Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene
 
 Student::StarSystemScene* Student::DrawableObjectsManager::getScene()
 {
+    assert(scene_);
+
     return scene_;
 }
 
@@ -40,6 +43,8 @@ int Student::DrawableObjectsManager::getNumberOfPlanets()
 
 QList<QGraphicsItem *> Student::DrawableObjectsManager::getCollidingItems(PlayerShipUi* player)
 {
+    assert(scene_);
+
     return scene_->collidingItems(player);
 }
 
@@ -132,11 +137,15 @@ void Student::DrawableObjectsManager::changeShipUiPosition(QGraphicsPixmapItem *
 
 void Student::DrawableObjectsManager::clearScene()
 {
+    assert(scene_);
+
     scene_->eraseEverything();
 }
 
 void Student::DrawableObjectsManager::drawShip(std::shared_ptr<Common::Ship> ship)
 {
+    assert(scene_);
+
     if( std::dynamic_pointer_cast<Student::Planet> (ship))
     {
         for(auto element : planetUiList_)
@@ -250,7 +259,7 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
         if(uiShip != nullptr)
         {
             uiShip->setPos(to.x*coordsScale_, to.y*coordsScale_);
-            if(!isInPlayerShipVisibilityRange(uiShip))
+            if(!isInPlayerShipVisibilityRange(uiShip) && scene_->isNPCShipVisible(uiShip))
             {
                 scene_->eraseNPCShip(uiShip);
             }
@@ -268,6 +277,8 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)
 {    
+    assert(scene_);
+
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
         NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
@@ -288,7 +299,15 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
             }
             else
             {
-                scene_->eraseNPCShip(uiShip);
+                //If realocated ship doesn't have position, it is "lost" somewhere in galaxy
+                //But ship can also have previous StarSystem location nullptr => in can be lost
+                //for a while but found again. So Let the ship stay in the Galaxy, just erase in
+                //case it is visible.
+
+                if(scene_->isNPCShipVisible(uiShip))
+                {
+                    scene_->eraseNPCShip(uiShip);
+                }
             }
         }
         else
@@ -326,6 +345,8 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
 
 bool Student::DrawableObjectsManager::isInPlayerShipVisibilityRange(NPCShipUi* ship)
 {
+    assert(playerShipUiList_.size() > 0);
+
     //ToDo: select which playership -- playerShipUiList_.at(0) is not correct solution (but in current state enough)
     return Common::distance(ship->pos().x(), ship->pos().y(), playerShipUiList_.at(0).second->pos().x(),
                             playerShipUiList_.at(0).second->pos().y()) > visibilityRange_;
@@ -359,6 +380,8 @@ void Student::DrawableObjectsManager::shipIsAbandoned(std::shared_ptr<Common::Sh
 
 void Student::DrawableObjectsManager::setPosition(QGraphicsPixmapItem *item, int x, int y)
 {
+    assert(scene_);
+
     if(y < scene_->sceneRect().top()+scene_->sceneRect().height()-item->pixmap().height() && x > scene_->sceneRect().left() &&
             y > scene_->sceneRect().top() && x < scene_->sceneRect().left()+scene_->width()-item->pixmap().width())
     {

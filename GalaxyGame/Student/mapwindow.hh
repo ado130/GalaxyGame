@@ -53,6 +53,7 @@ public:
      * @brief markStarSystemAsDistressed
      * @param starSystem Star System containing distressed ship
      * @exception throws UnknownStarSystemException if starSystem is not found in starSystemList_ vector
+     * @pre QPixmap pixDistressed_ has been associated with this object
      * @post Exception guarantee: strong
      * @post starSystem is marked in UI with pixDistressed_ icon
      */
@@ -62,6 +63,7 @@ public:
      * @brief unmarkStarSystemDistress
      * @param starSystem Star System freed of distressed ships
      * @exception throws UnknownStarSystemException if starSystem is not found in starSystemList_ vector
+     * @pre scene_ has been associated with this object
      * @post Exception guarantee: strong
      * @post pixDistressed_ icon in UI is removed from starSystem
      */
@@ -73,6 +75,7 @@ public:
      * @param pixmap QPixmap which is set to the mark
      * @param x x coordinate of item
      * @param y y coordinate of item
+     * @pre scene_ has been associated with this object
      * @post Exception guarantee: nothrow
      * @post if item is not nullptr, pixmap is set to item and put to scene
      * according to x and y coordinates
@@ -112,6 +115,8 @@ private:
     /**
      * @brief showStarSystems creates UI representation for base StarSystem objects, pairs them and stores in starSystemList_
      * @param starSystem Vector of all starSystems in galaxy
+     * @pre handler_ has been associated with this object
+     * @pre ui has been associated with this object
      * @post UI representation of all starSystems is created, paired with it's base object and stored in starSystemList_
      * @post Exception guarantee: nothrow
      */
@@ -122,6 +127,7 @@ public Q_SLOTS:
      * @brief travelToStarSystem changes position of QGraphicsPixmapItem playerLocation_ in map
      * @param idStarUi id of Star System
      * @exception trows UnknownStarSystemException if Star System with id idStarUi was not found
+     * @pre playerLocation_ has been associated with this object
      * @post Exception guarantee: strong
      */
     void travelToStarSystem(unsigned idStarUi);
@@ -129,6 +135,7 @@ public Q_SLOTS:
     /**
      * @brief showGoodsInfo shows info about StarSystem in right info panel
      * @param idStarUi id of Star System
+     * @pre ui has been associated with this object
      * @post Info about Star System, it's planets and goods is shown to player
      * @post Exception guarantee: nothrow
      */

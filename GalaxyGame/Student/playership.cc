@@ -1,6 +1,7 @@
 #include "playership.hh"
 
 #include <algorithm>
+#include <cassert>
 
 PlayerShip::PlayerShip(std::shared_ptr<Common::ShipEngine> engine,
                        std::shared_ptr<Common::StarSystem> initialLocation,
@@ -18,6 +19,8 @@ bool PlayerShip::decideAction()
 
 Student::Statistics *PlayerShip::getStatistics()
 {
+    assert(statistics_);
+
     return statistics_;
 }
 
