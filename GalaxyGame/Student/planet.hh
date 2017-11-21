@@ -92,6 +92,7 @@ public:
 private:
     //! Planet's id
     unsigned id_;
+
     //! simpleTradeGoods_ are goods sold by this Planet
     SimpleTradeGoods simpleTradeGoods_;
 };

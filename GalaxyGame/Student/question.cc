@@ -27,6 +27,10 @@ Common::IGalaxy::ShipVector Student::Question::getPlanetsByStarSystem(Common::IG
 
 void Student::Question::generateQuestions()
 {
+    questionList_.clear();
+    activeQuestions_.clear();
+    completedQuestions_.clear();
+
     for(unsigned i = 0; i<MAX_QUESTIONS; ++i)
     {
         std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getRandomSystem();

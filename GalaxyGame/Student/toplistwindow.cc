@@ -54,6 +54,8 @@ void TopListWindow::addRoot(QString name, QString description, Student::Statisti
 
 void TopListWindow::addChild(QTreeWidgetItem* parent ,QString name, QString description)
 {
+    if(parent == nullptr) return;
+
     QTreeWidgetItem* item = new QTreeWidgetItem();
     item->setText(0, name);
     item->setText(1, description);
@@ -102,7 +104,10 @@ QList<QPair<QString, Student::Statistics::playerStat> > TopListWindow::sortTopTe
 
 void TopListWindow::loadSettings()
 {
-    QFile file("stats.dat");
+    QFile file(FILENAME);
+
+    if(!file.exists()) return;
+
     file.open(QIODevice::ReadOnly);
     QDataStream in(&file);
     in >> totalStat_;
@@ -118,7 +123,7 @@ void TopListWindow::saveSettings(QString name, Student::Statistics::playerStat s
 {
     totalStat_[name] = stat;
 
-    QFile file("stats.dat");
+    QFile file(FILENAME);
     file.open(QIODevice::WriteOnly);
     QDataStream out(&file);
     out << totalStat_;

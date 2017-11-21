@@ -14,5 +14,6 @@
         <file>images/distressed.png</file>
         <file>images/dead.png</file>
         <file>images/location-pointer.png</file>
+        <file>images/question.png</file>
     </qresource>
 </RCC>

@@ -1,9 +1,9 @@
 #ifndef QUESTIONDLG_H
 #define QUESTIONDLG_H
 
-#include <QDialog>
+#include "question.hh"
 
-typedef std::pair<std::string, std::pair< std::string, std::string > > questions_t;
+#include <QDialog>
 
 namespace Ui {
 class QuestionDlg;
@@ -19,9 +19,16 @@ public:
 
 private:
     Ui::QuestionDlg *ui;
+
+    //! active_ is used to store all active questions
     QList<questions_t> active_;
+
+    //! completed_ is used to stode all completed questions
     QList<questions_t> completed_;
 
+    /**
+     * @brief showQuestions Method which show active and completed questions in a widget
+     */
     void showQuestions();
 };
 

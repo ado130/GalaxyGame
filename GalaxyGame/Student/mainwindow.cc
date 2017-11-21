@@ -76,8 +76,6 @@ MainWindow::MainWindow(QWidget *parent,
             this, SLOT(exceptionInShipExecution(std::shared_ptr<Common::Ship>, std::string const&)));
 
 
-
-
     Common::addNewShipType("Planet", [=] (std::shared_ptr<Common::StarSystem> initialLocation,
                                                         std::shared_ptr<Common::IEventHandler> events
                                                         ) -> std::shared_ptr<Common::Ship>  {
@@ -609,11 +607,28 @@ void MainWindow::on_pbShowMap_clicked()
         connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
                 this, SLOT(planetsInStarSystemRequest(unsigned)));
         map_->setModal(true);
+
+        markQuestionStarSystems();
+
         map_->exec();
     }
     else
     {
+        markQuestionStarSystems();
         map_->show();
+    }
+}
+
+void MainWindow::markQuestionStarSystems()
+{
+    assert(map_);
+    assert(question_);
+    assert(galaxy_);
+
+    QList<questions_t> active = question_->getActiveQuestions();
+    for(auto element : active)
+    {
+        map_->markQuestionStarSystem(galaxy_->getStarSystemByName(element.second.first));
     }
 }
 

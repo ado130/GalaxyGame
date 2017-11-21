@@ -21,6 +21,7 @@ MapWindow::MapWindow(std::shared_ptr<Student::UserActionHandler> handler,
     connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)), this, SLOT(travelToStarSystem(unsigned)));
 
     pixDistressed_ = QPixmap(":/images/images/distressed.png");
+    pixQuestion_ = QPixmap(":/images/images/question.png");
     QPixmap playerLocationPixmap = QPixmap(":/images/images/location-pointer.png");
     playerLocationPixmap = playerLocationPixmap.scaledToWidth(playerLocationPixmap.width()/2);
 
@@ -66,12 +67,29 @@ void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> sta
         {
             if(element.first == starSystem)
             {
-                if(item->x() == element.second->x()+element.second->boundingRect().right() &&
-                        item->y() == element.second->y()){
+                if(cmpf(item->x(), element.second->x()+element.second->boundingRect().right()) &&
+                        cmpf(item->y(), element.second->y()))
+                {
                     scene_->removeItem(item);
                     return;
                 }
             }
+        }
+    }
+    throw UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
+}
+
+void MapWindow::markQuestionStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
+{
+    assert(pixQuestion_);
+
+    for(auto element : starSystemList_)
+    {
+        if(element.first == starSystem)
+        {
+            QGraphicsPixmapItem *item = new QGraphicsPixmapItem();
+            addMarkSign(item, pixQuestion_, element.second->x()+element.second->boundingRect().right(), element.second->y());
+            return;
         }
     }
     throw UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
@@ -115,6 +133,11 @@ void MapWindow::showStarSystems(Common::StarSystem::StarSystemVector starSystem)
         scene_->addItem(starSystemUi);
         starSystemList_.append(qMakePair(starSystem.at(i), starSystemUi));
     }
+}
+
+bool MapWindow::cmpf(double A, double B, double epsilon)
+{
+    return (fabs(A - B) < epsilon);
 }
 
 void MapWindow::travelToStarSystem(unsigned idStarUi)

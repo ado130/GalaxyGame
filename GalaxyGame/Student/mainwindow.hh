@@ -161,54 +161,87 @@ private:
 
     //! EventHandler used for handling new game events and changes
     std::shared_ptr<Common::IEventHandler> handler_;
+
     //! Galaxy
     std::shared_ptr<Student::Galaxy> galaxy_;
+
     //! gameRunner used to control game flow
     std::shared_ptr<Common::IGameRunner> gameRunner_;
+
     //! handler used for handling events coming from user actions
     std::shared_ptr<Student::UserActionHandler> userActionHandler_;
+
     //! drawManager used to handle objects which are to be drawn on StarSystem view scene
     std::shared_ptr<Student::DrawableObjectsManager> drawManager_;
+
     //! all items existing in galaxy
     std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
+
     //! ship controlled by user
     std::shared_ptr<PlayerShip> player_;
+
     //! object responsible for Question checking / completing
     std::shared_ptr<Student::Question> question_;
+
     //! current game settings
     std::shared_ptr<Student::Settings> settings_;
 
     //! timer responsible for refreshing UI
     QTimer* refreshTimer_ = nullptr;
+
     //! timer responsible for checking player collision with other objects
     QTimer* collisionTimer_ = nullptr;
+
     //! timer responsible for invoking game events
     QTimer* gameTimer_ = nullptr;
+
     //! playing time counter
     QTime* playingTime_ = nullptr;
+
     //! map showing all starsystems, is used for travelling
     MapWindow* map_ = nullptr;
+
     //! statistics window showing current player's Statistics
     StatisticsWindow* statsWindow_ = nullptr;
+
     //! top list window showing previous player's score
     TopListWindow* topListWindow_ = nullptr;
+
     //! dialog showing current Questions
     QuestionDlg* questionDlg_ = nullptr;
+
     //! indicates whether is player able to trade with planet
     bool isPlayerTrading_ = false;
+
     //! current Planet with whom is player_ trading
     std::shared_ptr<Student::Planet> currentPlanet_;
+
     //! StarSystem location of player_
     std::shared_ptr<Common::StarSystem> currentStarSystem_;
+
     //! vector keeping track of all ships in distress
     std::vector<std::shared_ptr<Common::Ship>> shipsInDistress_;
+
     //! indicates whether is player able to save ship
     bool isNPCShipNear_ = false;
+
     //! current NPC ship which is player_ saving
     std::shared_ptr<Common::Ship> currentNPCShip_;
+
     //! user's choice of the name
     QString playerName_;
 
+    /**
+     * @brief markQuestionStarSystems Mark star system in travel map with question icon
+     * @pre map_ has been associated with this object
+     * @pre question_ has been associated with this object
+     * @pre galaxy_ has been associated with this object
+     */
+    void markQuestionStarSystems();
+
+    /**
+     * @brief startGame Generate new world and start game
+     */
     void startGame();
     void loadSettings();
     void saveSettings();
@@ -227,15 +260,10 @@ private Q_SLOTS:
     void gameEvent();
     void checkCollision();
     void on_pbShowMap_clicked();
-
     void on_pbQuestions_clicked();
-
     void on_pbEndGame_clicked();
-
     void on_actionTop_list_triggered();
-
     void on_actionDefault_Settings_triggered();
-
     void on_actionReset_top_list_triggered();
 
 Q_SIGNALS:

@@ -194,52 +194,43 @@ public Q_SLOTS:
      */
     void changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> oldLocation);
 private:
-    /**
-     * @brief planets_ are used for loading images from files
-     */
+    //! planets_ are used for loading images from files
     std::vector<std::string> planets_ = {"Earth", "Jupiter", "Mars", "Mercury", "Moon", "Pluto", "Venus"};
 
-    /**
-     * @brief scene_ for Star System view where every game object UI representation lives
-     */
+    //! scene_ for Star System view where every game object UI representation lives
     Student::StarSystemScene *scene_;
 
-    /**
-     * @brief userActionHandler_ catches user actions and forwards them further
-     */
+    //! userActionHandler_ catches user actions and forwards them further
     std::shared_ptr<Student::UserActionHandler> userActionHandler_;
 
-    /**
-     * @brief coordsScale_ used to multiply course side coordinates to create "zoom efect" and starsystems
-     * won't intervene with each other (just to make our scene "bigger" so it can use more space)
-     */
+    //! coordsScale_ used to multiply course side coordinates to create "zoom efect" and starsystems
+    //! won't intervene with each other (just to make our scene "bigger" so it can use more space)
     int coordsScale_ = 5000;
 
-    /**
-     * @brief starSystemSpawnRadius_ is size of side of rectangle in scene in which objects of certain
-     * Star System can be spawned with center in exact location of base starSystem*coordsScale_
-     */
+    //! starSystemSpawnRadius_ is size of side of rectangle in scene in which objects of certain
+    //! Star System can be spawned with center in exact location of base starSystem*coordsScale_
     int starSystemSpawnRadius_ = 800;
 
-    /**
-     * @brief visibilityRange_ is distance from playerShip in which objects in scene are shown
-     */
+    //! visibilityRange_ is distance from playerShip in which objects in scene are shown
     int visibilityRange_ = 500;
 
-    /**
-     * @brief playerShipIcon_ Pixmap used for playerShip representation
-     */
+    //! playerShipIcon_ Pixmap used for playerShip representation
     QPixmap playerShipIcon_;
 
-    /**
-     * @brief cargoShipIcon_ Pixmap used for cargoShip representation
-     */
+    //! cargoShipIcon_ Pixmap used for cargoShip representation
     QPixmap cargoShipIcon_;
 
-    /**
-     * @brief shipAbandonedIcon_ Pixmap used for abandoned ship representation
-     */
+    //! shipAbandonedIcon_ Pixmap used for abandoned ship representation
     QPixmap shipAbandonedIcon_;
+
+    //! cargoShipUiList_ is used to store pairs of cargoShips base classes and it's UI representations
+    cargoShipUiPair cargoShipUiList_;
+
+    //! planetUiList_ is used to store pairs of planets base classes and it's UI representations
+    planetUiPair planetUiList_;
+
+    //! playerShipUiList_ is used to store pairs of players base classes and it's UI representations
+    playerShipUiPair playerShipUiList_;
 
     /**
      * @brief isInPlayerShipVisibilityRange checks if NPCShipUi object distance from playerShip is
@@ -261,19 +252,6 @@ private:
      * @post Exception guarantee: nothrow
      */
     void setPosition(QGraphicsPixmapItem *item, int x, int y);
-
-    /**
-     * @brief cargoShipUiList_ is used to store pairs of cargoShips base classes and it's UI representations
-     */
-    cargoShipUiPair cargoShipUiList_;
-    /**
-     * @brief planetUiList_ is used to store pairs of planets base classes and it's UI representations
-     */
-    planetUiPair planetUiList_;
-    /**
-     * @brief playerShipUiList_ is used to store pairs of players base classes and it's UI representations
-     */
-    playerShipUiPair playerShipUiList_;
 
 Q_SIGNALS:
     /**

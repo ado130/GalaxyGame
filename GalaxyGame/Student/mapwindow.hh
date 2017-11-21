@@ -81,6 +81,16 @@ public:
      * according to x and y coordinates
      */
     void addMarkSign(QGraphicsPixmapItem *item, QPixmap pixmap, int x, int y);
+
+    /**
+     * @brief markQuestionStarSystem Mark star system which contain a question
+     * @param starSystem Star system to be marked
+     * @exception throws UnknownStarSystemException if starSystem is not found in starSystemList_ vector
+     * @pre QPixmap pixQuestion_ has been associated with this object
+     * @post Exception guarantee: strong
+     * @post starSystem is marked in UI with pixQuestion_ icon
+     */
+    void markQuestionStarSystem(std::shared_ptr<Common::StarSystem> starSystem);
 private:
     //! MapWindow ui
     Ui::MapWindow *ui;
@@ -103,14 +113,17 @@ private:
     //! distressedStarSystemItems_ stores QGraphicsPixmapItems representing StarSystems in distress
     std::vector<QGraphicsPixmapItem*> distressedStarSystemItems_;
 
+    //! questionStarSystemItems_ stores QGraphicsPixmapItems representing StarSystems with question
+    std::vector<QGraphicsPixmapItem*> questionStarSystemItems_;
+
     //! playerLocation_ is QGraphicsPixmapItem representing player's position in galaxy
     QGraphicsPixmapItem* playerLocation_ = nullptr;
 
     //! pixmap used to create QGraphicsPixmapItem to mark distressed StarSystems
     QPixmap pixDistressed_;
 
-    //! pixmap used to set to NPCShipUi when ship is abandoned
-    QPixmap pixAbandoned_;
+    //! pixmap used to create QGraphicsPixmapItem to mark StarSystems with a question
+    QPixmap pixQuestion_;
 
     /**
      * @brief showStarSystems creates UI representation for base StarSystem objects, pairs them and stores in starSystemList_
@@ -121,6 +134,15 @@ private:
      * @post Exception guarantee: nothrow
      */
     void showStarSystems(Common::StarSystem::StarSystemVector starSystem);
+
+    /**
+     * @brief cmpf Function to compare two float numbers
+     * @param A First float number
+     * @param B Second float number
+     * @param epsilon Accuracy
+     * @return Bool value if number are equal
+     */
+    bool cmpf(double A, double B, double epsilon = 0.005f);
 public Q_SLOTS:
 
     /**
