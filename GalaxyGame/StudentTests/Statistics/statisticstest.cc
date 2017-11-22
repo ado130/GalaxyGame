@@ -102,11 +102,11 @@ void StatisticsTest::changeAmountOfCredits()
     Student::Statistics stats = Student::Statistics(maxLoan);
     QVERIFY2(stats.getCreditBalance() == 0, "Initial credit is not 0.");
     stats.addCredits(add);
-    QVERIFY2(stats.getCreditBalance() == add, "Amount of credits after adding is not correct");
+    QVERIFY2(stats.getCreditBalance() == (int)add, "Amount of credits after adding is not correct");
     if(remove > add + stats.getMaxLoanAllowance())
     {
         QVERIFY_EXCEPTION_THROWN(stats.reduceCredits(remove), Common::StateException);
-        QVERIFY2(stats.getCreditBalance() == add, "Amount of points after exception in removing isn't correct");
+        QVERIFY2(stats.getCreditBalance() == (int)add, "Amount of points after exception in removing isn't correct");
     }
     else
     {

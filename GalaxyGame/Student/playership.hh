@@ -11,6 +11,8 @@
  * @brief PlayerShip object is user controlled ship.
  * PlayerShip can save ships, travel among StarSystems,
  * trade with Planets and complete Questions.
+ *
+ * @invariant inventory_.size() >= 0
  */
 class PlayerShip : public Common::Ship
 {

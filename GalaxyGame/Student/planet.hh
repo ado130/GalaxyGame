@@ -9,6 +9,8 @@ namespace Student {
 /**
  * @brief Planet is a type of ship with immobile PlanetCoreDrive engine.
  * Every planet sells one type of SimpleTradeGoods.
+ *
+ * @invariant Planet object cannot change it's location
  */
 class Planet : public Common::Ship
 {

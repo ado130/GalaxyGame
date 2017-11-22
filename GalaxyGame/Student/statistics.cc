@@ -92,7 +92,7 @@ void Student::Statistics::addCredits(unsigned amount)
 void Student::Statistics::reduceCredits(unsigned amount)
 {
 
-    if(amount > credits_+MAX_LOAN_ALLOWANCE)
+    if((int)amount > credits_+MAX_LOAN_ALLOWANCE)
     {
         throw Common::StateException("Amount of credits too low! Cannot reduce.");
     }

@@ -8,6 +8,8 @@
 namespace Student {
 /**
  * @brief Class representing PlanetS in UI
+ *
+ * @invariant PlanetUi cannot change it's position
  */
 class PlanetUi : public QGraphicsPixmapItem
 {

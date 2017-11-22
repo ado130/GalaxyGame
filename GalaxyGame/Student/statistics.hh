@@ -30,7 +30,7 @@ public:
      * @param MAX_LOAN_ALLOWANCE limit that the player is allowed to have debt
      * @param handler EventHandler
      */
-    Statistics(int MAX_LOAN_ALLOWANCE = 100, std::shared_ptr<Student::EventHandler> handler = nullptr);
+    Statistics(int MAX_LOAN_ALLOWANCE = 10, std::shared_ptr<Student::EventHandler> handler = nullptr);
 
     /**
      * @brief Destructor.

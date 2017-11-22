@@ -20,8 +20,8 @@ bool TradeAction::canDo() const
 
     if(action_ == "buy")
     {
-        if(player_->getInventory().size() >= MAX_PLAYER_INVENTORY &&
-                currentPlanet_->getGoods().getPrice() > player_->getStatistics()->getCreditBalance())
+        if(player_->getInventory().size() >= MAX_PLAYER_INVENTORY ||
+                currentPlanet_->getGoods().getPrice() > player_->getStatistics()->getCreditBalance()+player_->getStatistics()->getMaxLoanAllowance())
         {
             return false;
         }
@@ -48,6 +48,7 @@ bool TradeAction::canDo() const
         }
         return false;
     }
+    return false;
 }
 
 bool TradeAction::execute()
@@ -80,4 +81,5 @@ bool TradeAction::execute()
     {
         return false;
     }
+    return false;
 }

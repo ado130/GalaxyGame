@@ -12,6 +12,9 @@ namespace Student {
 /**
  * @brief StarSystemScene is a scene which holds all UI representations of
  * objects which are supposed to appear on single Star System view
+ *
+ * @invariant all objects stored in shipList_, planetList_ and playerShipList_
+ * are visible on scene
  */
 class StarSystemScene : public QGraphicsScene
 {
@@ -126,6 +129,9 @@ private:
 
     //! list containing all player ships UI representations
     std::vector<PlayerShipUi*> playerShipList_;
+
+    //! parent object
+    QWidget *parent_ = nullptr;
 };
 }
 

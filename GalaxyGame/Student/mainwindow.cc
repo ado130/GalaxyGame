@@ -38,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent,
     galaxy_ = galaxy;
     gameRunner_ = gameRunner;
     userActionHandler_ = std::make_shared<Student::UserActionHandler>();
-    drawManager_ = std::make_shared<Student::DrawableObjectsManager>(new Student::StarSystemScene(this), userActionHandler_);
+    Student::StarSystemScene *scene = new Student::StarSystemScene(this);
+    drawManager_ = std::make_shared<Student::DrawableObjectsManager>(scene , userActionHandler_, this);
     itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
     question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
     settings_ = std::make_shared<Student::Settings>();
@@ -469,7 +470,7 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
     bool isStarSystemFullySaved = true;
 
     //remove ship from distress list
-    for(int i = 0; i < shipsInDistress_.size(); i++)
+    for(unsigned i = 0; i < shipsInDistress_.size(); i++)
     {
         if(shipsInDistress_[i] == ship)
         {
@@ -529,7 +530,7 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
         showErrorDialog(ex.msg(), true);
     }
     //remove ship from distress list
-    for(int i = 0; i < shipsInDistress_.size(); i++)
+    for(unsigned i = 0; i < shipsInDistress_.size(); i++)
     {
         if(shipsInDistress_[i] == ship)
         {

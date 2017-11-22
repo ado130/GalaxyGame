@@ -194,14 +194,14 @@ public Q_SLOTS:
      */
     void changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> oldLocation);
 private:
-    //! planets_ are used for loading images from files
-    std::vector<std::string> planets_ = {"Earth", "Jupiter", "Mars", "Mercury", "Moon", "Pluto", "Venus"};
-
     //! scene_ for Star System view where every game object UI representation lives
     Student::StarSystemScene *scene_;
 
     //! userActionHandler_ catches user actions and forwards them further
     std::shared_ptr<Student::UserActionHandler> userActionHandler_;
+
+    //! planets_ are used for loading images from files
+    std::vector<std::string> planets_ = {"Earth", "Jupiter", "Mars", "Mercury", "Moon", "Pluto", "Venus"};
 
     //! coordsScale_ used to multiply course side coordinates to create "zoom efect" and starsystems
     //! won't intervene with each other (just to make our scene "bigger" so it can use more space)

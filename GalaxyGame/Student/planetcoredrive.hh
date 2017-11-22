@@ -6,6 +6,8 @@
 /**
  * @brief PlanetCoreDrive is a type of ShipEngine that isn't able
  * to freely move.
+ *
+ * @invariant PlanetCoreDrive cannot ever start.
  */
 class PlanetCoreDrive : public Common::ShipEngine
 {

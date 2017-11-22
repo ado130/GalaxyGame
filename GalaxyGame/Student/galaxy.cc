@@ -147,11 +147,6 @@ Common::IGalaxy::ShipVector Student::Galaxy::getShipsInStarSystem(std::string na
     }
 }
 
-std::vector<std::string> Student::Galaxy::getSystemNames()
-{
-
-}
-
 std::shared_ptr<Common::StarSystem> Student::Galaxy::getStarSystemByName(std::string name)
 {
     auto it = std::find_if(starSystemsInGalaxy_.begin(), starSystemsInGalaxy_.end(),

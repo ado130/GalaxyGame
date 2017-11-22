@@ -9,6 +9,7 @@
 
 Student::StarSystemScene::StarSystemScene(QWidget *parent)
 {
+    parent_ = parent;
     setBackgroundBrush( Qt::lightGray );
 }
 

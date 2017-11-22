@@ -45,7 +45,7 @@ void Student::Settings::applyDefaultSettings()
     if(!QFile("settings.ini").exists())
     {
         creditProfitFromSale_ = 0.5;
-        maxCreditAllowance_ = 100;
+        maxCreditAllowance_ = 10;
         initialPlayerCredit_ = 10;
         pointsFromQuestion_ = 1;
         pointsFromSaving_ = 2;
@@ -60,7 +60,7 @@ void Student::Settings::applyDefaultSettings()
     }
 
     creditProfitFromSale_ = settings.value("CreditProfitFromSale", 0.5).toInt();
-    maxCreditAllowance_ = settings.value("MaxCreditAllowance", 100).toInt();
+    maxCreditAllowance_ = settings.value("MaxCreditAllowance", 10).toInt();
     initialPlayerCredit_ = settings.value("InitialPlayerCredit", 10).toInt();
     pointsFromQuestion_ = settings.value("PointsFromQuestion", 1).toInt();
     pointsFromSaving_ = settings.value("PointsFromSaving", 2).toInt();
@@ -70,7 +70,7 @@ void Student::Settings::applyDefaultSettings()
 void Student::Settings::setDefault()
 {
     creditProfitFromSale_ = 0.5;
-    maxCreditAllowance_ = 100;
+    maxCreditAllowance_ = 10;
     initialPlayerCredit_ = 10;
     pointsFromQuestion_ = 1;
     pointsFromSaving_ = 2;

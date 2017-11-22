@@ -9,11 +9,10 @@
 #include <QBrush>
 #include <cassert>
 
-//ToDo: create "IDrawableObject" do that there is no need for all the if-elses
 Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene *scene,
                                                         std::shared_ptr<Student::UserActionHandler> userActionHandler,
                                                         QObject *parent) :
-    QObject(parent), userActionHandler_(userActionHandler), scene_(scene)
+    QObject(parent), scene_(scene), userActionHandler_(userActionHandler)
 {
     QPixmap cargoBigIcon = QPixmap(":/images/images/NPCShip.png");
     cargoShipIcon_ = cargoBigIcon.scaledToWidth(cargoBigIcon.width());
@@ -253,6 +252,7 @@ void Student::DrawableObjectsManager::setFocusOnPlayer(std::shared_ptr<PlayerShi
 
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, Common::Point from, Common::Point to)
 {
+    Q_UNUSED(from);
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
         NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
@@ -278,6 +278,8 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
 void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> starSystem)
 {    
     assert(scene_);
+
+    Q_UNUSED(starSystem);
 
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
