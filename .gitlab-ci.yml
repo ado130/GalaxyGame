@@ -1,4 +1,4 @@
-GalaxyGame:
+statistics:
  script:
   - cd GalaxyGame/StudentTests/Statistics
   - qmake Statistics.pro
@@ -6,4 +6,3 @@ GalaxyGame:
   - ./statisticstest
  tags:
   - qt
-  - c++
