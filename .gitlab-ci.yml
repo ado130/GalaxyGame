@@ -3,9 +3,18 @@ questions:
   - cd GalaxyGame/StudentTests/QuestionTest
   - qmake QuestionTest.pro
   - make
-  - ./questiontesttest
+  - ./questiontest
  tags:
   - qt  
+  
+galaxy:
+ script:
+  - cd GalaxyGame/CourseTests/Galaxy
+  - qmake Galaxy.pro
+  - make
+  - ./galaxytest
+ tags:
+  - qt                                      
   
 statistics:
  script:

@@ -149,7 +149,7 @@ void MainWindow::startGame()
 
     gameTimer_ = new QTimer();
     connect(gameTimer_, &QTimer::timeout, this, &MainWindow::gameEvent);
-    gameTimer_->start(10000);
+    gameTimer_->start(6000);
 
     // Start location is player's location
     travelToStarSystem(player_->getLocation()->getId());
@@ -754,6 +754,7 @@ void MainWindow::showDialog(std::string msg, bool quitProgram)
 {
     QMessageBox msgBox;
     msgBox.setWindowIcon(QIcon(":/images/images/favicon.png"));
+
     if(quitProgram)
     {
         msgBox.setText(QString::fromStdString(msg));
@@ -762,7 +763,9 @@ void MainWindow::showDialog(std::string msg, bool quitProgram)
     {
         msgBox.setText(QString::fromStdString(msg));
     }
+
     msgBox.exec();
+
     if(quitProgram)
     {
         exit(1);

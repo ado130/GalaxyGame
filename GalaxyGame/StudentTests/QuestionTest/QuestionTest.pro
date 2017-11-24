@@ -8,7 +8,7 @@ QT       += testlib
 
 QT       -= gui
 
-TARGET = questiontesttest
+TARGET = questiontest
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG += c++14
