@@ -38,19 +38,19 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>800</width>
+      <width>720</width>
       <height>600</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>800</width>
+      <width>720</width>
       <height>600</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>800</width>
+      <width>720</width>
       <height>600</height>
      </size>
     </property>
@@ -64,7 +64,7 @@
    <widget class="QPushButton" name="pbNewGame">
     <property name="geometry">
      <rect>
-      <x>820</x>
+      <x>740</x>
       <y>10</y>
       <width>91</width>
       <height>35</height>
@@ -77,11 +77,24 @@
    <widget class="QGroupBox" name="gbInfo">
     <property name="geometry">
      <rect>
-      <x>820</x>
+      <x>740</x>
       <y>50</y>
-      <width>201</width>
+      <width>281</width>
       <height>561</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+    border: 1px solid gray;
+    border-radius: 9px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+}</string>
     </property>
     <property name="title">
      <string>Info</string>
@@ -91,9 +104,22 @@
       <rect>
        <x>10</x>
        <y>160</y>
-       <width>181</width>
-       <height>101</height>
+       <width>261</width>
+       <height>111</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 1px solid gray;
+    border-radius: 9px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+}</string>
      </property>
      <property name="title">
       <string>Star System</string>
@@ -102,8 +128,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>71</width>
+        <y>30</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -118,8 +144,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
-        <width>71</width>
+        <y>50</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -134,8 +160,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
-        <width>71</width>
+        <y>70</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -149,9 +175,9 @@
      <widget class="QLabel" name="lbSSEconomy">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>40</y>
-        <width>71</width>
+        <x>100</x>
+        <y>50</y>
+        <width>151</width>
         <height>16</height>
        </rect>
       </property>
@@ -165,9 +191,9 @@
      <widget class="QLabel" name="lbSSPopulation">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>60</y>
-        <width>71</width>
+        <x>100</x>
+        <y>70</y>
+        <width>151</width>
         <height>16</height>
        </rect>
       </property>
@@ -181,9 +207,9 @@
      <widget class="QLabel" name="lbSSName">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>20</y>
-        <width>71</width>
+        <x>100</x>
+        <y>30</y>
+        <width>151</width>
         <height>16</height>
        </rect>
       </property>
@@ -197,9 +223,9 @@
      <widget class="QLabel" name="lbSSEnemies">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>80</y>
-        <width>71</width>
+        <x>100</x>
+        <y>90</y>
+        <width>151</width>
         <height>16</height>
        </rect>
       </property>
@@ -214,8 +240,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
-        <width>71</width>
+        <y>90</y>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -232,19 +258,35 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>181</width>
-       <height>71</height>
+       <width>261</width>
+       <height>81</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 1px solid gray;
+    border-radius: 9px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+}</string>
      </property>
      <property name="title">
       <string>Game</string>
      </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
      <widget class="QLabel" name="lbCntStarSystems">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>20</y>
-        <width>41</width>
+        <x>130</x>
+        <y>30</y>
+        <width>91</width>
         <height>20</height>
        </rect>
       </property>
@@ -256,8 +298,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
-        <width>81</width>
+        <y>50</y>
+        <width>111</width>
         <height>16</height>
        </rect>
       </property>
@@ -265,15 +307,15 @@
        <string>Ships in distress:</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="lbShipsInDistress">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>40</y>
-        <width>41</width>
+        <x>130</x>
+        <y>50</y>
+        <width>111</width>
         <height>20</height>
        </rect>
       </property>
@@ -285,8 +327,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>81</width>
+        <y>30</y>
+        <width>111</width>
         <height>16</height>
        </rect>
       </property>
@@ -298,8 +340,8 @@
     <widget class="QPushButton" name="pbShowMap">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>110</y>
+       <x>100</x>
+       <y>120</y>
        <width>100</width>
        <height>35</height>
       </rect>
@@ -313,9 +355,22 @@
       <rect>
        <x>10</x>
        <y>270</y>
-       <width>181</width>
-       <height>61</height>
+       <width>261</width>
+       <height>71</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 1px solid gray;
+    border-radius: 9px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+}</string>
      </property>
      <property name="title">
       <string>Star Planet</string>
@@ -324,8 +379,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>41</width>
+        <y>30</y>
+        <width>51</width>
         <height>20</height>
        </rect>
       </property>
@@ -339,8 +394,8 @@
      <widget class="QLabel" name="lbSPName">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>20</y>
+        <x>70</x>
+        <y>30</y>
         <width>101</width>
         <height>20</height>
        </rect>
@@ -355,8 +410,8 @@
      <widget class="QLabel" name="lbSPGoods">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>40</y>
+        <x>70</x>
+        <y>50</y>
         <width>101</width>
         <height>20</height>
        </rect>
@@ -372,8 +427,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
-        <width>41</width>
+        <y>50</y>
+        <width>51</width>
         <height>20</height>
        </rect>
       </property>
@@ -389,10 +444,23 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>340</y>
-       <width>181</width>
+       <y>350</y>
+       <width>261</width>
        <height>161</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QGroupBox {
+    border: 1px solid gray;
+    border-radius: 9px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 3px 0 3px;
+}</string>
      </property>
      <property name="title">
       <string>Player</string>
@@ -402,7 +470,7 @@
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>161</width>
+        <width>241</width>
         <height>101</height>
        </rect>
       </property>
@@ -413,9 +481,9 @@
      <widget class="QLabel" name="lbCredits">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>20</y>
-        <width>101</width>
+        <x>70</x>
+        <y>25</y>
+        <width>91</width>
         <height>20</height>
        </rect>
       </property>
@@ -430,8 +498,8 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>41</width>
+        <y>25</y>
+        <width>51</width>
         <height>20</height>
        </rect>
       </property>
@@ -446,8 +514,8 @@
     <widget class="QPushButton" name="pbQuestions">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>507</y>
+       <x>100</x>
+       <y>520</y>
        <width>100</width>
        <height>35</height>
       </rect>
@@ -477,7 +545,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuNew_Game">

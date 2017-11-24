@@ -42,7 +42,7 @@ MapWindow::~MapWindow()
 
 void MapWindow::markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> starSystem)
 {
-    assert(pixDistressed_);
+    assert(!pixDistressed_.isNull());
 
     for(auto element : starSystemList_)
     {
@@ -81,7 +81,7 @@ void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> sta
 
 void MapWindow::markQuestionStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
 {
-    assert(pixQuestion_);
+    assert(!pixQuestion_.isNull());
 
     for(auto element : starSystemList_)
     {
@@ -173,9 +173,10 @@ void MapWindow::showGoodsInfo(unsigned idStarUi)
         ui->ptPlanets->clear();
 
         const char* economy[] = { "Refinery", "Extraction", "HiTech", "Industrial", "Tourism", "Agriculture", "Service", "Military", "Terraforming", "Colony", "None" };
-        QString text = "Name: " + QString(starSystem->getName().data()) + "\n";
+        QString text = "----------------------------------\n";
+        text += "Star system name: " + QString(starSystem->getName().data()) + "\n";
         text += "Economy: " + QString(economy[starSystem->getEconomy()]) + "\n";
-        text += "--------------------------------------";
+        text += "----------------------------------";
         ui->ptPlanets->appendPlainText(text);
 
         emit planetsByStarSystemRequest(starSystem->getId());
@@ -189,7 +190,7 @@ void MapWindow::showGoodsInfo(unsigned idStarUi)
             for(auto k : planets_)
             {
                 Student::Planet* planet = static_cast<Student::Planet*>(k.get());
-                QString info = "Name: " + QString(planet->getName().data());
+                QString info = "Name: " + QString(planet->getName().data()) + "\n";
                 info += "Goods: " + QString(planet->getGoods().getName().data()) + "\n";
                 info += "Price: " + QString::number(planet->getGoods().getPrice()) + "\n";
                 ui->ptPlanets->appendPlainText(info);

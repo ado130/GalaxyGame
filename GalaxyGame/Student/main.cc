@@ -17,15 +17,15 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("Semicolon - Space game");
 
+    std::shared_ptr<Common::IEventHandler> handler;
+    std::shared_ptr<Student::Galaxy> galaxy;
+    std::shared_ptr<Common::IGameRunner> gameRunner;
     try
     {
-        std::shared_ptr<Common::IEventHandler> handler = std::make_shared<Student::EventHandler>();
-        std::shared_ptr<Student::Galaxy> galaxy = std::make_shared<Student::Galaxy>();
-        std::shared_ptr<Common::IGameRunner> gameRunner = Common::getGameRunner(galaxy, handler);
+        handler = std::make_shared<Student::EventHandler>();
+        galaxy = std::make_shared<Student::Galaxy>();
+        gameRunner = Common::getGameRunner(galaxy, handler);
         Common::utilityInit(time(NULL));
-
-        MainWindow w(0, handler, galaxy, gameRunner);
-        w.show();
     }
     catch (...)
     {
@@ -37,5 +37,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    MainWindow w(0, handler, galaxy, gameRunner);
+    w.show();
     return a.exec();
 }
