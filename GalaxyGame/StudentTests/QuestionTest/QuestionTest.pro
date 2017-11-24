@@ -56,21 +56,13 @@ INCLUDEPATH += ../../Student ../../Course/
 DEPENDPATH += ../../Student
 
 
-CONFIG(release, debug|release) {
-   DESTDIR = release
-}
-
-CONFIG(debug, debug|release) {
-   DESTDIR = debug
-}
-
 win32 {
  #   copyfiles.commands += @echo NOW COPYING ADDITIONAL FILE(S) for Windows &
     copyfiles.commands += xcopy ..\\..\\..\\GalaxyGame\\Assets Assets /i /s /e /y
 }
 unix:!macx {
     copyfiles.commands += @echo \"NOW COPYING ADDITIONAL FILE(S) for Linux\" &&
-    copyfiles.commands += cp -r ../../../GalaxyGame/Assets $$DESTDIR
+    copyfiles.commands += cp -r ../../../GalaxyGame/Assets Assets
 }
 macx {
     copyfiles.commands += @echo \"NOW COPYING ADDITIONAL FILE(S) for MacOS\" &&
