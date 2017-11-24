@@ -4,6 +4,9 @@ questions:
   - qmake QuestionTest.pro
   - make
   - ./questiontesttest
+ tags:
+  - qt  
+  
 statistics:
  script:
   - cd GalaxyGame/StudentTests/Statistics
