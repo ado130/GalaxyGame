@@ -1,3 +1,9 @@
+questions:
+ script:
+  - cd GalaxyGame/StudentTests/QuestionTest
+  - qmake QuestionTest.pro
+  - make
+  - ./questiontesttest
 statistics:
  script:
   - cd GalaxyGame/StudentTests/Statistics
