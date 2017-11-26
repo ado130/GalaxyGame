@@ -9,12 +9,12 @@
 
 QString const ASSET_FOLDER("Assets/");
 
-ItemsInGalaxy::ItemsInGalaxy()
+Student::ItemsInGalaxy::ItemsInGalaxy()
 {
 
 }
 
-void ItemsInGalaxy::initSimpleTradeGoods()
+void Student::ItemsInGalaxy::initSimpleTradeGoods()
 {
     QJsonArray jsonArr;
     try
@@ -51,7 +51,7 @@ void ItemsInGalaxy::initSimpleTradeGoods()
     }
 }
 
-std::vector<SimpleTradeGoods> ItemsInGalaxy::getSimpleTradeGoods()
+std::vector<Student::SimpleTradeGoods> Student::ItemsInGalaxy::getSimpleTradeGoods()
 {
     if(simpleTradeGoods_.empty())
     {
@@ -60,7 +60,7 @@ std::vector<SimpleTradeGoods> ItemsInGalaxy::getSimpleTradeGoods()
     return simpleTradeGoods_;
 }
 
-SimpleTradeGoods ItemsInGalaxy::getRandomTradeGoods()
+Student::SimpleTradeGoods Student::ItemsInGalaxy::getRandomTradeGoods()
 {
     if(simpleTradeGoods_.empty())
     {
@@ -70,7 +70,7 @@ SimpleTradeGoods ItemsInGalaxy::getRandomTradeGoods()
     return simpleTradeGoods_.at(rand);
 }
 
-QJsonArray ItemsInGalaxy::loadFromFile(std::string filename)
+QJsonArray Student::ItemsInGalaxy::loadFromFile(std::string filename)
 {
     QFile file (ASSET_FOLDER + QString::fromStdString(filename));
     if(!file.open(QFile::ReadOnly))
@@ -89,7 +89,7 @@ QJsonArray ItemsInGalaxy::loadFromFile(std::string filename)
     }
 }
 
-SimpleTradeGoods ItemsInGalaxy::jsonToSimpleTradeGoods(QJsonObject object)
+Student::SimpleTradeGoods Student::ItemsInGalaxy::jsonToSimpleTradeGoods(QJsonObject object)
 {
     return SimpleTradeGoods( object.value("name").toString().toStdString(), object.value("price").toInt());
 }

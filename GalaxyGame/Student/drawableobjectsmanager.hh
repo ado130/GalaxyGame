@@ -13,13 +13,13 @@
 #include <QList>
 
 //! QList of QPairs used to store CargoShip base objects and their NPCShipUi UI representations
-typedef QList< QPair<std::shared_ptr<Common::CargoShip>, NPCShipUi*> > cargoShipUiPair;
+typedef QList< QPair<std::shared_ptr<Common::CargoShip>, Ui::NPCShipUi*> > cargoShipUiPair;
 
 //! QList of QPairs used to store Planet base objects and their PlanetUi UI representations
-typedef QList< QPair<std::shared_ptr<Student::Planet>, Student::PlanetUi*> > planetUiPair;
+typedef QList< QPair<std::shared_ptr<Student::Planet>, Ui::PlanetUi*> > planetUiPair;
 
 //! QList of QPairs used to store PlayerShip base objects and their PlayerShipUi UI representations
-typedef QList< QPair<std::shared_ptr<PlayerShip>, PlayerShipUi*> > playerShipUiPair;
+typedef QList< QPair<std::shared_ptr<Student::PlayerShip>, Ui::PlayerShipUi*> > playerShipUiPair;
 
 namespace Student {
 
@@ -38,13 +38,13 @@ public:
      * @param userActionHandler Handler which is used to get actions from user and forward them further
      * @param parent parent QObject
      */
-    DrawableObjectsManager(StarSystemScene *scene, std::shared_ptr<Student::UserActionHandler> userActionHandler, QObject *parent = 0);
+    DrawableObjectsManager(Ui::StarSystemScene *scene, std::shared_ptr<Student::UserActionHandler> userActionHandler, QObject *parent = 0);
 
     /**
      * @brief Returns scene of Star System view
      * @pre StarSystemScene scene_ has been associated with this object
      */
-    Student::StarSystemScene* getScene();
+    Ui::StarSystemScene* getScene();
 
     /**
      * @brief getNumberOfShips
@@ -67,7 +67,7 @@ public:
      * @pre StarSystemScene scene_ has been associated with this object
      * @post Exception guarantee: nothrow
      */
-    QList<QGraphicsItem *> getCollidingItems(PlayerShipUi *player);
+    QList<QGraphicsItem *> getCollidingItems(Ui::PlayerShipUi *player);
 
     /**
      * @brief clearScene erases everything from Star System view
@@ -107,7 +107,7 @@ public:
      * @return pointer to PlayerShipUi object, if playerShip not found nullptr is returned
      * @post Exception guarantee: nothrow
      */
-    PlayerShipUi* getPlayerShipUiByObject(std::shared_ptr<PlayerShip> ship);
+    Ui::PlayerShipUi* getPlayerShipUiByObject(std::shared_ptr<Student::PlayerShip> ship);
 
     /**
      * @brief getShipUiByObject searches for UI object representation of certain ship
@@ -115,7 +115,7 @@ public:
      * @return pointer to NPCShipUi object, if playerShip not found nullptr is returned
      * @post Exception guarantee: nothrow
      */
-    NPCShipUi* getShipUiByObject(std::shared_ptr<Common::Ship> ship);
+    Ui::NPCShipUi* getShipUiByObject(std::shared_ptr<Common::Ship> ship);
 
     /**
      * @brief setFocusOnPlayer
@@ -124,7 +124,7 @@ public:
      * @post PlayerShipUI paired with PlayerShip has focus in scene
      * @post Exception guarantee: strong
      */
-    void setFocusOnPlayer(std::shared_ptr<PlayerShip> ship);
+    void setFocusOnPlayer(std::shared_ptr<Student::PlayerShip> ship);
 
     /**
      * @brief getPlanetsByStarSystem
@@ -195,7 +195,7 @@ public Q_SLOTS:
     void changeShipPosition(std::shared_ptr<Common::Ship> ship, std::shared_ptr<Common::StarSystem> oldLocation);
 private:
     //! scene_ for Star System view where every game object UI representation lives
-    Student::StarSystemScene *scene_;
+    Ui::StarSystemScene *scene_;
 
     //! userActionHandler_ catches user actions and forwards them further
     std::shared_ptr<Student::UserActionHandler> userActionHandler_;
@@ -240,7 +240,7 @@ private:
      * @pre "playerShipUiList.size() > 0" at least one player is in the game
      * @post Exception guarantee: nothrow
      */
-    bool isInPlayerShipVisibilityRange(NPCShipUi* ship);
+    bool isInPlayerShipVisibilityRange(Ui::NPCShipUi* ship);
 
     /**
      * @brief setPosition changes position of object in scene if it's in Star System

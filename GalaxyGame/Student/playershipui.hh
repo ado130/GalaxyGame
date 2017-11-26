@@ -10,6 +10,8 @@
 #include <QObject>
 #include <QSet>
 
+namespace Ui {
+
 /**
  * @brief Class representing PlayerShips in UI
  */
@@ -97,5 +99,6 @@ private Q_SLOTS:
      */
     void updateMovement();
 };
+}
 
 #endif // PLAYERSHIPUI_H

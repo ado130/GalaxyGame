@@ -9,6 +9,8 @@
 #include <QJsonObject>
 #include <memory>
 
+namespace Student {
+
 /**
  * @brief Class responsible for loading and storing all items which
  * can be used in galaxy
@@ -66,5 +68,6 @@ private:
     //! vector holding all SimpleTradeGoods items usable in galaxy
     std::vector<SimpleTradeGoods> simpleTradeGoods_;
 };
+}
 
 #endif // ITEMSINGALAXY_HH

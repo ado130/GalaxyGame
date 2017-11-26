@@ -3,6 +3,8 @@
 
 #include "galaxy.hh"
 
+namespace Student {
+
 /**
  * @brief PlanetCoreDrive is a type of ShipEngine that isn't able
  * to freely move.
@@ -70,5 +72,6 @@ private:
     //! Galaxy the engine is in
     std::shared_ptr<Common::IGalaxy> galaxy_;
 };
+}
 
 #endif // PLANETCOREDRIVE_HH

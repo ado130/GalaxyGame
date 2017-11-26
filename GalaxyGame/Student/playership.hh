@@ -5,6 +5,8 @@
 #include "statistics.hh"
 #include "simpletradegoods.hh"
 
+namespace Student {
+
 #define MAX_PLAYER_INVENTORY 5
 
 /**
@@ -72,5 +74,6 @@ private:
     //! SimpleTradeGoods vector representing player's inventory
     std::vector<SimpleTradeGoods> inventory_;
 };
+}
 
 #endif // PLAYERSHIP_HH

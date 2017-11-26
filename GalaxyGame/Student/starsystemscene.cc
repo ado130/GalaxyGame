@@ -7,19 +7,19 @@
 
 #include <QDebug>
 
-Student::StarSystemScene::StarSystemScene(QWidget *parent)
+Ui::StarSystemScene::StarSystemScene(QWidget *parent)
 {
     parent_ = parent;
     setBackgroundBrush( Qt::lightGray );
 }
 
-void Student::StarSystemScene::drawPlayerShip(PlayerShipUi *ship)
+void Ui::StarSystemScene::drawPlayerShip(PlayerShipUi *ship)
 {
     playerShipList_.push_back(ship);
     addItem(ship);
 }
 
-void Student::StarSystemScene::erasePlayerShip(PlayerShipUi *ship)
+void Ui::StarSystemScene::erasePlayerShip(PlayerShipUi *ship)
 {
     std::vector<PlayerShipUi*>::iterator iter = std::find(playerShipList_.begin(), playerShipList_.end(), ship);
     if(iter != playerShipList_.end())
@@ -28,25 +28,25 @@ void Student::StarSystemScene::erasePlayerShip(PlayerShipUi *ship)
         removeItem(ship);
         return;
     }
-    throw UnknownShipException("UI Player ship was not found.");
+    throw Student::UnknownShipException("UI Player ship was not found.");
 }
 
-void Student::StarSystemScene::eraseAllPlayerShips()
+void Ui::StarSystemScene::eraseAllPlayerShips()
 {
-    for(PlayerShipUi* player : playerShipList_)
+    for(Ui::PlayerShipUi* player : playerShipList_)
     {
         removeItem(player);
     }
     playerShipList_.clear();
 }
 
-void Student::StarSystemScene::drawNPCShip(NPCShipUi* ship)
+void Ui::StarSystemScene::drawNPCShip(NPCShipUi* ship)
 {
     shipList_.push_back(ship);
     addItem(ship);
 }
 
-void Student::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
+void Ui::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
 {
     std::vector<NPCShipUi*>::iterator iter = std::find(shipList_.begin(), shipList_.end(), ship);
 
@@ -56,33 +56,33 @@ void Student::StarSystemScene::eraseNPCShip(NPCShipUi *ship)
         removeItem(ship);
         return;
     }
-    throw UnknownShipException("NPC ship was not found.");
+    throw Student::UnknownShipException("NPC ship was not found.");
 }
 
-void Student::StarSystemScene::eraseAllNPCShips()
+void Ui::StarSystemScene::eraseAllNPCShips()
 {
-    for(NPCShipUi* ship : shipList_)
+    for(Ui::NPCShipUi* ship : shipList_)
     {
         removeItem(ship);
     }
     shipList_.clear();
 }
 
-bool Student::StarSystemScene::isNPCShipVisible(NPCShipUi* ship)
+bool Ui::StarSystemScene::isNPCShipVisible(Ui::NPCShipUi* ship)
 {
     if(std::find(shipList_.begin(), shipList_.end(), ship) == shipList_.end()) return false;
     return true;
 }
 
-void Student::StarSystemScene::drawPlanet(Student::PlanetUi *planet)
+void Ui::StarSystemScene::drawPlanet(Ui::PlanetUi *planet)
 {
     planetList_.push_back(planet);
     addItem(planet);
 }
 
-void Student::StarSystemScene::erasePlanet(Student::PlanetUi *planet)
+void Ui::StarSystemScene::erasePlanet(Ui::PlanetUi *planet)
 {
-    std::vector<Student::PlanetUi*>::iterator iter = std::find(planetList_.begin(), planetList_.end(), planet);
+    std::vector<Ui::PlanetUi*>::iterator iter = std::find(planetList_.begin(), planetList_.end(), planet);
 
     if(iter != planetList_.end())
     {
@@ -90,25 +90,25 @@ void Student::StarSystemScene::erasePlanet(Student::PlanetUi *planet)
         removeItem(planet);
         return;
     }
-    throw UnknownShipException("Planet was not found.");
+    throw Student::UnknownShipException("Planet was not found.");
 }
 
-void Student::StarSystemScene::eraseAllPlanets()
+void Ui::StarSystemScene::eraseAllPlanets()
 {
-    for(Student::PlanetUi* planet : planetList_)
+    for(Ui::PlanetUi* planet : planetList_)
     {
         removeItem(planet);
     }
     planetList_.clear();
 }
 
-bool Student::StarSystemScene::isPlanetShipVisible(PlanetUi *ship)
+bool Ui::StarSystemScene::isPlanetShipVisible(Ui::PlanetUi *ship)
 {
     if(std::find(planetList_.begin(), planetList_.end(), ship) == planetList_.end()) return false;
     return true;
 }
 
-void Student::StarSystemScene::eraseEverything()
+void Ui::StarSystemScene::eraseEverything()
 {
     eraseAllPlanets();
     eraseAllNPCShips();

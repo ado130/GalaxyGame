@@ -9,7 +9,7 @@
 #include <QBrush>
 #include <cassert>
 
-Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene *scene,
+Student::DrawableObjectsManager::DrawableObjectsManager(Ui::StarSystemScene *scene,
                                                         std::shared_ptr<Student::UserActionHandler> userActionHandler,
                                                         QObject *parent) :
     QObject(parent), scene_(scene), userActionHandler_(userActionHandler)
@@ -23,7 +23,7 @@ Student::DrawableObjectsManager::DrawableObjectsManager(Student::StarSystemScene
     shipAbandonedIcon_ = QPixmap(":/images/images/dead.png");
 }
 
-Student::StarSystemScene* Student::DrawableObjectsManager::getScene()
+Ui::StarSystemScene* Student::DrawableObjectsManager::getScene()
 {
     assert(scene_);
 
@@ -40,7 +40,7 @@ int Student::DrawableObjectsManager::getNumberOfPlanets()
     return planetUiList_.size();
 }
 
-QList<QGraphicsItem *> Student::DrawableObjectsManager::getCollidingItems(PlayerShipUi* player)
+QList<QGraphicsItem *> Student::DrawableObjectsManager::getCollidingItems(Ui::PlayerShipUi* player)
 {
     assert(scene_);
 
@@ -56,7 +56,7 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
         QString randomPlanetName = QString::fromStdString(planets_.at(randomPlanetIndex));
         QString pathToImage = QString(":/images/images/planets/%1.png").arg(randomPlanetName.toLower());
         QPixmap bigPixmap = QPixmap(pathToImage);
-        Student::PlanetUi *planet = new Student::PlanetUi(bigPixmap.scaledToWidth(bigPixmap.width()/3),
+        Ui::PlanetUi *planet = new Ui::PlanetUi(bigPixmap.scaledToWidth(bigPixmap.width()/3),
                                                           ship->getLocation()->getCoordinates().x*coordsScale_+
                                                             Common::randomMinMax(starSystemSpawnRadius_*(-1), starSystemSpawnRadius_-bigPixmap.width()/3),
                                                           ship->getLocation()->getCoordinates().y*coordsScale_+
@@ -66,20 +66,20 @@ void Student::DrawableObjectsManager::registerShip(std::shared_ptr<Common::Ship>
 
     else if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
-        NPCShipUi *npcship = new NPCShipUi(cargoShipIcon_,
+        Ui::NPCShipUi *npcship = new Ui::NPCShipUi(cargoShipIcon_,
                                            ship->getLocation()->getCoordinates().x*coordsScale_+
                                             Common::randomMinMax(starSystemSpawnRadius_*(-1), starSystemSpawnRadius_),
                                            ship->getLocation()->getCoordinates().y*coordsScale_+
                                             Common::randomMinMax(starSystemSpawnRadius_*(-1), starSystemSpawnRadius_));
         cargoShipUiList_.append(qMakePair(std::dynamic_pointer_cast<Common::CargoShip> (ship), npcship));
     }
-    else if(std::dynamic_pointer_cast<PlayerShip> (ship))
+    else if(std::dynamic_pointer_cast<Student::PlayerShip> (ship))
     {
-        PlayerShipUi *playership = new PlayerShipUi(playerShipIcon_,
+        Ui::PlayerShipUi *playership = new Ui::PlayerShipUi(playerShipIcon_,
                                                     ship->getLocation()->getCoordinates().x*coordsScale_,
                                                     ship->getLocation()->getCoordinates().y*coordsScale_,
                                                     userActionHandler_);
-        playerShipUiList_.append(qMakePair(std::dynamic_pointer_cast<PlayerShip> (ship), playership));
+        playerShipUiList_.append(qMakePair(std::dynamic_pointer_cast<Student::PlayerShip> (ship), playership));
     }
     else
     {
@@ -212,7 +212,7 @@ std::shared_ptr<Common::CargoShip> Student::DrawableObjectsManager::getCargoShip
     return nullptr;
 }
 
-PlayerShipUi* Student::DrawableObjectsManager::getPlayerShipUiByObject(std::shared_ptr<PlayerShip> ship)
+Ui::PlayerShipUi* Student::DrawableObjectsManager::getPlayerShipUiByObject(std::shared_ptr<Student::PlayerShip> ship)
 {
     for(auto element : playerShipUiList_)
     {
@@ -225,7 +225,7 @@ PlayerShipUi* Student::DrawableObjectsManager::getPlayerShipUiByObject(std::shar
 }
 
 
-NPCShipUi* Student::DrawableObjectsManager::getShipUiByObject(std::shared_ptr<Common::Ship> ship)
+Ui::NPCShipUi* Student::DrawableObjectsManager::getShipUiByObject(std::shared_ptr<Common::Ship> ship)
 {
     for(auto element : cargoShipUiList_)
     {
@@ -255,7 +255,7 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
     Q_UNUSED(from);
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
-        NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
+        Ui::NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
         if(uiShip != nullptr)
         {
             uiShip->setPos(to.x*coordsScale_, to.y*coordsScale_);
@@ -283,7 +283,7 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
 
     if(std::dynamic_pointer_cast<Common::CargoShip> (ship))
     {
-        NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
+        Ui::NPCShipUi* uiShip = getShipUiByObject(std::dynamic_pointer_cast<Common::CargoShip> (ship));
         if(uiShip != nullptr)
         {
             if(ship->getLocation() != nullptr)
@@ -320,7 +320,7 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
     }
     else if(std::dynamic_pointer_cast<PlayerShip> (ship))
     {
-        PlayerShipUi* uiShip = getPlayerShipUiByObject(std::dynamic_pointer_cast<PlayerShip> (ship));
+        Ui::PlayerShipUi* uiShip = getPlayerShipUiByObject(std::dynamic_pointer_cast<Student::PlayerShip> (ship));
         if(uiShip != nullptr)
         {
             QRect rect = QRect(ship->getLocation()->getCoordinates().x*coordsScale_-starSystemSpawnRadius_,
@@ -345,7 +345,7 @@ void Student::DrawableObjectsManager::changeShipPosition(std::shared_ptr<Common:
 }
 
 
-bool Student::DrawableObjectsManager::isInPlayerShipVisibilityRange(NPCShipUi* ship)
+bool Student::DrawableObjectsManager::isInPlayerShipVisibilityRange(Ui::NPCShipUi* ship)
 {
     assert(playerShipUiList_.size() > 0);
 
@@ -369,7 +369,7 @@ Common::IGalaxy::ShipVector Student::DrawableObjectsManager::getPlanetsByStarSys
 
 void Student::DrawableObjectsManager::shipIsAbandoned(std::shared_ptr<Common::Ship> ship)
 {
-    NPCShipUi* shipUi = getShipUiByObject(ship);
+    Ui::NPCShipUi* shipUi = getShipUiByObject(ship);
     if(shipUi != nullptr)
     {
         shipUi->changePixmapAndRotation(shipAbandonedIcon_, 0);

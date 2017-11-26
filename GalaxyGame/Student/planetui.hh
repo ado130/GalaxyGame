@@ -5,7 +5,7 @@
 
 #include <QGraphicsPixmapItem>
 
-namespace Student {
+namespace Ui {
 /**
  * @brief Class representing PlanetS in UI
  *

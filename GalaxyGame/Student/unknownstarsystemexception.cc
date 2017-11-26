@@ -1,6 +1,6 @@
 #include "unknownstarsystemexception.hh"
 
-UnknownStarSystemException::UnknownStarSystemException(const std::string &msg):
+Student::UnknownStarSystemException::UnknownStarSystemException(const std::string &msg):
     GameException(msg)
 {
 

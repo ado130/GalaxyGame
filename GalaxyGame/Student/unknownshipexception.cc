@@ -1,6 +1,6 @@
 #include "unknownshipexception.hh"
 
-UnknownShipException::UnknownShipException(const std::string &msg):
+Student::UnknownShipException::UnknownShipException(const std::string &msg):
     GameException(msg)
 {
 

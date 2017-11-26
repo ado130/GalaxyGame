@@ -5,7 +5,7 @@
 
 #define NPCSHIPSPEED_MOVEMENT 0.1
 
-NPCShipUi::NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
+Ui::NPCShipUi::NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
     QObject(parent)
 {  
     setPixmap(pixmap);
@@ -27,13 +27,13 @@ NPCShipUi::NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
 
 }
 
-void NPCShipUi::changePixmapAndRotation(QPixmap pixmap, int rotation)
+void Ui::NPCShipUi::changePixmapAndRotation(QPixmap pixmap, int rotation)
 {
     setPixmap(pixmap);
     setRotation(rotation);
 }
 
-void NPCShipUi::canMove(bool canMove)
+void Ui::NPCShipUi::canMove(bool canMove)
 {
     assert(keyMovement_);
     assert(randomKeyPress_);
@@ -51,12 +51,12 @@ void NPCShipUi::canMove(bool canMove)
     canMove_ = canMove;
 }
 
-bool NPCShipUi::canMove()
+bool Ui::NPCShipUi::canMove()
 {
     return canMove_;
 }
 
-void NPCShipUi::randomChangeOfDirection()
+void Ui::NPCShipUi::randomChangeOfDirection()
 {
     int randomKey = Common::randomMinMax(0,2);
     if(randomKey == 1)
@@ -72,31 +72,31 @@ void NPCShipUi::randomChangeOfDirection()
     }
 }
 
-void NPCShipUi::goLeft()
+void Ui::NPCShipUi::goLeft()
 {
     setRotation(rotation()-Common::randomMinMax(1, 180));
 }
 
-void NPCShipUi::goRight()
+void Ui::NPCShipUi::goRight()
 {
     setRotation(rotation()+Common::randomMinMax(1, 180));
 }
 
-void NPCShipUi::goUp(qreal width, qreal height)
+void Ui::NPCShipUi::goUp(qreal width, qreal height)
 {
     qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 ) * NPCSHIPSPEED_MOVEMENT;
     qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * NPCSHIPSPEED_MOVEMENT;
     setPos(x()+diffX, y()+diffY);
 }
 
-void NPCShipUi::goDown(qreal width, qreal height)
+void Ui::NPCShipUi::goDown(qreal width, qreal height)
 {
     qreal diffX = width * cos( (rotation()-90) * M_PI / 180.0 ) * NPCSHIPSPEED_MOVEMENT;
     qreal diffY = height * sin( (rotation()-90) * M_PI / 180.0 ) * NPCSHIPSPEED_MOVEMENT;
     setPos(x()-diffX, y()-diffY);
 }
 
-void NPCShipUi::moveForward()
+void Ui::NPCShipUi::moveForward()
 {
     qreal width = scale()*boundingRect().size().width()/2;
     qreal height = scale()*boundingRect().size().height()/2;

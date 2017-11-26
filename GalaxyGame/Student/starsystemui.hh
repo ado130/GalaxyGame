@@ -9,7 +9,7 @@
 #include "point.hh"
 #include "useractionhandler.hh"
 
-namespace Student {
+namespace Ui {
 /**
  * @brief Class representing StarSystems in map UI
  */

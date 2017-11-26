@@ -8,7 +8,7 @@
 
 #include <QGraphicsScene>
 
-namespace Student {
+namespace Ui {
 /**
  * @brief StarSystemScene is a scene which holds all UI representations of
  * objects which are supposed to appear on single Star System view

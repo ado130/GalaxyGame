@@ -38,9 +38,9 @@ MainWindow::MainWindow(QWidget *parent,
     galaxy_ = galaxy;
     gameRunner_ = gameRunner;
     userActionHandler_ = std::make_shared<Student::UserActionHandler>();
-    Student::StarSystemScene *scene = new Student::StarSystemScene(this);
+    Ui::StarSystemScene *scene = new Ui::StarSystemScene(this);
     drawManager_ = std::make_shared<Student::DrawableObjectsManager>(scene , userActionHandler_, this);
-    itemsInGalaxy_ = std::make_shared<ItemsInGalaxy>();
+    itemsInGalaxy_ = std::make_shared<Student::ItemsInGalaxy>();
     question_ = std::make_shared<Student::Question>(galaxy, itemsInGalaxy_);
     settings_ = std::make_shared<Student::Settings>();
     topListWindow_ = new TopListWindow();
@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent,
     Common::addNewShipType("Planet", [=] (std::shared_ptr<Common::StarSystem> initialLocation,
                                                         std::shared_ptr<Common::IEventHandler> events
                                                         ) -> std::shared_ptr<Common::Ship>  {
-        return std::make_shared<Student::Planet>(std::make_shared<PlanetCoreDrive>(galaxy_), initialLocation, events,
+        return std::make_shared<Student::Planet>(std::make_shared<Student::PlanetCoreDrive>(galaxy_), initialLocation, events,
                                                  itemsInGalaxy_->getRandomTradeGoods());
     });
 
@@ -176,7 +176,7 @@ void MainWindow::createPlayer()
     std::shared_ptr<Common::ShipEngine> shipEngine = std::make_shared<Common::WormHoleDrive>(galaxy_);
     std::shared_ptr<Common::StarSystem> initialLocation = galaxy_->getRandomSystem();
     Student::Statistics *stats = new Student::Statistics(settings_->getMaxCreditAllowance(), std::dynamic_pointer_cast<Student::EventHandler>(handler_));
-    player_ = std::make_shared<PlayerShip>(shipEngine, initialLocation, handler_, stats);
+    player_ = std::make_shared<Student::PlayerShip>(shipEngine, initialLocation, handler_, stats);
     player_->getStatistics()->addCredits(settings_->getInitialPlayerCredit());
     galaxy_->addShip(player_);
     handler_->shipSpawned(player_);
@@ -200,7 +200,7 @@ void MainWindow::pressedSpace()
                                              tr("Trade type:"), items, 0, false, &ok);
         if (ok && !item.isEmpty())
         {
-            TradeAction trade = TradeAction(player_, currentPlanet_, item.toLower().toStdString(),
+            Student::TradeAction trade = Student::TradeAction(player_, currentPlanet_, item.toLower().toStdString(),
                                             currentStarSystem_, question_, settings_);
             if(trade.canDo())
             {
@@ -244,7 +244,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     std::shared_ptr<Common::StarSystem> starSystem = galaxy_->getStarSystemById(starSystemId);
 
     if(starSystem == nullptr) {
-        throw UnknownStarSystemException("Star system does not exist in the galaxy.");
+        throw Student::UnknownStarSystemException("Star system does not exist in the galaxy.");
     }
 
     currentStarSystem_ = starSystem;
@@ -258,7 +258,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
         {
             drawManager_->drawShip(ship);
         }
-        catch (UnknownShipException ex)
+        catch (Student::UnknownShipException ex)
         {
             showErrorDialog(ex.msg(), true);
         }
@@ -274,7 +274,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     {
         drawManager_->setFocusOnPlayer(player_);
     }
-    catch(UnknownShipException ex)
+    catch(Student::UnknownShipException ex)
     {
         showErrorDialog(ex.msg(), true);
     }
@@ -294,7 +294,7 @@ void MainWindow::refreshUI()
     {
         drawManager_->setFocusOnPlayer(player_);
     }
-    catch(UnknownShipException ex)
+    catch(Student::UnknownShipException ex)
     {
         showErrorDialog(ex.msg(), true);
     }
@@ -330,14 +330,14 @@ void MainWindow::checkCollision()
     QList<QGraphicsItem *> colliding_Items = drawManager_->getScene()->collidingItems(drawManager_->getPlayerShipUiByObject(player_));
     for(int i = 0, n = colliding_Items.size(); i<n; ++i)
     {
-        if(typeid (*(colliding_Items[i])) == typeid (NPCShipUi))
+        if(typeid (*(colliding_Items[i])) == typeid (Ui::NPCShipUi))
         {
             isNPCShipNear_ = true;
             std::shared_ptr<Common::Ship> ship = drawManager_->getCargoShipByUiItem(colliding_Items[i]);
             currentNPCShip_ = ship;
             return;
         }
-        else if(typeid (*(colliding_Items[i])) == typeid (Student::PlanetUi))
+        else if(typeid (*(colliding_Items[i])) == typeid (Ui::PlanetUi))
         {
             isPlayerTrading_ = true;
             std::shared_ptr<Student::Planet> planet = drawManager_->getPlanetByUiItem(colliding_Items[i]);
@@ -436,14 +436,14 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
     //add ship to distress list
     shipsInDistress_.push_back(ship);
     //Stop ship in ui
-    NPCShipUi* shipUi = drawManager_->getShipUiByObject(ship);
+    Ui::NPCShipUi* shipUi = drawManager_->getShipUiByObject(ship);
     if(shipUi != nullptr)
     {
         shipUi->canMove(false);
     }
     else
     {
-        throw UnknownShipException("NPC ship " + ship->getName() + " was not found in UI");
+        throw Student::UnknownShipException("NPC ship " + ship->getName() + " was not found in UI");
     }
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
@@ -454,7 +454,7 @@ void MainWindow::shipCallingForHelp(std::shared_ptr<Common::Ship> ship)
         {
             map_->markStarSystemAsDistressed(ship->getLocation());
         }
-        catch(UnknownStarSystemException ex)
+        catch(Student::UnknownStarSystemException ex)
         {
             showErrorDialog(ex.msg(), true);
         }
@@ -484,14 +484,14 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
         }
     }
     //Ship in ui can move again
-    NPCShipUi* shipUi  = drawManager_->getShipUiByObject(ship);
+    Ui::NPCShipUi* shipUi  = drawManager_->getShipUiByObject(ship);
     if(shipUi != nullptr)
     {
         shipUi->canMove(true);
     }
     else
     {
-        throw UnknownShipException("NPC ship " + ship->getName() + " was not found in UI");
+        throw Student::UnknownShipException("NPC ship " + ship->getName() + " was not found in UI");
     }
     //Update ui
     ui->lbShipsInDistress->setText(QString::number(shipsInDistress_.size()));
@@ -502,7 +502,7 @@ void MainWindow::shipSavedFromDistress(std::shared_ptr<Common::Ship> ship)
         {
             map_->unmarkStarSystemDistress(ship->getLocation());
         }
-        catch(UnknownStarSystemException ex)
+        catch(Student::UnknownStarSystemException ex)
         {
             showErrorDialog(ex.msg(), true);
         }
@@ -525,7 +525,7 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
     {
         drawManager_->shipIsAbandoned(ship);
     }
-    catch(UnknownShipException ex)
+    catch(Student::UnknownShipException ex)
     {
         showErrorDialog(ex.msg(), true);
     }
@@ -552,7 +552,7 @@ void MainWindow::shipAbandoned(std::shared_ptr<Common::Ship> ship)
         {
             map_->unmarkStarSystemDistress(ship->getLocation());
         }
-        catch(UnknownStarSystemException ex)
+        catch(Student::UnknownStarSystemException ex)
         {
             showErrorDialog(ex.msg(), true);
         }

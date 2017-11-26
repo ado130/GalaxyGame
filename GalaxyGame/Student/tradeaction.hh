@@ -11,6 +11,8 @@
 #include <memory>
 #include <string>
 
+namespace Student {
+
 /**
  * @brief The TradeAction class is used when PlayerShip invokes trade with Planet
  */
@@ -66,5 +68,6 @@ private:
     //! current game settings
     std::shared_ptr<Student::Settings> settings_;
 };
+}
 
 #endif // TRADEACTION_HH

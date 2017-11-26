@@ -3,6 +3,8 @@
 
 #include "gameexception.hh"
 
+namespace Student {
+
 /**
  * @brief The UnknownShipException is thrown when certain Ship cannot be found
  * or recognized
@@ -21,5 +23,6 @@ public:
      */
     ~UnknownShipException() {}
 };
+}
 
 #endif // UNKNOWNSHIPEXCEPTION_HH

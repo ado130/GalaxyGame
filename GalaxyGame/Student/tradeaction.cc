@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-TradeAction::TradeAction(std::shared_ptr<PlayerShip> player, std::shared_ptr<Student::Planet> currentPlanet,
+Student::TradeAction::TradeAction(std::shared_ptr<PlayerShip> player, std::shared_ptr<Student::Planet> currentPlanet,
                          std::string action, std::shared_ptr<Common::StarSystem> currentStarSystem,
                          std::shared_ptr<Student::Question> question, std::shared_ptr<Student::Settings> settings):
     player_(player), currentPlanet_(currentPlanet), action_(action), currentStarSystem_(currentStarSystem),
@@ -11,7 +11,7 @@ TradeAction::TradeAction(std::shared_ptr<PlayerShip> player, std::shared_ptr<Stu
 
 }
 
-bool TradeAction::canDo() const
+bool Student::TradeAction::canDo() const
 {
     assert(player_);
     assert(currentPlanet_);
@@ -51,7 +51,7 @@ bool TradeAction::canDo() const
     return false;
 }
 
-bool TradeAction::execute()
+bool Student::TradeAction::execute()
 {
     assert(player_);
     assert(currentPlanet_);

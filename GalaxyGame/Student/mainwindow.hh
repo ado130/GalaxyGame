@@ -175,10 +175,10 @@ private:
     std::shared_ptr<Student::DrawableObjectsManager> drawManager_;
 
     //! all items existing in galaxy
-    std::shared_ptr<ItemsInGalaxy> itemsInGalaxy_;
+    std::shared_ptr<Student::ItemsInGalaxy> itemsInGalaxy_;
 
     //! ship controlled by user
-    std::shared_ptr<PlayerShip> player_;
+    std::shared_ptr<Student::PlayerShip> player_;
 
     //! object responsible for Question checking / completing
     std::shared_ptr<Student::Question> question_;

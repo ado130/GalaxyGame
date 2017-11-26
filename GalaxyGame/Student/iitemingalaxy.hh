@@ -2,6 +2,9 @@
 #define IITEMINGALAXY_HH
 
 #include <string>
+
+namespace Student {
+
 /**
  * @brief Every item in galaxy, which can be put into player's inventory
  * have to inplement this class
@@ -16,5 +19,6 @@ public:
      */
     virtual std::string getName() = 0;
 };
+}
 
 #endif // IITEMINGALAXY_HH

@@ -3,6 +3,8 @@
 
 #include "gameexception.hh"
 
+namespace Student {
+
 /**
  * @brief The UnknownStarSystemException is thrown when certain StarSystem cannot be found
  * or recognized
@@ -21,5 +23,6 @@ public:
      */
     ~UnknownStarSystemException(){}
 };
+}
 
 #endif // UNKNOWNSTARSYSTEMEXCEPTION_HH

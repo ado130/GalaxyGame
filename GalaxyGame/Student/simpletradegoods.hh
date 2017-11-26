@@ -5,6 +5,7 @@
 
 #include <string>
 
+namespace Student {
 
 /**
  * @brief SimpleTradeGoods class represents items which can be put into player's
@@ -51,6 +52,7 @@ private:
     //! item price
     int price_;
 };
+}
 
 #endif // SIMPLETRADEGOODS_H
 

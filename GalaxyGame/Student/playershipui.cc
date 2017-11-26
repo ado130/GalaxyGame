@@ -9,7 +9,7 @@
 
 #define PLAYERSPEED_MOVEMENT 0.3
 
-PlayerShipUi::PlayerShipUi(QPixmap pixmap, int posX, int posY, std::shared_ptr<Student::UserActionHandler> userActionHandler, QObject *parent):
+Ui::PlayerShipUi::PlayerShipUi(QPixmap pixmap, int posX, int posY, std::shared_ptr<Student::UserActionHandler> userActionHandler, QObject *parent):
     QObject(parent), handler_(userActionHandler)
 {
     setPixmap(pixmap);
@@ -25,7 +25,7 @@ PlayerShipUi::PlayerShipUi(QPixmap pixmap, int posX, int posY, std::shared_ptr<S
     keyMovement_->start(50);
 }
 
-void PlayerShipUi::keyPressEvent(QKeyEvent *event)
+void Ui::PlayerShipUi::keyPressEvent(QKeyEvent *event)
 {
     if(!event->isAutoRepeat())
     {
@@ -34,7 +34,7 @@ void PlayerShipUi::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void PlayerShipUi::keyReleaseEvent(QKeyEvent *event)
+void Ui::PlayerShipUi::keyReleaseEvent(QKeyEvent *event)
 {
     if(!event->isAutoRepeat())
     {
@@ -42,17 +42,17 @@ void PlayerShipUi::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-void PlayerShipUi::goLeft()
+void Ui::PlayerShipUi::goLeft()
 {
     setRotation(rotation()-5);
 }
 
-void PlayerShipUi::goRight()
+void Ui::PlayerShipUi::goRight()
 {
     setRotation(rotation()+5);
 }
 
-void PlayerShipUi::goUp(qreal width, qreal height)
+void Ui::PlayerShipUi::goUp(qreal width, qreal height)
 {
     assert(handler_);
 
@@ -61,7 +61,7 @@ void PlayerShipUi::goUp(qreal width, qreal height)
     handler_->pressedPlayerMovementKey(this, x()+diffX, y()+diffY);
 }
 
-void PlayerShipUi::goDown(qreal width, qreal height)
+void Ui::PlayerShipUi::goDown(qreal width, qreal height)
 {
     assert(handler_);
 
@@ -70,7 +70,7 @@ void PlayerShipUi::goDown(qreal width, qreal height)
     handler_->pressedPlayerMovementKey(this, x()-diffX, y()-diffY);
 }
 
-void PlayerShipUi::updateMovement()
+void Ui::PlayerShipUi::updateMovement()
 {
     if(pressedKeys_.count() > 0)
     {
@@ -81,7 +81,7 @@ void PlayerShipUi::updateMovement()
     }
 }
 
-void PlayerShipUi::moveAccordingToPressedKey(int key)
+void Ui::PlayerShipUi::moveAccordingToPressedKey(int key)
 {
     assert(handler_);
 

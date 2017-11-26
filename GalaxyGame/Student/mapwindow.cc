@@ -54,7 +54,7 @@ void MapWindow::markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> s
             return;
         }
     }
-    throw UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
+    throw Student::UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
 }
 
 void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> starSystem)
@@ -76,7 +76,7 @@ void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> sta
             }
         }
     }
-    throw UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
+    throw Student::UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
 }
 
 void MapWindow::markQuestionStarSystem(std::shared_ptr<Common::StarSystem> starSystem)
@@ -92,7 +92,7 @@ void MapWindow::markQuestionStarSystem(std::shared_ptr<Common::StarSystem> starS
             return;
         }
     }
-    throw UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
+    throw Student::UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
 }
 
 void MapWindow::addMarkSign(QGraphicsPixmapItem *item, QPixmap pixmap, int x, int y)
@@ -127,7 +127,7 @@ void MapWindow::showStarSystems(Common::StarSystem::StarSystemVector starSystem)
 
         Common::Point mapCoords = Common::Point(starSystem.at(i).get()->getCoordinates().x*coordsScale_,
                                   starSystem.at(i).get()->getCoordinates().y*coordsScale_);
-        Student::StarSystemUi *starSystemUi = new Student::StarSystemUi(smallerPix, handler_,
+        Ui::StarSystemUi *starSystemUi = new Ui::StarSystemUi(smallerPix, handler_,
                                                                         mapCoords,
                                                                         starSystem.at(i).get()->getId());
         scene_->addItem(starSystemUi);
@@ -152,7 +152,7 @@ void MapWindow::travelToStarSystem(unsigned idStarUi)
             return;
         }
     }
-    throw UnknownStarSystemException("Star System with id " + std::to_string(idStarUi) + " was not found.");
+    throw Student::UnknownStarSystemException("Star System with id " + std::to_string(idStarUi) + " was not found.");
 }
 
 void MapWindow::showGoodsInfo(unsigned idStarUi)

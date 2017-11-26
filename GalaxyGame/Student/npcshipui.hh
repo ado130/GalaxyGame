@@ -7,6 +7,8 @@
 #include <QSet>
 #include <QTimer>
 
+namespace Ui {
+
 /**
  * @brief Class representing NPC ships in UI
  */
@@ -101,5 +103,6 @@ private:
     //! canMove_ indicates whether ship can move or not
     bool canMove_;
 };
+}
 
 #endif // NPCSHIP_HH

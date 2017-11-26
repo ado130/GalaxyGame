@@ -11,7 +11,7 @@
 #include "igalaxy.hh"
 
 //! QList of QPairs used to store StarSystem base objects and their StarSystemUi UI representations
-typedef QList< QPair<std::shared_ptr<Common::StarSystem>, Student::StarSystemUi*> > starSystemUI_t;
+typedef QList< QPair<std::shared_ptr<Common::StarSystem>, Ui::StarSystemUi*> > starSystemUI_t;
 
 namespace Ui {
 class MapWindow;

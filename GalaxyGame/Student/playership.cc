@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cassert>
 
-PlayerShip::PlayerShip(std::shared_ptr<Common::ShipEngine> engine,
+Student::PlayerShip::PlayerShip(std::shared_ptr<Common::ShipEngine> engine,
                        std::shared_ptr<Common::StarSystem> initialLocation,
                        std::shared_ptr<Common::IEventHandler> events,
                        Student::Statistics *statistics):
@@ -12,19 +12,19 @@ PlayerShip::PlayerShip(std::shared_ptr<Common::ShipEngine> engine,
 
 }
 
-bool PlayerShip::decideAction()
+bool Student::PlayerShip::decideAction()
 {
     return 0;
 }
 
-Student::Statistics *PlayerShip::getStatistics()
+Student::Statistics *Student::PlayerShip::getStatistics()
 {
     assert(statistics_);
 
     return statistics_;
 }
 
-void PlayerShip::removeGoodsFromInventory(std::string goods)
+void Student::PlayerShip::removeGoodsFromInventory(std::string goods)
 {
     for(auto k = inventory_.begin(); k != inventory_.end(); ++k)
     {
