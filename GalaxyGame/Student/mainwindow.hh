@@ -265,6 +265,7 @@ private Q_SLOTS:
     void on_actionTop_list_triggered();
     void on_actionDefault_Settings_triggered();
     void on_actionReset_top_list_triggered();
+    void changeFocus();
 
 Q_SIGNALS:
     void startCollisionTimer();

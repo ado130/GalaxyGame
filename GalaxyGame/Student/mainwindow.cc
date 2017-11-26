@@ -278,6 +278,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     {
         showErrorDialog(ex.msg(), true);
     }
+    ui->graphicsView->setFocus();
     if(map_ != nullptr)
     {
         gameTimer_->start();
@@ -567,7 +568,7 @@ void MainWindow::exceptionInShipExecution(std::shared_ptr<Common::Ship> ship, co
 }
 
 void MainWindow::on_actionMy_statistics_triggered()
-{    
+{
     //Check if player is initialized
     if(player_ != nullptr)
     {
@@ -607,6 +608,8 @@ void MainWindow::on_pbShowMap_clicked()
                 map_, SLOT(showGoodsInfo(unsigned)));
         connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
                 this, SLOT(planetsInStarSystemRequest(unsigned)));
+        connect(map_, SIGNAL(finished(int)),
+                this, SLOT(changeFocus()));
         map_->setModal(true);
 
         markQuestionStarSystems();
@@ -712,12 +715,19 @@ void MainWindow::on_actionReset_top_list_triggered()
     }
 }
 
+void MainWindow::changeFocus()
+{
+    ui->graphicsView->setFocus();
+}
+
 
 void MainWindow::on_pbQuestions_clicked()
 {
     assert(question_);
 
     questionDlg_ = new QuestionDlg(question_->getActiveQuestions(), question_->getCompletedQuestions(), this);
+    connect(questionDlg_, SIGNAL(finished(int)),
+            this, SLOT(changeFocus()));
     questionDlg_->setAttribute(Qt::WA_DeleteOnClose, true);
     questionDlg_->setModal(true);
     questionDlg_->exec();
