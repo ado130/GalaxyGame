@@ -10,7 +10,8 @@
 Ui::StarSystemScene::StarSystemScene(QWidget *parent)
 {
     parent_ = parent;
-    setBackgroundBrush( Qt::lightGray );
+//    setBackgroundBrush( Qt::lightGray );
+    setBackgroundBrush( QPixmap(":/images/images/bg.jpg") );
 }
 
 void Ui::StarSystemScene::drawPlayerShip(PlayerShipUi *ship)

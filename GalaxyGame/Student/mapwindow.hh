@@ -91,6 +91,11 @@ public:
      * @post starSystem is marked in UI with pixQuestion_ icon
      */
     void markQuestionStarSystem(std::shared_ptr<Common::StarSystem> starSystem);
+
+    /**
+     * @brief centerOnPlayer centers graphics view on player location
+     */
+    void centerOnPlayer();
 private:
     //! MapWindow ui
     Ui::MapWindow *ui;

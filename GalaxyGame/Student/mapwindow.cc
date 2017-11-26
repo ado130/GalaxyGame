@@ -32,6 +32,8 @@ MapWindow::MapWindow(std::shared_ptr<Student::UserActionHandler> handler,
     playerLocation_->setPos(currentStarSystem->getCoordinates().x*coordsScale_,
                             currentStarSystem->getCoordinates().y*coordsScale_-starSystemList_[0].second->boundingRect().height()/2);
     scene_->addItem(playerLocation_);
+    scene_->setBackgroundBrush( QPixmap(":/images/images/map_bg.jpg") );
+    centerOnPlayer();
 
 }
 
@@ -93,6 +95,11 @@ void MapWindow::markQuestionStarSystem(std::shared_ptr<Common::StarSystem> starS
         }
     }
     throw Student::UnknownStarSystemException("Star System " + starSystem->getName() + " was not found.");
+}
+
+void MapWindow::centerOnPlayer()
+{
+    ui->graphicsView->centerOn(playerLocation_);
 }
 
 void MapWindow::addMarkSign(QGraphicsPixmapItem *item, QPixmap pixmap, int x, int y)

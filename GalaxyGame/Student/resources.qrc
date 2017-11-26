@@ -15,5 +15,7 @@
         <file>images/dead.png</file>
         <file>images/location-pointer.png</file>
         <file>images/question.png</file>
+        <file>images/bg.jpg</file>
+        <file>images/map_bg.jpg</file>
     </qresource>
 </RCC>

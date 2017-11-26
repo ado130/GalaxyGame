@@ -618,6 +618,7 @@ void MainWindow::on_pbShowMap_clicked()
         markQuestionStarSystems();
         map_->show();
     }
+    map_->centerOnPlayer();
 }
 
 void MainWindow::markQuestionStarSystems()
