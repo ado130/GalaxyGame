@@ -259,6 +259,7 @@ private Q_SLOTS:
     void on_actionMy_statistics_triggered();
     void gameEvent();
     void checkCollision();
+    void initMap();
     void on_pbShowMap_clicked();
     void on_pbQuestions_clicked();
     void on_pbEndGame_clicked();

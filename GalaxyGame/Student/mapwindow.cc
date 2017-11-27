@@ -34,7 +34,6 @@ MapWindow::MapWindow(std::shared_ptr<Student::UserActionHandler> handler,
     scene_->addItem(playerLocation_);
     scene_->setBackgroundBrush( QPixmap(":/images/images/map_bg.jpg") );
     centerOnPlayer();
-
 }
 
 MapWindow::~MapWindow()
@@ -51,8 +50,32 @@ void MapWindow::markStarSystemAsDistressed(std::shared_ptr<Common::StarSystem> s
         if(element.first == starSystem)
         {
             QGraphicsPixmapItem *item = new QGraphicsPixmapItem();
-            distressedStarSystemItems_.push_back(item);
-            addMarkSign(item, pixDistressed_, element.second->x()+element.second->boundingRect().right(), element.second->y());
+            item->setPos(element.second->x()+element.second->boundingRect().right(), element.second->y());
+
+            if(distressedStarSystemItems_.empty())
+            {
+                distressedStarSystemItems_.push_back(item);
+                addMarkSign(item, pixDistressed_, element.second->x()+element.second->boundingRect().right(), element.second->y());
+                return;
+            }
+            else
+            {
+                bool alreadyMarked = false;
+                for(auto distressesSS : distressedStarSystemItems_)
+                {
+                    if(item->pos().x() == distressesSS->pos().x() &&
+                            item->pos().y() == distressesSS->pos().y())
+                    {
+                        alreadyMarked = true;
+                    }
+                }
+                if(!alreadyMarked)
+                {
+                    distressedStarSystemItems_.push_back(item);
+                    addMarkSign(item, pixDistressed_, element.second->x()+element.second->boundingRect().right(), element.second->y());
+                    return;
+                }
+            }
             return;
         }
     }
@@ -63,18 +86,20 @@ void MapWindow::unmarkStarSystemDistress(std::shared_ptr<Common::StarSystem> sta
 {
     assert(scene_);
 
-    for(auto item : distressedStarSystemItems_)
+    if(distressedStarSystemItems_.size() == 0)
+    {
+        return;
+    }
+
+    for(unsigned i = 0; i < distressedStarSystemItems_.size(); i++)
     {
         for(auto element : starSystemList_)
         {
             if(element.first == starSystem)
             {
-                if(cmpf(item->x(), element.second->x()+element.second->boundingRect().right()) &&
-                        cmpf(item->y(), element.second->y()))
-                {
-                    scene_->removeItem(item);
-                    return;
-                }
+                scene_->removeItem(distressedStarSystemItems_[i]);
+                distressedStarSystemItems_.erase(distressedStarSystemItems_.begin()+i);
+                return;
             }
         }
     }

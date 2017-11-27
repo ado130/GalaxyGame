@@ -161,6 +161,7 @@ void MainWindow::startGame()
     ui->pbEndGame->setEnabled(true);
 
     loadSettings();
+    initMap();
 
     playingTime_ = new QTime();
     playingTime_->start();
@@ -217,6 +218,10 @@ void MainWindow::pressedSpace()
         assert(currentNPCShip_);
         Common::RepairAction *action = new Common::RepairAction(player_, currentNPCShip_->getEngine(), false);
         int originHealth = currentNPCShip_->getEngine()->getHealth();
+        if(originHealth == 0)
+        {
+            return;
+        }
         if(action->execute())
         {
             if(originHealth != currentNPCShip_->getEngine()->getHealth())
@@ -238,6 +243,7 @@ void MainWindow::travelToStarSystem(unsigned starSystemId)
     {
         gameTimer_->stop();
         map_->hide();
+        ui->graphicsView->setFocus();
         if(player_->getLocation()->getId() == starSystemId)     // if destination is equal to current star system
         {
             gameTimer_->start();
@@ -373,6 +379,23 @@ void MainWindow::checkCollision()
     ui->gbStarPlanet->setTitle("Nothing nearby");
     ui->detailNearbyTitle->clear();
     ui->nameNearbyTitle->clear();
+}
+
+void MainWindow::initMap()
+{
+    QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
+    connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)),
+            this, SLOT(travelToStarSystem(unsigned)));
+    map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), player_->getLocation(), this);
+    connect(eventHandlerObj, SIGNAL(showGoodsInfo(unsigned)),
+            map_, SLOT(showGoodsInfo(unsigned)));
+    connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
+            this, SLOT(planetsInStarSystemRequest(unsigned)));
+    connect(map_, SIGNAL(finished(int)),
+            this, SLOT(changeFocus()));
+    map_->setModal(true);
+
+    markQuestionStarSystems();
 }
 
 void MainWindow::loadSettings()
@@ -620,20 +643,7 @@ void MainWindow::on_pbShowMap_clicked()
 
     if(map_ == nullptr)
     {
-        QObject* eventHandlerObj = dynamic_cast<QObject*>(userActionHandler_.get());
-        connect(eventHandlerObj, SIGNAL(travelRequest(unsigned)),
-                this, SLOT(travelToStarSystem(unsigned)));
-        map_ = new MapWindow(userActionHandler_, galaxy_->getStarSystemVector(), player_->getLocation(), this);
-        connect(eventHandlerObj, SIGNAL(showGoodsInfo(unsigned)),
-                map_, SLOT(showGoodsInfo(unsigned)));
-        connect(map_, SIGNAL(planetsByStarSystemRequest(unsigned)),
-                this, SLOT(planetsInStarSystemRequest(unsigned)));
-        connect(map_, SIGNAL(finished(int)),
-                this, SLOT(changeFocus()));
-        map_->setModal(true);
-
-        markQuestionStarSystems();
-
+        initMap();
         map_->exec();
     }
     else
