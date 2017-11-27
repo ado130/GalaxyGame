@@ -128,8 +128,8 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
-        <width>81</width>
+        <y>20</y>
+        <width>60</width>
         <height>16</height>
        </rect>
       </property>
@@ -144,8 +144,8 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
-        <width>81</width>
+        <y>40</y>
+        <width>60</width>
         <height>16</height>
        </rect>
       </property>
@@ -160,8 +160,8 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
-        <width>81</width>
+        <y>60</y>
+        <width>60</width>
         <height>16</height>
        </rect>
       </property>
@@ -175,9 +175,9 @@ QGroupBox::title {
      <widget class="QLabel" name="lbSSEconomy">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>50</y>
-        <width>151</width>
+        <x>80</x>
+        <y>40</y>
+        <width>165</width>
         <height>16</height>
        </rect>
       </property>
@@ -191,9 +191,9 @@ QGroupBox::title {
      <widget class="QLabel" name="lbSSPopulation">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>70</y>
-        <width>151</width>
+        <x>80</x>
+        <y>60</y>
+        <width>165</width>
         <height>16</height>
        </rect>
       </property>
@@ -207,9 +207,9 @@ QGroupBox::title {
      <widget class="QLabel" name="lbSSName">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>30</y>
-        <width>151</width>
+        <x>80</x>
+        <y>20</y>
+        <width>165</width>
         <height>16</height>
        </rect>
       </property>
@@ -223,9 +223,9 @@ QGroupBox::title {
      <widget class="QLabel" name="lbSSEnemies">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>90</y>
-        <width>151</width>
+        <x>80</x>
+        <y>80</y>
+        <width>165</width>
         <height>16</height>
        </rect>
       </property>
@@ -240,8 +240,8 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>90</y>
-        <width>81</width>
+        <y>80</y>
+        <width>60</width>
         <height>16</height>
        </rect>
       </property>
@@ -284,7 +284,7 @@ QGroupBox::title {
      <widget class="QLabel" name="lbCntStarSystems">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>100</x>
         <y>30</y>
         <width>91</width>
         <height>20</height>
@@ -299,7 +299,7 @@ QGroupBox::title {
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>111</width>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -313,7 +313,7 @@ QGroupBox::title {
      <widget class="QLabel" name="lbShipsInDistress">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>100</x>
         <y>50</y>
         <width>111</width>
         <height>20</height>
@@ -328,7 +328,7 @@ QGroupBox::title {
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>111</width>
+        <width>81</width>
         <height>16</height>
        </rect>
       </property>
@@ -379,7 +379,7 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
+        <y>20</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -395,7 +395,7 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>30</y>
+        <y>20</y>
         <width>181</width>
         <height>20</height>
        </rect>
@@ -411,7 +411,7 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>50</y>
+        <y>40</y>
         <width>181</width>
         <height>20</height>
        </rect>
@@ -427,7 +427,7 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
+        <y>40</y>
         <width>51</width>
         <height>20</height>
        </rect>
@@ -482,8 +482,8 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>70</x>
-        <y>25</y>
-        <width>91</width>
+        <y>20</y>
+        <width>171</width>
         <height>20</height>
        </rect>
       </property>
@@ -498,7 +498,7 @@ QGroupBox::title {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>25</y>
+        <y>20</y>
         <width>51</width>
         <height>20</height>
        </rect>
