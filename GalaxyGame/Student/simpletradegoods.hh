@@ -35,14 +35,16 @@ public:
     // IItemInGalaxy interface
 public:
     /**
-     * @copydoc IItemInGalaxy.getName()
+     * @brief getName returns name of goods
+     * @return name
      */
     std::string getName() { return name_; }
 
     // ITradableItem interface
 public:
     /**
-     * @copydoc ITradableItem.getPrice()
+     * @brief getPrice returns price of goods
+     * @return price
      */
     int getPrice() { return price_; }
 private:

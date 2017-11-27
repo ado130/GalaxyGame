@@ -9,7 +9,10 @@
 namespace Student {
 
 /**
- * @copydoc IEventHandler;
+ * @class Common::IEventHandler
+ * @brief Event handler acts as an intermediary between objects that receives events and
+ * the objects that are interested in those events. Objects spawn events by calling functions of
+ * the event handler. See more details in the sequence diagrams within the course assignment.
  */
 class EventHandler: public QObject, public Common::IEventHandler
 {
@@ -19,49 +22,65 @@ public:
     ~EventHandler();
 
     /**
-     * @copydoc IEventHandler::shipSpawned();
-     * @post registerShipToUi signal is emited
+     * @brief A new ship has been created in the galaxy.
+     * @param ship The created ship
+     * @post Exception guarantee: nothrow
      */
     void shipSpawned(std::shared_ptr<Common::Ship> ship);
+
     /**
-     * @copydoc IEventHandler::shipRemoved();
-     * @post registerShipToUi signal is emited
+     * @brief A ship has been removed from the galaxy.
+     * @param ship The removed ship
+     * @post Exception guarantee: nothrow
      */
     void shipRemoved(std::shared_ptr<Common::Ship> ship);
+
     /**
-     * @copydoc IEventHandler::shipRelocated();
-     * @post shipChangedLocation signal is emited if all data needed are present
+     * @brief A ship has moved to a star system, or moved away from a star system.
+     * @param ship The ship, which relocated
+     * @param starSystem The previous system where the ship was located. Can be nullptr.
+     * @post Exception guarantee: nothrow
      */
     void shipRelocated(std::shared_ptr<Common::Ship> ship,
                        std::shared_ptr<Common::StarSystem> starSystem);
+
     /**
-     * @copydoc IEventHandler::shipMoved();
-     * @post shipMovement signal is emited
+     * @brief A ship moved from one point to another.
+     * @param ship The ship, which moved
+     * @param origin The point, from which the ship moved
+     * @param target The point, to which the ship moved
+     * @post Exception guarantee: nothrow
      */
     void shipMoved(std::shared_ptr<Common::Ship> ship,
                    Common::Point origin,
                    Common::Point target);
+
     /**
-     * @copydoc IEventHandler::exceptionInExecution();
-     * @post exceptionInShipExecution signal is emited
+     * @brief An action executed by a ship caused an exception, and thus it was cancelled.
+     * @param ship The ship that caused the exception.
+     * @param msg Description of the exception.
+     * @post Exception guarantee: nothrow
      */
     void exceptionInExecution(std::shared_ptr<Common::Ship> ship, std::string const& msg);
 
     /**
-     * @copydoc IEventHandler::distressOn();
-     * @post shipCallForHelp signal is emited
+     * @brief A ship has switched on distress call.
+     * @param ship The ship, which switched on the distress call
+     * @post Exception guarantee: nothrow
      */
     void distressOn(std::shared_ptr<Common::Ship> ship);
 
     /**
-     * @copydoc IEventHandler::distressOff();
-     * @post shipWasSaved signal is emited
+     * @brief A ship has switched off distress call.
+     * @param ship The ship, which switched off the distress call
+     * @post Exception guarantee: nothrow
      */
     void distressOff(std::shared_ptr<Common::Ship> ship);
 
     /**
-     * @copydoc IEventHandler::shipAbandoned();
-     * @post shipWasAbandoned signal is emited
+     * @brief A ship has been abandoned.
+     * @param ship The ship, which has been abandoned
+     * @post Exception guarantee: nothrow
      */
     void shipAbandoned(std::shared_ptr<Common::Ship> ship);
 
