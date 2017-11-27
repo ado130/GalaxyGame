@@ -184,14 +184,14 @@ void MainWindow::createPlayer()
 
 void MainWindow::pressedSpace()
 {
-    assert(player_);
-    assert(currentPlanet_);
+    assert(player_);    
     assert(currentStarSystem_);
     assert(question_);
     assert(settings_);
 
     if(isPlayerTrading_ && !isNPCShipNear_)
     {
+        assert(currentPlanet_);
         QStringList items;
         items << tr("Buy") << tr("Sell");
         bool ok;
@@ -214,9 +214,16 @@ void MainWindow::pressedSpace()
     }
     else if(isNPCShipNear_)
     {
-        qDebug() << "wanna repair!";
+        assert(currentNPCShip_);
         Common::RepairAction *action = new Common::RepairAction(player_, currentNPCShip_->getEngine(), false);
-        action->execute();
+        int originHealth = currentNPCShip_->getEngine()->getHealth();
+        if(action->execute());
+        {
+            if(originHealth != currentNPCShip_->getEngine()->getHealth())
+            {
+                player_->getStatistics()->addCredits(Common::randomMinMax(1,2));
+            }
+        }
     }
 }
 
@@ -334,13 +341,23 @@ void MainWindow::checkCollision()
         if(typeid (*(colliding_Items[i])) == typeid (Ui::NPCShipUi))
         {
             isNPCShipNear_ = true;
+            ui->gbStarPlanet->setTitle("NPC Ship");
+            ui->detailNearbyTitle->setText(QString("Health:"));
+            ui->nameNearbyTitle->setText(QString("Name:"));
             std::shared_ptr<Common::Ship> ship = drawManager_->getCargoShipByUiItem(colliding_Items[i]);
             currentNPCShip_ = ship;
+            ui->lbSPName->setText(QString::fromStdString(ship->getName()));
+            std::string hp = std::to_string(ship->getEngine()->getHealth()) + " / " +
+                     std::to_string(ship->getEngine()->getMaxHealth());
+            ui->lbSPGoods->setText(QString::fromStdString(hp));
             return;
         }
         else if(typeid (*(colliding_Items[i])) == typeid (Ui::PlanetUi))
         {
             isPlayerTrading_ = true;
+            ui->gbStarPlanet->setTitle("Star Planet");
+            ui->detailNearbyTitle->setText(QString("Goods:"));
+            ui->nameNearbyTitle->setText(QString("Name:"));
             std::shared_ptr<Student::Planet> planet = drawManager_->getPlanetByUiItem(colliding_Items[i]);
             ui->lbSPName->setText(QString::fromStdString(planet->getName()));
             ui->lbSPGoods->setText(QString::fromStdString(planet->getGoods().getName()));
@@ -353,6 +370,9 @@ void MainWindow::checkCollision()
     isNPCShipNear_ = false;
     ui->lbSPName->clear();
     ui->lbSPGoods->clear();
+    ui->gbStarPlanet->setTitle("Nothing nearby");
+    ui->detailNearbyTitle->clear();
+    ui->nameNearbyTitle->clear();
 }
 
 void MainWindow::loadSettings()

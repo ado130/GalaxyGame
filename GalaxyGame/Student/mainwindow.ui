@@ -373,9 +373,9 @@ QGroupBox::title {
 }</string>
      </property>
      <property name="title">
-      <string>Star Planet</string>
+      <string>Nothing nearby</string>
      </property>
-     <widget class="QLabel" name="label_8">
+     <widget class="QLabel" name="nameNearbyTitle">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -385,7 +385,7 @@ QGroupBox::title {
        </rect>
       </property>
       <property name="text">
-       <string>Name:</string>
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -396,7 +396,7 @@ QGroupBox::title {
        <rect>
         <x>70</x>
         <y>30</y>
-        <width>101</width>
+        <width>181</width>
         <height>20</height>
        </rect>
       </property>
@@ -412,7 +412,7 @@ QGroupBox::title {
        <rect>
         <x>70</x>
         <y>50</y>
-        <width>101</width>
+        <width>181</width>
         <height>20</height>
        </rect>
       </property>
@@ -423,7 +423,7 @@ QGroupBox::title {
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_12">
+     <widget class="QLabel" name="detailNearbyTitle">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -433,7 +433,7 @@ QGroupBox::title {
        </rect>
       </property>
       <property name="text">
-       <string>Goods:</string>
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -545,7 +545,7 @@ QGroupBox::title {
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuNew_Game">
