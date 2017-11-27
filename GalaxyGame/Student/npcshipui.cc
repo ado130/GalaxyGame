@@ -11,6 +11,7 @@ Ui::NPCShipUi::NPCShipUi(QPixmap pixmap, int posX, int posY, QObject *parent):
     setPixmap(pixmap);
     setScale(0.2);
     setTransformOriginPoint((boundingRect().center().x()),(boundingRect().center().y()));
+    setZValue(-1);
 
     setPos(posX, posY);
     canMove_ = true;
