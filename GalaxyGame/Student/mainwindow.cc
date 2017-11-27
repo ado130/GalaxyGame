@@ -217,7 +217,7 @@ void MainWindow::pressedSpace()
         assert(currentNPCShip_);
         Common::RepairAction *action = new Common::RepairAction(player_, currentNPCShip_->getEngine(), false);
         int originHealth = currentNPCShip_->getEngine()->getHealth();
-        if(action->execute());
+        if(action->execute())
         {
             if(originHealth != currentNPCShip_->getEngine()->getHealth())
             {
